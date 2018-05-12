@@ -3,12 +3,19 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CircleOfCampus.iml" filepath="$PROJECT_DIR$/CircleOfCampus.iml" />
+      <module fileurl="file://F:\Android\View\CircleOfCampus\CircleOfCampus.iml" filepath="F:\Android\View\CircleOfCampus\CircleOfCampus.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://F:\Android\View\CircleOfCampus\app\app.iml" filepath="F:\Android\View\CircleOfCampus\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/campus/campus.iml" filepath="$PROJECT_DIR$/campus/campus.iml" />
+      <module fileurl="file://F:\Android\View\CircleOfCampus\campus\campus.iml" filepath="F:\Android\View\CircleOfCampus\campus\campus.iml" />
       <module fileurl="file://$PROJECT_DIR$/chat/chat.iml" filepath="$PROJECT_DIR$/chat/chat.iml" />
+      <module fileurl="file://F:\Android\View\CircleOfCampus\chat\chat.iml" filepath="F:\Android\View\CircleOfCampus\chat\chat.iml" />
       <module fileurl="file://$PROJECT_DIR$/home/home.iml" filepath="$PROJECT_DIR$/home/home.iml" />
+      <module fileurl="file://F:\Android\View\CircleOfCampus\home\home.iml" filepath="F:\Android\View\CircleOfCampus\home\home.iml" />
       <module fileurl="file://$PROJECT_DIR$/login/login.iml" filepath="$PROJECT_DIR$/login/login.iml" />
+      <module fileurl="file://F:\Android\View\CircleOfCampus\login\login.iml" filepath="F:\Android\View\CircleOfCampus\login\login.iml" />
       <module fileurl="file://$PROJECT_DIR$/manager/manager.iml" filepath="$PROJECT_DIR$/manager/manager.iml" />
+      <module fileurl="file://F:\Android\View\CircleOfCampus\manager\manager.iml" filepath="F:\Android\View\CircleOfCampus\manager\manager.iml" />
     </modules>
   </component>
 </project>
