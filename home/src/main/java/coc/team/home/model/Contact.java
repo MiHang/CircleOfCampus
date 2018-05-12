@@ -15,6 +15,7 @@ public class Contact implements Serializable,Comparable<Contact> {
     private String LastName;//姓氏首字母
     private String UserIcon;
     private String UserName;
+    private String Sex;
 
 
     public String getAccount() {
@@ -49,7 +50,13 @@ public class Contact implements Serializable,Comparable<Contact> {
         UserName = userName;
     }
 
+    public String getSex() {
+        return Sex;
+    }
 
+    public void setSex(String sex) {
+        Sex = sex;
+    }
 
     @Override
     public int compareTo(@NonNull Contact contact) {//按照用户名字母顺序排序

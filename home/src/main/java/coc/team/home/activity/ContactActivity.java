@@ -225,7 +225,7 @@ public class ContactActivity extends AppCompatActivity {
 
     private void initView() {
         Search = (MyEditText) findViewById(R.id.Search);
-        rv = (SwipeMenuRecyclerView) findViewById(R.id.rv);
+        rv = (SwipeMenuRecyclerView) findViewById(R.id.recycler_view);
         IndexList = (ListView) findViewById(R.id.IndexList);
     }
 

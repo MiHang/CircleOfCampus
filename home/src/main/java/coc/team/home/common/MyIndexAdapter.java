@@ -54,7 +54,7 @@ public class MyIndexAdapter extends BaseAdapter {
             vh= (ViewHolder) view.getTag();
         }
         vh.letter.setText(data.get(i).getLetter());
-        if (data.get(i).isHover){//经过时颜色
+        if (data.get(i).isHover()){//经过时颜色
             vh.letter.setTextColor(context.getResources().getColor(data.get(i).getHover_TextColor()));
             vh.letter.setBackgroundResource(data.get(i).getHover_bg());
         }else{//默认颜色

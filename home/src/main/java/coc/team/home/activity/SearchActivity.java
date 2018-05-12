@@ -4,24 +4,37 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import coc.team.home.OnItemClickListener;
 import coc.team.home.R;
+import coc.team.home.adapter.GoodFriendAdapter;
+import coc.team.home.adapter.MyMessageAdapter;
+import coc.team.home.model.Contact;
+import coc.team.home.model.UserMsg;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -33,12 +46,29 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private EditText search;
     private Button button;
     private TextView result;
-
+    private SwipeMenuRecyclerView recycler_view;
+    GoodFriendAdapter mMenuAdapter;
+    List<Contact> data=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         initView();
+        recycler_view.setLayoutManager(new LinearLayoutManager(getApplicationContext()));// 布局管理器。
+        recycler_view.setHasFixedSize(true);// 如果Item够简单，高度是确定的，打开FixSize将提高性能。
+        recycler_view.setItemAnimator(new DefaultItemAnimator());// 设置Item默认动画，加也行，不加也行。
+//        mSwipeMenuRecyclerView.addItemDecoration(new ListViewDecoration());// 添加分割线。
+
+
+
+        mMenuAdapter = new GoodFriendAdapter(getApplicationContext(),data);
+        mMenuAdapter.setItemListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Toast.makeText(getApplicationContext(), ""+position, Toast.LENGTH_SHORT).show();
+            }
+        });
+        recycler_view.setAdapter(mMenuAdapter);
     }
 
     private void initView() {
@@ -60,24 +90,39 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (search.getText().length()>0){
+                if (search.getText().length() > 0) {
                     result.setText("");
+                    data.clear();
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            final String s=getData(search.getText().toString());
+                            final String s = getData(search.getText().toString());
                             result.post(new Runnable() {
                                 @Override
                                 public void run() {
 
                                     try {
-                                        JSONObject  js = new JSONObject(s);
-                                        result.setText("搜索到"+js.getString("Result")+"条数据\n");
+                                        JSONObject js = new JSONObject(s);
+                                        result.setText("搜索到" + js.getString("Result") + "条数据\n");
                                         JSONArray json = new JSONArray(js.getString("Info"));
-                                        for(int i=0;i<json.length();i++){
-                                            JSONObject jsonObject= new JSONObject(json.get(i).toString());
-                                            result.setText(result.getText()+jsonObject.getString("UserName")+jsonObject.getString("Account")+"\n");
+                                        for (int i = 0; i < json.length(); i++) {
+                                            JSONObject jsonObject = new JSONObject(json.get(i).toString());
+                                            Contact contact=new Contact();
+                                            contact.setUserName(jsonObject.getString("UserName"));
+                                            contact.setAccount(jsonObject.getString("Account"));
+                                            contact.setSex(jsonObject.getString("Sex"));
+                                            data.add(contact);
+
+//                                            result.setText(result.getText() + jsonObject.getString("UserName") + jsonObject.getString("Account") + "\n");
+//
                                         }
+                                        //延时2毫秒刷新
+                                        new Handler().postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                mMenuAdapter.notifyDataSetChanged();
+                                            }
+                                        }, 200);
 
                                     } catch (JSONException e) {
                                         e.printStackTrace();
@@ -93,17 +138,19 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             }
 
         });
+        recycler_view = (SwipeMenuRecyclerView) findViewById(R.id.recycler_view);
+        recycler_view.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button:
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE)!= PackageManager.PERMISSION_GRANTED){
-                    ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.CALL_PHONE},0);
-                    Intent intent=new Intent();
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 0);
+                    Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_CALL);
-                    intent.setData(Uri.parse("tel:"+10086));
+                    intent.setData(Uri.parse("tel:" + 10086));
                     startActivity(intent);
                 }
 

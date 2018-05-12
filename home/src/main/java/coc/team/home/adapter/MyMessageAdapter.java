@@ -42,7 +42,7 @@ public class MyMessageAdapter extends SwipeMenuAdapter<MyMessageAdapter.ViewHold
 
     @Override
     public View onCreateContentView(ViewGroup parent, int viewType) {
-        return LayoutInflater.from(context).inflate(R.layout.item, parent, false);
+        return LayoutInflater.from(context).inflate(R.layout.msg_item, parent, false);
     }
 
     @Override
