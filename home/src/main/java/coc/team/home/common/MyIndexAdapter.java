@@ -11,9 +11,10 @@ import android.widget.TextView;
 import java.util.List;
 
 import coc.team.home.R;
+import coc.team.home.model.Letter;
 
 /**
- * Created by 惠普 on 2018-05-08.
+ * 右侧字母索引适配器
  */
 
 public class MyIndexAdapter extends BaseAdapter {

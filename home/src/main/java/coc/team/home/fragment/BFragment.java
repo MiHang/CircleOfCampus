@@ -126,17 +126,18 @@ public class BFragment extends Fragment {
         @Override
         public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
 
-            int width = getResources().getDimensionPixelSize(R.dimen.item_height);
+            int width = getResources().getDimensionPixelSize(R.dimen.column_width);
 
             // MATCH_PARENT 自适应高度，保持和内容一样高；也可以指定菜单具体高度，也可以用WRAP_CONTENT。
-            int height = ViewGroup.LayoutParams.MATCH_PARENT;
+            int height =getResources().getDimensionPixelSize(R.dimen.column_height);
 
 
 
 
             SwipeMenuItem closeItem = new SwipeMenuItem(getContext())
                     .setBackgroundDrawable(R.drawable.selector_purple)
-                    .setImage(R.mipmap.ic_action_close)
+                    .setText("置顶") // 文字，还可以设置文字颜色，大小等。。
+                    .setTextColor(Color.WHITE)
                     .setWidth(width)
                     .setHeight(height);
             swipeRightMenu.addMenuItem(closeItem); // 添加一个按钮到右侧菜单。

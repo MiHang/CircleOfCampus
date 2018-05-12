@@ -1,4 +1,4 @@
-package coc.team.home.common;
+package coc.team.home.adapter;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -19,7 +19,7 @@ import coc.team.home.R;
  * Created by 惠普 on 2018-01-29.
  */
 
-public class MyItemDecoration extends RecyclerView.ItemDecoration {
+public class GoodFriendItemDecoration extends RecyclerView.ItemDecoration {
     private int dividerHeight;//分割线高度
     private int dividerPadding=15;//分割线左右距离
     int TitleHeight=50;//字母索引栏高度
@@ -40,7 +40,7 @@ public class MyItemDecoration extends RecyclerView.ItemDecoration {
     private Map<Integer,String> Titles=new HashMap<>();//存放所有标题的位置
 
 
-    public MyItemDecoration(Context context) {
+    public GoodFriendItemDecoration(Context context) {
 
         this.Contxt=context;
         TextPaint=new Paint();

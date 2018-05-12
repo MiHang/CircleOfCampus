@@ -27,13 +27,13 @@ import java.util.Map;
 
 import coc.team.home.OnItemClickListener;
 import coc.team.home.R;
-import coc.team.home.common.Contact;
+import coc.team.home.model.Contact;
 import coc.team.home.common.LanguageUtils;
-import coc.team.home.common.Letter;
+import coc.team.home.model.Letter;
 import coc.team.home.common.MyEditText;
 import coc.team.home.common.MyIndexAdapter;
-import coc.team.home.common.MyItemDecoration;
-import coc.team.home.common.MyRecyclerViewAdapter;
+import coc.team.home.adapter.GoodFriendItemDecoration;
+import coc.team.home.adapter.GoodFriendAdapter;
 
 public class ContactActivity extends AppCompatActivity {
 
@@ -46,7 +46,7 @@ public class ContactActivity extends AppCompatActivity {
     List<Letter> d = new ArrayList<>();
     MyIndexAdapter myAdapter;//索引列表适配器
     LinearLayoutManager layoutManager;//布局管理器
-    MyRecyclerViewAdapter adapter;
+    GoodFriendAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +58,7 @@ public class ContactActivity extends AppCompatActivity {
         rv.setLayoutManager(layoutManager);
 
 
-//设置增加或删除条目的动画
+        //设置增加或删除条目的动画
         rv.setItemAnimator(new DefaultItemAnimator());
 
         List<Contact> list = new ArrayList<Contact>();
@@ -141,7 +141,7 @@ public class ContactActivity extends AppCompatActivity {
         }
         Collections.sort(data);//按字母顺序排序
 
-        adapter = new MyRecyclerViewAdapter(this, data);
+        adapter = new GoodFriendAdapter(this, data);
 
         //标题
         Titles.put(0, data.get(0).getLastName());
@@ -153,7 +153,7 @@ public class ContactActivity extends AppCompatActivity {
         }
 
 
-        MyItemDecoration itemDecoration = new MyItemDecoration(getApplicationContext());
+        GoodFriendItemDecoration itemDecoration = new GoodFriendItemDecoration(getApplicationContext());
         itemDecoration.setTitles(Titles);
         rv.addItemDecoration(itemDecoration);
 
@@ -282,14 +282,6 @@ public class ContactActivity extends AppCompatActivity {
                     .setWidth(width)
                     .setHeight(height);
             swipeRightMenu.addMenuItem(closeItem); // 添加一个按钮到右侧菜单。
-
-            SwipeMenuItem deleteItem = new SwipeMenuItem(getApplicationContext())
-                    .setBackgroundDrawable(R.drawable.selector_red)
-                    .setText("删除") // 文字，还可以设置文字颜色，大小等。。
-                    .setTextColor(Color.WHITE)
-                    .setWidth(width)
-                    .setHeight(height);
-            swipeRightMenu.addMenuItem(deleteItem);// 添加一个按钮到右侧侧菜单。
 
         }
     };

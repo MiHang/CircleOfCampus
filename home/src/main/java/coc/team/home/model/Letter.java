@@ -1,9 +1,9 @@
-package coc.team.home.common;
+package coc.team.home.model;
 
 import coc.team.home.R;
 
 /**
- * 索引条
+ * 索引条 javabeen
  */
 
 public class Letter {

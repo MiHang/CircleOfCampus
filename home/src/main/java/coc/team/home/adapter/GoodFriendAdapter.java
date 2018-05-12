@@ -1,7 +1,7 @@
-package coc.team.home.common;
+package coc.team.home.adapter;
 
 /**
- * Created by 惠普 on 2018-04-25.
+ * 好友列表适配器
  */
 
 import android.content.Context;
@@ -20,8 +20,9 @@ import java.util.List;
 
 import coc.team.home.OnItemClickListener;
 import coc.team.home.R;
+import coc.team.home.model.Contact;
 
-public class MyRecyclerViewAdapter extends SwipeMenuAdapter<MyRecyclerViewAdapter.ViewHolder> implements View.OnClickListener{
+public class GoodFriendAdapter extends SwipeMenuAdapter<GoodFriendAdapter.ViewHolder> implements View.OnClickListener{
     private List<Contact> data;
     private Context context;
     OnItemClickListener itemListener;
@@ -31,7 +32,7 @@ public class MyRecyclerViewAdapter extends SwipeMenuAdapter<MyRecyclerViewAdapte
         this.itemListener = itemListener;
     }
 
-    public MyRecyclerViewAdapter(Context context, List<Contact> data) {
+    public GoodFriendAdapter(Context context, List<Contact> data) {
         this.context = context;
         this.data = data;
     }

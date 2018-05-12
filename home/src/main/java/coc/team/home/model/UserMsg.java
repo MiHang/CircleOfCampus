@@ -1,7 +1,7 @@
 package coc.team.home.model;
 
 /**
- * Created by 惠普 on 2018-05-12.
+ * 消息列表 javabean
  */
 
 public class UserMsg {

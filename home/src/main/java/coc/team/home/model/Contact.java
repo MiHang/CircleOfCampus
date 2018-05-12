@@ -1,4 +1,4 @@
-package coc.team.home.common;
+package coc.team.home.model;
 
 import android.support.annotation.NonNull;
 
