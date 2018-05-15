@@ -18,7 +18,7 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuAdapter;
 
 import java.util.List;
 
-import coc.team.home.OnItemClickListener;
+import coc.team.home.Interface.OnItemClickListener;
 import coc.team.home.R;
 import coc.team.home.model.Contact;
 

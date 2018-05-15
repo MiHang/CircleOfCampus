@@ -10,9 +10,10 @@ import android.widget.TextView;
 
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuAdapter;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
-import coc.team.home.OnItemClickListener;
+import coc.team.home.Interface.OnItemClickListener;
 import coc.team.home.R;
 import coc.team.home.model.UserMsg;
 
@@ -25,6 +26,7 @@ public class MyMessageAdapter extends SwipeMenuAdapter<MyMessageAdapter.ViewHold
     Context context;
     List<UserMsg> data;
     OnItemClickListener mOnItemClickListener;
+    SimpleDateFormat sdf=new SimpleDateFormat("HH:mm");
 
     public MyMessageAdapter(Context context, List<UserMsg> data) {
         this.context = context;
@@ -53,6 +55,9 @@ public class MyMessageAdapter extends SwipeMenuAdapter<MyMessageAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.name.setText(data.get(position).getUserName());
+        holder.msg.setText(data.get(position).getMsg());
+        holder.Num.setText(data.get(position).getNum()+"条消息");
+        holder.time.setText(sdf.format(data.get(position).getDate()));
         holder.itemView.setOnClickListener(this);
         holder.itemView.setTag(position);
     }

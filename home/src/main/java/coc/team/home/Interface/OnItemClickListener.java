@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package coc.team.home;
+package coc.team.home.Interface;
 
 /**
  * Created by Yan Zhenjie on 2016/7/27.

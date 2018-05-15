@@ -28,13 +28,12 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import coc.team.home.OnItemClickListener;
+import coc.team.home.Interface.OnItemClickListener;
 import coc.team.home.R;
 import coc.team.home.adapter.GoodFriendAdapter;
-import coc.team.home.adapter.MyMessageAdapter;
 import coc.team.home.model.Contact;
-import coc.team.home.model.UserMsg;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -102,27 +101,32 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                                 public void run() {
 
                                     try {
-                                        JSONObject js = new JSONObject(s);
-                                        result.setText("搜索到" + js.getString("Result") + "条数据\n");
-                                        JSONArray json = new JSONArray(js.getString("Info"));
-                                        for (int i = 0; i < json.length(); i++) {
-                                            JSONObject jsonObject = new JSONObject(json.get(i).toString());
-                                            Contact contact=new Contact();
-                                            contact.setUserName(jsonObject.getString("UserName"));
-                                            contact.setAccount(jsonObject.getString("Account"));
-                                            contact.setSex(jsonObject.getString("Sex"));
-                                            data.add(contact);
+                                        if(!s.equals("")){
+                                            JSONObject js = new JSONObject(s);
+                                            result.setText("搜索到" + js.getString("Result") + "条数据\n");
+                                            JSONArray json = new JSONArray(js.getString("Info"));
+                                            for (int i = 0; i < json.length(); i++) {
+                                                JSONObject jsonObject = new JSONObject(json.get(i).toString());
+                                                Contact contact=new Contact();
+                                                contact.setUserName(jsonObject.getString("UserName"));
+                                                contact.setAccount(jsonObject.getString("Account"));
+                                                contact.setSex(jsonObject.getString("Sex"));
+                                                data.add(contact);
 
 //                                            result.setText(result.getText() + jsonObject.getString("UserName") + jsonObject.getString("Account") + "\n");
-//
-                                        }
-                                        //延时2毫秒刷新
-                                        new Handler().postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                mMenuAdapter.notifyDataSetChanged();
+
                                             }
-                                        }, 200);
+                                            //延时2毫秒刷新
+                                            new Handler().postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    mMenuAdapter.notifyDataSetChanged();
+                                                }
+                                            }, 200);
+                                        }else{
+                                            result.setText("连接服务器失败\n");
+                                        }
+
 
                                     } catch (JSONException e) {
                                         e.printStackTrace();
@@ -162,7 +166,12 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     public String getData(String account) {
         String url = "http://192.168.56.1:8080/coc/search.do";
-        OkHttpClient okHttpClient = new OkHttpClient();
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .readTimeout(5, TimeUnit.SECONDS)//设置读取超时时间
+                .writeTimeout(5,TimeUnit.SECONDS)//设置写的超时时间
+                .connectTimeout(5,TimeUnit.SECONDS)//设置连接超时时间
+                .build();
+
         JSONObject js = new JSONObject();
 
         try {

@@ -20,10 +20,12 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import coc.team.home.BroadcastReceiver.MyBroadcastReceiver;
 import coc.team.home.activity.ContactActivity;
-import coc.team.home.OnItemClickListener;
+import coc.team.home.Interface.OnItemClickListener;
 import coc.team.home.R;
 import coc.team.home.model.UserMsg;
 import coc.team.home.adapter.MyMessageAdapter;
@@ -37,19 +39,57 @@ public class BFragment extends Fragment {
     private TextView title;
     private TextView user;
     private SwipeMenuRecyclerView recycler_view;
-    MyMessageAdapter mMenuAdapter;
+    MyMessageAdapter adapter;
     List<UserMsg> data=new ArrayList<>();
+    MyBroadcastReceiver BroadcastReceiver;
+    public void bind(MyBroadcastReceiver BroadcastReceiver){
+        this.BroadcastReceiver=BroadcastReceiver;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_b, null);
         initView(view);
-        for(int i=0;i<6;i++){
-            UserMsg userMsg=new UserMsg();
-            userMsg.setIcon(R.mipmap.ic_launcher);
-            userMsg.setUserName("mingz");
-            data.add(userMsg);
+//        for(int i=0;i<6;i++){
+//            UserMsg userMsg=new UserMsg();
+//
+//            userMsg.setUserName("mingz");
+//            data.add(userMsg);
+//        }
+
+
+        if (BroadcastReceiver!=null){//添加广播回调监听，从而更新消息列表
+            BroadcastReceiver.setMessageListener(new MyBroadcastReceiver.MessageListener() {
+                @Override
+                public void sendMessageListener(UserMsg userMsg) {
+                    boolean isFlag=true;
+                    for(UserMsg msg:data){
+                        if (msg.getUserName().equals(userMsg.getUserName())){
+                            isFlag=false;
+                        }
+                    }
+                    if (isFlag){
+                        userMsg.setNum(1);
+                        data.add(userMsg);
+                    }else{
+                        for (UserMsg u:data){
+                            if (u.getUserName().equals(userMsg.getUserName())){
+                                u.setMsg(userMsg.getMsg());
+                                u.setDate(userMsg.getDate());
+                                u.setNum(u.getNum()+1);
+                            }
+                        }
+                    }
+
+
+                    Collections.sort(data);
+                    adapter.notifyDataSetChanged();
+
+                    Toast.makeText(getContext(), "接收到"+userMsg.getUserName()+":"+userMsg.getMsg(), Toast.LENGTH_SHORT).show();
+                }
+            });
         }
+
 
         recycler_view.setLayoutManager(new LinearLayoutManager(getContext()));// 布局管理器。
         recycler_view.setHasFixedSize(true);// 如果Item够简单，高度是确定的，打开FixSize将提高性能。
@@ -64,9 +104,9 @@ public class BFragment extends Fragment {
         // 设置菜单Item点击监听。
         recycler_view.setSwipeMenuItemClickListener(menuItemClickListener);
 
-        mMenuAdapter = new MyMessageAdapter(getContext(),data);
-        mMenuAdapter.setOnItemClickListener(onItemClickListener);
-        recycler_view.setAdapter(mMenuAdapter);
+        adapter = new MyMessageAdapter(getContext(),data);
+        adapter.setOnItemClickListener(onItemClickListener);
+        recycler_view.setAdapter(adapter);
         return view;
     }
 
@@ -114,7 +154,7 @@ public class BFragment extends Fragment {
             // TODO 推荐调用Adapter.notifyItemRemoved(position)，也可以Adapter.notifyDataSetChanged();
             if (menuPosition == 1) {// 删除按钮被点击。
                 data.remove(adapterPosition);
-                mMenuAdapter.notifyItemRemoved(adapterPosition);
+                adapter.notifyItemRemoved(adapterPosition);
             }
         }
     };

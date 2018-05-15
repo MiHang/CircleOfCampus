@@ -1,23 +1,19 @@
 package coc.team.home.model;
 
+import android.support.annotation.NonNull;
+
+import java.util.Date;
+
 /**
  * 消息列表 javabean
  */
 
-public class UserMsg {
-    int icon;//头像
+public class UserMsg implements Comparable<UserMsg>{
     String UserName;//用户名
+    String Sex;//性别
     String Msg;//消息
-    String Time;//时间
-    String Num;//消息条数
-
-    public int getIcon() {
-        return icon;
-    }
-
-    public void setIcon(int icon) {
-        this.icon = icon;
-    }
+    Date date;//时间
+    int Num;//消息条数
 
     public String getUserName() {
         return UserName;
@@ -25,6 +21,14 @@ public class UserMsg {
 
     public void setUserName(String userName) {
         UserName = userName;
+    }
+
+    public String getSex() {
+        return Sex;
+    }
+
+    public void setSex(String sex) {
+        Sex = sex;
     }
 
     public String getMsg() {
@@ -35,19 +39,28 @@ public class UserMsg {
         Msg = msg;
     }
 
-    public String getTime() {
-        return Time;
+    public Date getDate() {
+        return date;
     }
 
-    public void setTime(String time) {
-        Time = time;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
-    public String getNum() {
+    public int getNum() {
         return Num;
     }
 
-    public void setNum(String num) {
+    public void setNum(int num) {
         Num = num;
+    }
+
+    @Override
+    public int compareTo(@NonNull UserMsg userMsg) {
+        int i=this.getDate().compareTo(userMsg.getDate());
+        if (i==0){
+            return this.getUserName().compareTo(userMsg.getUserName());
+        }
+        return i;
     }
 }
