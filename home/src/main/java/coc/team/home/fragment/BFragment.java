@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 import coc.team.home.BroadcastReceiver.MyBroadcastReceiver;
+import coc.team.home.Interface.MessageListener;
 import coc.team.home.activity.ContactActivity;
 import coc.team.home.Interface.OnItemClickListener;
 import coc.team.home.R;
@@ -59,24 +60,24 @@ public class BFragment extends Fragment {
 
 
         if (BroadcastReceiver!=null){//添加广播回调监听，从而更新消息列表
-            BroadcastReceiver.setMessageListener(new MyBroadcastReceiver.MessageListener() {
+            BroadcastReceiver.setMessageListener(new MessageListener() {
                 @Override
                 public void sendMessageListener(UserMsg userMsg) {
                     boolean isFlag=true;
                     for(UserMsg msg:data){
-                        if (msg.getUserName().equals(userMsg.getUserName())){
+                        if (msg.getAccount().equals(userMsg.getAccount())){
                             isFlag=false;
                         }
                     }
                     if (isFlag){
-                        userMsg.setNum(1);
+                        userMsg.setAmount(1);
                         data.add(userMsg);
                     }else{
                         for (UserMsg u:data){
-                            if (u.getUserName().equals(userMsg.getUserName())){
+                            if (u.getAccount().equals(userMsg.getAccount())){
                                 u.setMsg(userMsg.getMsg());
                                 u.setDate(userMsg.getDate());
-                                u.setNum(u.getNum()+1);
+                                u.setAmount(u.getAmount()+1);
                             }
                         }
                     }
@@ -85,7 +86,7 @@ public class BFragment extends Fragment {
                     Collections.sort(data);
                     adapter.notifyDataSetChanged();
 
-                    Toast.makeText(getContext(), "接收到"+userMsg.getUserName()+":"+userMsg.getMsg(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "接收到"+userMsg.getAccount()+":"+userMsg.getMsg(), Toast.LENGTH_SHORT).show();
                 }
             });
         }

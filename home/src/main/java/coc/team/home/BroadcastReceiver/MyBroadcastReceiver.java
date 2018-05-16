@@ -35,7 +35,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
         DataMsg dataMsg =utils.toT(msg);
         if (listener!=null){
             UserMsg userMsg=new UserMsg();
-            userMsg.setUserName(dataMsg.getSend());
+            userMsg.setAccount(dataMsg.getSend());
             if(dataMsg.getSendMsg().getTextMsg()!=null){
                 userMsg.setMsg(dataMsg.getSendMsg().getTextMsg());
             }

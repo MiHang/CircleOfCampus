@@ -9,26 +9,17 @@ import java.util.Date;
  */
 
 public class UserMsg implements Comparable<UserMsg>{
-    String UserName;//用户名
-    String Sex;//性别
+    String Account;//账号
     String Msg;//消息
     Date date;//时间
-    int Num;//消息条数
+    int  Amount;//消息条数
 
-    public String getUserName() {
-        return UserName;
+    public String getAccount() {
+        return Account;
     }
 
-    public void setUserName(String userName) {
-        UserName = userName;
-    }
-
-    public String getSex() {
-        return Sex;
-    }
-
-    public void setSex(String sex) {
-        Sex = sex;
+    public void setAccount(String account) {
+        Account = account;
     }
 
     public String getMsg() {
@@ -47,20 +38,18 @@ public class UserMsg implements Comparable<UserMsg>{
         this.date = date;
     }
 
-    public int getNum() {
-        return Num;
+    public int getAmount() {
+        return Amount;
     }
 
-    public void setNum(int num) {
-        Num = num;
+    public void setAmount(int amount) {
+        Amount = amount;
     }
 
     @Override
     public int compareTo(@NonNull UserMsg userMsg) {
         int i=this.getDate().compareTo(userMsg.getDate());
-        if (i==0){
-            return this.getUserName().compareTo(userMsg.getUserName());
-        }
+
         return i;
     }
 }
