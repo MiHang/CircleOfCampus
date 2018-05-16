@@ -40,7 +40,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         intentFilter.addAction("coc.team.home.activity");
         registerReceiver(myBro,intentFilter);
         Intent intent=new Intent(this,MyService.class);
-        intent.putExtra("send","123");
+        intent.putExtra("send","jayevip@163.com");
         startService(intent);
 
         data.add(new AFragment());

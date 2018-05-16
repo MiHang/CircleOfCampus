@@ -12,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.common.utils.LanguageUtils;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
 import com.yanzhenjie.recyclerview.swipe.OnSwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
@@ -27,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import coc.team.home.Interface.OnItemClickListener;
+import coc.team.home.LanguageUtils;
 import coc.team.home.R;
 import coc.team.home.model.Contact;
 import coc.team.home.model.Letter;

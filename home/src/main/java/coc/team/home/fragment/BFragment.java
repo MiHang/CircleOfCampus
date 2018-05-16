@@ -1,17 +1,21 @@
 package coc.team.home.fragment;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.common.utils.LanguageUtils;
+import com.common.utils.TimeUtil;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
 import com.yanzhenjie.recyclerview.swipe.OnSwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
@@ -19,8 +23,11 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import coc.team.home.BroadcastReceiver.MyBroadcastReceiver;
@@ -42,6 +49,9 @@ public class BFragment extends Fragment {
     private SwipeMenuRecyclerView recycler_view;
     MyMessageAdapter adapter;
     List<UserMsg> data=new ArrayList<>();
+    TimeUtil timeUtil=new TimeUtil();
+    Date date;
+    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     MyBroadcastReceiver BroadcastReceiver;
     public void bind(MyBroadcastReceiver BroadcastReceiver){
         this.BroadcastReceiver=BroadcastReceiver;
@@ -59,6 +69,7 @@ public class BFragment extends Fragment {
 //        }
 
 
+
         if (BroadcastReceiver!=null){//添加广播回调监听，从而更新消息列表
             BroadcastReceiver.setMessageListener(new MessageListener() {
                 @Override
@@ -69,6 +80,12 @@ public class BFragment extends Fragment {
                             isFlag=false;
                         }
                     }
+                    try {
+                        date=sdf.parse(userMsg.getDate());
+                        userMsg.setDate(timeUtil.getTimeFormatText(date));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                     if (isFlag){
                         userMsg.setAmount(1);
                         data.add(userMsg);
@@ -76,7 +93,7 @@ public class BFragment extends Fragment {
                         for (UserMsg u:data){
                             if (u.getAccount().equals(userMsg.getAccount())){
                                 u.setMsg(userMsg.getMsg());
-                                u.setDate(userMsg.getDate());
+                                u.setDate(timeUtil.getTimeFormatText(date));
                                 u.setAmount(u.getAmount()+1);
                             }
                         }
@@ -90,7 +107,6 @@ public class BFragment extends Fragment {
                 }
             });
         }
-
 
         recycler_view.setLayoutManager(new LinearLayoutManager(getContext()));// 布局管理器。
         recycler_view.setHasFixedSize(true);// 如果Item够简单，高度是确定的，打开FixSize将提高性能。

@@ -28,6 +28,7 @@ import java.util.List;
 import coc.team.home.GlideCircleTransform;
 import coc.team.home.Interface.OnItemClickListener;
 import coc.team.home.R;
+import coc.team.home.http.HttpHelper;
 import coc.team.home.model.UserMsg;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -44,12 +45,14 @@ public class MyMessageAdapter extends SwipeMenuAdapter<MyMessageAdapter.ViewHold
     Context context;
     List<UserMsg> data;
     OnItemClickListener mOnItemClickListener;
-    SimpleDateFormat sdf=new SimpleDateFormat("HH:mm");
-    String path="http://192.168.1.157:8080";
+
+    int scale=120;
+    HttpHelper http;
 
     public MyMessageAdapter(Context context, List<UserMsg> data) {
         this.context = context;
         this.data = data;
+        http=new HttpHelper(context);
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -73,15 +76,24 @@ public class MyMessageAdapter extends SwipeMenuAdapter<MyMessageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
+        Log.e("tag",data.get(position).getAccount()+data.get(position).getUserName()+data.get(position).getSex());
+        //加载头像 查询服务器是否有头像图片，若无则按性别加载
         Glide.with(context)
-                .load(path+"/res/img/456.png")
+                .load(http.getPath()+"/res/img/"+data.get(position).getAccount())
                 .transform(new GlideCircleTransform(context))
-                .override(100,100)
-                .transform(new GlideCircleTransform(context))
+                .override(scale,scale)
                 .crossFade()
                 .listener(new RequestListener<String, GlideDrawable>() {
                     @Override
                     public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+
+                                Glide.with(context)
+                                        .load(http.getPath()+"/res/img/"+data.get(position).getSex())
+                                        .transform(new GlideCircleTransform(context))
+                                        .override(scale,scale)
+                                        .crossFade()
+                                        .into(holder.icon);
+
 
 
                         return false;
@@ -93,34 +105,13 @@ public class MyMessageAdapter extends SwipeMenuAdapter<MyMessageAdapter.ViewHold
                     }
                 })
                 .into(holder.icon);
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-               final String s=getUserInfo("87654321@qq.com");
-                Log.e("tag",s);
-
-                holder.name.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            holder.name.setText(s);
-                            JSONObject jsonObject=new JSONObject(s);
-                            Log.e("tag","性别"+jsonObject.getString("Sex"));
-                            holder.name.setText(jsonObject.getString("UserName" ));
-                            Toast.makeText(context, "性别"+jsonObject.getString("Sex"), Toast.LENGTH_SHORT).show();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                });
-            }
-        });
 
 
+
+        holder.name.setText(data.get(position).getUserName());
         holder.msg.setText(data.get(position).getMsg());
         holder.Amount.setText(data.get(position).getAmount()+"条消息");
-        holder.time.setText(sdf.format(data.get(position).getDate()));
+        holder.time.setText(data.get(position).getDate());
         holder.itemView.setOnClickListener(this);
         holder.itemView.setTag(position);
 
@@ -152,26 +143,6 @@ public class MyMessageAdapter extends SwipeMenuAdapter<MyMessageAdapter.ViewHold
 
     }
 
-    public String getUserInfo(String Account){
-        OkHttpClient okHttpClient=new OkHttpClient();
-        MediaType mediaType=MediaType.parse("application/json;charset=utf8");
-        JSONObject jsonObject=new JSONObject();
-        try {
-            jsonObject.put("Account" ,Account);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestBody requestBody=RequestBody.create(mediaType,jsonObject.toString());
-        Request request=new Request.Builder().url(path+"/coc/UserNameAndSexQuery.do").post(requestBody).build();
-        try {
-            Response response=okHttpClient.newCall(request).execute();
-            if (response.isSuccessful()){
-                return response.body().string();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
+
 }
 

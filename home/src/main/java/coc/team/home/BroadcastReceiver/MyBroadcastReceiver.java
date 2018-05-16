@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
+
 
 import com.common.model.DataMsg;
 import com.common.utils.ByteUtils;
@@ -36,6 +36,8 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
         if (listener!=null){
             UserMsg userMsg=new UserMsg();
             userMsg.setAccount(dataMsg.getSend());
+            userMsg.setUserName(dataMsg.getUserName());
+            userMsg.setSex(dataMsg.getSex());
             if(dataMsg.getSendMsg().getTextMsg()!=null){
                 userMsg.setMsg(dataMsg.getSendMsg().getTextMsg());
             }
