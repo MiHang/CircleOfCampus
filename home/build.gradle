@@ -65,6 +65,8 @@ dependencies {
     compile 'com.yanzhenjie:recyclerview-swipe:1.0.2'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     implementation files('libs/java_websocket.jar')
-    implementation files('libs/MyUtils.jar')
     implementation files('libs/pinyin4j-2.5.0.jar')
+    implementation files('libs/ormlite-android-5.0.jar')
+    implementation files('libs/ormlite-core-5.0.jar')
+    implementation files('libs/classes.jar')
 }

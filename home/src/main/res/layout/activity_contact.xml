@@ -5,19 +5,8 @@
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
     android:orientation="vertical">
-    <coc.team.home.common.MyEditText
-        android:id="@+id/Search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawableRight="@drawable/delete"
-        android:background="@android:drawable/editbox_background_normal"
-        android:gravity="left"
-        android:hint="搜索"
-        android:scrollbars="none"
-        android:textCursorDrawable="@null"
-        android:maxLines="1"
-        android:imeOptions="actionSearch"
-        android:drawableLeft="@drawable/search" />
+
+    <include layout="@layout/search_text" />
 
     <RelativeLayout
         android:layout_width="match_parent"

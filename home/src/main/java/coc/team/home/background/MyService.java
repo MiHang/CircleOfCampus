@@ -6,8 +6,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
-
-import com.common.model.DataMsg;
+import com.common.model.Msg;
 import com.common.utils.ByteUtils;
 
 import org.java_websocket.client.WebSocketClient;
@@ -69,9 +68,9 @@ public class MyService extends Service {
                     intent.setAction("coc.team.home.activity");
                     sendBroadcast(intent);
                     ByteUtils utils=new ByteUtils();
-                    DataMsg msg =utils.toT(bytes.array());
+                    Msg msg =utils.toT(bytes.array());
 
-                    Log.d(TAG,"消息"+ msg.getSend()+":"+msg.getSendMsg().getTextMsg());
+                    Log.d(TAG,"消息"+ msg.getSend()+":"+msg.getText());
 
                 }
 

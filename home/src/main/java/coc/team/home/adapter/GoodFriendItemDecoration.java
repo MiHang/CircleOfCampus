@@ -22,7 +22,7 @@ import coc.team.home.R;
 public class GoodFriendItemDecoration extends RecyclerView.ItemDecoration {
     private int dividerHeight;//分割线高度
     private int dividerPadding=15;//分割线左右距离
-    int TitleHeight=30;//字母索引栏高度
+    int TitleHeight=50;//字母索引栏高度
     private Paint TextPaint;//绘制文本
     private Paint BgPaint;//绘制背景
     private Paint  dividerPaint;//绘制分割线

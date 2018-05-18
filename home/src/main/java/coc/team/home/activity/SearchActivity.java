@@ -150,14 +150,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button:
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 0);
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_CALL);
-                    intent.setData(Uri.parse("tel:" + 10086));
-                    startActivity(intent);
-                }
-
 
                 break;
         }

@@ -173,7 +173,7 @@ public class ContactActivity extends AppCompatActivity {
         adapter.setItemListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Toast.makeText(ContactActivity.this, ""+position, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ContactActivity.this, ""+data.get(position).getAccount(), Toast.LENGTH_SHORT).show();
             }
         });
 

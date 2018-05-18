@@ -5,11 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-
-
-import com.common.model.DataMsg;
+import com.common.model.Msg;
 import com.common.utils.ByteUtils;
-
 import coc.team.home.Interface.MessageListener;
 import coc.team.home.model.UserMsg;
 
@@ -32,27 +29,27 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
         Bundle bundle=intent.getExtras();
         byte[] msg=bundle.getByteArray("Msg");
         ByteUtils utils=new ByteUtils();
-        DataMsg dataMsg =utils.toT(msg);
+        Msg dataMsg =utils.toT(msg);
         if (listener!=null){
             UserMsg userMsg=new UserMsg();
             userMsg.setAccount(dataMsg.getSend());
             userMsg.setUserName(dataMsg.getUserName());
             userMsg.setSex(dataMsg.getSex());
-            if(dataMsg.getSendMsg().getTextMsg()!=null){
-                userMsg.setMsg(dataMsg.getSendMsg().getTextMsg());
+            if(dataMsg.getText()!=null){
+                userMsg.setMsg(dataMsg.getText());
             }
-            if(dataMsg.getSendMsg().getAudioMsg()!=null){
+            if(dataMsg.getAudio()!=null){
                 userMsg.setMsg("语音消息");
             }
-            if(dataMsg.getSendMsg().getImgMsg()!=null){
+            if(dataMsg.getImg()!=null){
                 userMsg.setMsg("图片消息");
             }
-            userMsg.setDate(dataMsg.getSendMsg().getDate());
+            userMsg.setDate(dataMsg.getDate());
 
             listener.sendMessageListener(userMsg);
         }
 
-        Log.e("tag","广播:接收到消息"+ dataMsg.getSend()+":"+dataMsg.getSendMsg().getTextMsg());
+        Log.e("tag","广播:接收到消息"+ dataMsg.getSend()+":"+dataMsg.getText());
 
 
 
