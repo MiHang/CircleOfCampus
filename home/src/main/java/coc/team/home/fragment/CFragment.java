@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import coc.team.home.R;
 
@@ -12,11 +13,20 @@ import coc.team.home.R;
  * Created by 惠普 on 2018-05-11.
  */
 
-public class CFragment extends Fragment {
+public class CFragment  extends Fragment {
+
+    private TextView title;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_c, null);
+        View view = inflater.inflate(R.layout.fragment_c, null);
+        initView(view);
+        title.setText("我的发布");
+        return view;
+    }
+
+    private void initView(View view) {
+        title = (TextView) view.findViewById(R.id.title);
     }
 }

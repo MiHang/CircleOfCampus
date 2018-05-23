@@ -136,6 +136,7 @@ public class BFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), ContactActivity.class);
                 startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
             }
         });
         recycler_view = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);

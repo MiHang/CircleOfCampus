@@ -13,16 +13,16 @@ import coc.team.home.R;
  * Created by 惠普 on 2018-05-11.
  */
 
-public class AFragment extends Fragment {
+public class DFragment extends Fragment {
 
     private TextView title;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_a, null);
+        View view = inflater.inflate(R.layout.fragment_d, null);
         initView(view);
-        title.setText("校园圈");
+        title.setText("我的");
         return view;
     }
 

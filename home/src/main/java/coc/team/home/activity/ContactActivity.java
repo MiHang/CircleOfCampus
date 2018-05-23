@@ -1,5 +1,6 @@
 package coc.team.home.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,6 +29,7 @@ import java.util.Map;
 import coc.team.home.Interface.OnItemClickListener;
 import coc.team.home.LanguageUtils;
 import coc.team.home.R;
+import coc.team.home.fragment.BFragment;
 import coc.team.home.model.Contact;
 import coc.team.home.model.Letter;
 import coc.team.home.common.MyEditText;
@@ -229,7 +231,14 @@ public class ContactActivity extends AppCompatActivity {
         IndexList = (ListView) findViewById(R.id.IndexList);
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(ContactActivity.this, HomeActivity.class);
+        startActivity(intent);
 
+        overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
+        finish();
+    }
 
     /**
      * 菜单点击监听。

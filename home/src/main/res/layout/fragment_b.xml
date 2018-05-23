@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
     <include layout="@layout/header" />
 
     <TextView
@@ -16,7 +15,7 @@
         android:gravity="center"
         android:paddingRight="@dimen/min_padding"
         android:text="好友"
-        android:textColor="#000000"
+        android:textColor="@color/white"
         android:textSize="18dp" />
 
 
@@ -24,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/title_height"
+        android:background="#F7F7F5"
         android:orientation="vertical">
 
         <include
@@ -33,6 +33,7 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     </LinearLayout>
 

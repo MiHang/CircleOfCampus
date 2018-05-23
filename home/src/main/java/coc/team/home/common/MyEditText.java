@@ -24,6 +24,7 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText impl
 
     public MyEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
+
         this.setSelection(getText().length());
         this.setCompoundDrawablesWithIntrinsicBounds(LeftDrawble,0,0,0);
         this.addTextChangedListener(new TextWatcher() {

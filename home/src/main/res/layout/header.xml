@@ -2,6 +2,7 @@
 <LinearLayout android:layout_width="match_parent"
     android:layout_height="@dimen/title_height"
     android:orientation="vertical"
+    android:background="@drawable/bg"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
         <RelativeLayout
@@ -16,6 +17,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:textColor="@color/white"
                 android:textSize="@dimen/title_size"
                 android:gravity="center"
                 android:text="标题" />
@@ -24,7 +26,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/divide_line_height"
-            android:background="@color/overlay"></View>
+            android:background="@color/divide_color"></View>
 
     </LinearLayout>
 
