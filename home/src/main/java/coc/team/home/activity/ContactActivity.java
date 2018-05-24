@@ -25,15 +25,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import coc.team.home.Interface.OnItemClickListener;
 import coc.team.home.LanguageUtils;
+import coc.team.home.MyEditText;
 import coc.team.home.R;
-import coc.team.home.fragment.BFragment;
 import coc.team.home.model.Contact;
 import coc.team.home.model.Letter;
-import coc.team.home.common.MyEditText;
-import coc.team.home.common.MyIndexAdapter;
+import coc.team.home.adapter.MyIndexAdapter;
 import coc.team.home.adapter.GoodFriendItemDecoration;
 import coc.team.home.adapter.GoodFriendAdapter;
 

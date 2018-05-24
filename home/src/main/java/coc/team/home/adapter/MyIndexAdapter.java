@@ -1,4 +1,4 @@
-package coc.team.home.common;
+package coc.team.home.adapter;
 
 import android.content.Context;
 import android.graphics.Color;

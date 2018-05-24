@@ -62,12 +62,7 @@ public class BFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_b, null);
         initView(view);
         title.setText("消息列表");
-//        for(int i=0;i<6;i++){
-//            UserMsg userMsg=new UserMsg();
-//
-//            userMsg.setUserName("mingz");
-//            data.add(userMsg);
-//        }
+
 
 
 

@@ -1,4 +1,4 @@
-package coc.team.home.common;
+package coc.team.home;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -8,10 +8,10 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import coc.team.home.R;
 
 /**
- * Created by 惠普 on 2018-05-08.
+ * 自定义EditText
+ * 添加搜索与删除图片
  */
 
 public class MyEditText extends android.support.v7.widget.AppCompatEditText implements  View.OnTouchListener {
@@ -63,6 +63,7 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText impl
         if (drawable != null && event.getAction() == MotionEvent.ACTION_DOWN) {
             if (getText().length() > 0) {
                 setText(getText().subSequence(0, getText().length() - 1));
+                setSelection(getText().length());
             }
 
         }

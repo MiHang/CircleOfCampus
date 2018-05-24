@@ -8,4 +8,5 @@
     <dimen name="column_width">60dp</dimen>
     <dimen name="column_height">55dp</dimen>
     <dimen name="bottom_text_size">20dp</dimen>
+    <dimen name="user_info_textSize">20dp</dimen>
 </resources>
