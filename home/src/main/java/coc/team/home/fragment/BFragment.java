@@ -44,8 +44,8 @@ import coc.team.home.adapter.MyMessageAdapter;
 
 public class BFragment extends Fragment {
 
-    private TextView title;
-    private TextView user;
+
+
     private SwipeMenuRecyclerView recycler_view;
     MyMessageAdapter adapter;
     List<UserMsg> data=new ArrayList<>();
@@ -56,12 +56,13 @@ public class BFragment extends Fragment {
     public void bind(MyBroadcastReceiver BroadcastReceiver){
         this.BroadcastReceiver=BroadcastReceiver;
     }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_b, null);
         initView(view);
-        title.setText("消息列表");
 
 
 
@@ -124,16 +125,7 @@ public class BFragment extends Fragment {
     }
 
     private void initView(View view) {
-        title = (TextView) view.findViewById(R.id.title);
-        user = (TextView) view.findViewById(R.id.user);
-        user.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), ContactActivity.class);
-                startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
-            }
-        });
+
         recycler_view = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
 
     }

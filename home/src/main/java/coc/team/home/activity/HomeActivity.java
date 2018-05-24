@@ -8,10 +8,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
-
 import coc.team.home.BroadcastReceiver.MyBroadcastReceiver;
 import coc.team.home.R;
 import coc.team.home.adapter.MyFragmentAdapter;
@@ -33,12 +32,22 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private TextView circle;
     private TextView publish;
     private TextView mine;
+    private TextView user;
+    private TextView title;
+    int[] Titles = {
+            R.string.circle,
+            R.string.message,
+            R.string.publish,
+            R.string.mine
+
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         initView();
+        title.setText(Titles[0]);
         MyBroadcastReceiver myBro = new MyBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("coc.team.home.activity");
@@ -49,6 +58,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
         data.add(new AFragment());
         BFragment bFragment = new BFragment();
+
         bFragment.bind(myBro);
         data.add(bFragment);
         data.add(new CFragment());
@@ -59,7 +69,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void initView() {
+       private void initView() {
         HomeViewPager = (ViewPager) findViewById(R.id.HomeViewPager);
         message = (TextView) findViewById(R.id.message);
         message.setOnClickListener(this);
@@ -70,21 +80,36 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         publish.setOnClickListener(this);
         mine = (TextView) findViewById(R.id.mine);
         mine.setOnClickListener(this);
+        user = (TextView) findViewById(R.id.user);
+        user.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, ContactActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
+            }
+        });
+        title = (TextView) findViewById(R.id.title);
+
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.circle:
+                title.setText(Titles[0]);
                 HomeViewPager.setCurrentItem(0, true);
                 break;
             case R.id.message:
+                title.setText(Titles[1]);
                 HomeViewPager.setCurrentItem(1, true);
                 break;
             case R.id.publish:
+                title.setText(Titles[2]);
                 HomeViewPager.setCurrentItem(2, true);
                 break;
             case R.id.mine:
+                title.setText(Titles[3]);
                 HomeViewPager.setCurrentItem(3, true);
                 break;
         }

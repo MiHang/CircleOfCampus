@@ -15,18 +15,14 @@ import coc.team.home.R;
 
 public class CFragment  extends Fragment {
 
-    private TextView title;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_c, null);
-        initView(view);
-        title.setText("我的发布");
+
         return view;
     }
 
-    private void initView(View view) {
-        title = (TextView) view.findViewById(R.id.title);
-    }
+
 }
