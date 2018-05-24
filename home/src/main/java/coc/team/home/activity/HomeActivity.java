@@ -58,7 +58,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
         data.add(new AFragment());
         BFragment bFragment = new BFragment();
-
         bFragment.bind(myBro);
         data.add(bFragment);
         data.add(new CFragment());
