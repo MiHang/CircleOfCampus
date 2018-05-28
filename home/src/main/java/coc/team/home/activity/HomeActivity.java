@@ -23,7 +23,7 @@ import coc.team.home.fragment.DFragment;
 /**
  * 主界面
  */
-public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
+public class HomeActivity extends AppCompatActivity {
 
     MyFragmentAdapter adapter;
     private ViewPager HomeViewPager;
@@ -71,14 +71,38 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
        private void initView() {
         HomeViewPager = (ViewPager) findViewById(R.id.HomeViewPager);
         message = (TextView) findViewById(R.id.message);
-        message.setOnClickListener(this);
+        message.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                title.setText(Titles[1]);
+                HomeViewPager.setCurrentItem(1, true);
+            }
+        });
 
         circle = (TextView) findViewById(R.id.circle);
-        circle.setOnClickListener(this);
+        circle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                title.setText(Titles[0]);
+                HomeViewPager.setCurrentItem(0, true);
+            }
+        });
         publish = (TextView) findViewById(R.id.publish);
-        publish.setOnClickListener(this);
+        publish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                title.setText(Titles[2]);
+                HomeViewPager.setCurrentItem(2, true);
+            }
+        });
         mine = (TextView) findViewById(R.id.mine);
-        mine.setOnClickListener(this);
+        mine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                title.setText(Titles[3]);
+                HomeViewPager.setCurrentItem(3, true);
+            }
+        });
         user = (TextView) findViewById(R.id.user);
         user.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,27 +116,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.circle:
-                title.setText(Titles[0]);
-                HomeViewPager.setCurrentItem(0, true);
-                break;
-            case R.id.message:
-                title.setText(Titles[1]);
-                HomeViewPager.setCurrentItem(1, true);
-                break;
-            case R.id.publish:
-                title.setText(Titles[2]);
-                HomeViewPager.setCurrentItem(2, true);
-                break;
-            case R.id.mine:
-                title.setText(Titles[3]);
-                HomeViewPager.setCurrentItem(3, true);
-                break;
-        }
-    }
 
 
 }

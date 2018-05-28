@@ -19,7 +19,7 @@ import okhttp3.Response;
  */
 
 public class HttpHelper {
-    String path="http://172.17.162.141:8080";
+    String path="http://192.168.1.157:8080";
     Context context;
     public HttpHelper(Context context){
         this.context=context;
@@ -30,7 +30,7 @@ public class HttpHelper {
 
 
     public String getUserInfo(String account) {
-        String url = "http://172.17.162.141:8080/coc/search.do";
+        String url = "http://192.168.1.157:8080/coc/search.do";
         OkHttpClient okHttpClient = new OkHttpClient();
         JSONObject js = new JSONObject();
 
