@@ -19,23 +19,22 @@ import okhttp3.Response;
  */
 
 public class HttpHelper {
-    String path="http://192.168.1.157:8080";
+    String url="http://192.168.1.157:8080/";
     Context context;
     public HttpHelper(Context context){
         this.context=context;
     }
     public String getPath(){
-        return path;
+        return url;
     }
 
 
-    public String getUserInfo(String account) {
-        String url = "http://192.168.1.157:8080/coc/search.do";
+    public String getUserInfoByAccount(String account) {
         OkHttpClient okHttpClient = new OkHttpClient();
         JSONObject js = new JSONObject();
 
         try {
-            js.put("Search", account);
+            js.put("account", account);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -43,7 +42,7 @@ public class HttpHelper {
         MediaType mediaType = MediaType.parse("application/json;charset=utf8");
         RequestBody requestBody = RequestBody.create(mediaType, js.toString());
         Request request = new Request.Builder()
-                .url(url)
+                .url(url+"coc/getUserInfoByAccount.do")
                 .post(requestBody)
                 .build();
         try {
@@ -72,7 +71,7 @@ public class HttpHelper {
             e.printStackTrace();
         }
         RequestBody requestBody=RequestBody.create(mediaType,jsonObject.toString());
-        Request request=new Request.Builder().url(path+"/coc/UserNameAndSexQuery.do").post(requestBody).build();
+        Request request=new Request.Builder().url(url+"/coc/UserNameAndSexQuery.do").post(requestBody).build();
         try {
             Response response=okHttpClient.newCall(request).execute();
             if (response.isSuccessful()){

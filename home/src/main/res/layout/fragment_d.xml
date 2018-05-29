@@ -3,36 +3,62 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
 
-
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/icon_bg_height"
-        android:background="@drawable/bg"
-       >
+        android:layout_height="170dp"
+        android:background="@drawable/bg">
 
-        <ImageView
-            android:id="@+id/icon_bg"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="fitXY"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/icon_bg"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY" />
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white" />
+
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/Icon"
             android:layout_width="80dp"
-            android:layout_gravity="center"
             android:layout_height="80dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:scaleType="fitEnd"
             android:src="@drawable/icon" />
-    </FrameLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
         android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/radius"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="起个名字吧"
+            android:textColor="@color/black"
+            android:textSize="24sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -43,9 +69,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="2"
                 android:gravity="center"
                 android:text="ID："
-                android:layout_weight="2"
                 android:textColor="@color/black"
                 android:textSize="@dimen/user_info_textSize" />
 
@@ -64,6 +90,7 @@
             android:layout_marginBottom="@dimen/min_padding"
             android:layout_marginTop="@dimen/min_padding"
             android:background="@color/divide_color" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -73,39 +100,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="用户名："
                 android:layout_weight="2"
-                android:textColor="@color/black"
-                android:textSize="@dimen/user_info_textSize" />
-
-            <TextView
-                android:id="@+id/userName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="暂无数据"
-                android:textSize="@dimen/user_info_textSize" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/divide_line_height"
-            android:layout_marginBottom="@dimen/min_padding"
-            android:layout_marginTop="@dimen/min_padding"
-            android:background="@color/divide_color" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="性别："
-                android:layout_weight="2"
                 android:textColor="@color/black"
                 android:textSize="@dimen/user_info_textSize" />
 
@@ -134,9 +131,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="2"
                 android:gravity="center"
                 android:text="学校："
-                android:layout_weight="2"
                 android:textColor="@color/black"
                 android:textSize="@dimen/user_info_textSize" />
 
@@ -165,9 +162,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="2"
                 android:gravity="center"
                 android:text="院系："
-                android:layout_weight="2"
                 android:textColor="@color/black"
                 android:textSize="@dimen/user_info_textSize" />
 
@@ -193,7 +190,10 @@
         android:id="@+id/Log_out"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="退出登录" />
-
+        android:layout_margin="@dimen/max_padding"
+        android:background="@drawable/btn_bg"
+        android:text="退出登录"
+        android:textSize="@dimen/user_info_textSize"
+        android:textColor="@color/white" />
 
 </LinearLayout>

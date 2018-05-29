@@ -47,6 +47,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         initView();
+        displayUserButton(0);
         title.setText(Titles[0]);
         MyBroadcastReceiver myBro = new MyBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
@@ -64,10 +65,37 @@ public class HomeActivity extends AppCompatActivity {
         data.add(new DFragment());
         adapter = new MyFragmentAdapter(getSupportFragmentManager(), data);
         HomeViewPager.setAdapter(adapter);
+        HomeViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                displayUserButton(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
 
     }
 
+    /**
+     * 隐藏与显示控件 —标题栏右侧"好友"
+     * @param position
+     */
+    public void displayUserButton(int position){
+    if (position==1){
+        user.setVisibility(View.VISIBLE);
+    }else{
+        user.setVisibility(View.GONE);
+    }
+}
        private void initView() {
         HomeViewPager = (ViewPager) findViewById(R.id.HomeViewPager);
         message = (TextView) findViewById(R.id.message);
@@ -103,6 +131,7 @@ public class HomeActivity extends AppCompatActivity {
                 HomeViewPager.setCurrentItem(3, true);
             }
         });
+
         user = (TextView) findViewById(R.id.user);
         user.setOnClickListener(new View.OnClickListener() {
             @Override
