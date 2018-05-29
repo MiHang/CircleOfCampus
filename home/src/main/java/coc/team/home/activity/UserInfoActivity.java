@@ -16,7 +16,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
     private TextView user;
     private TextView title;
-    private ImageView more;
     private ImageView Icon;
     private TextView account;
     private TextView sex;
@@ -42,7 +41,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     private void initView() {
         user = (TextView) findViewById(R.id.user);
         title = (TextView) findViewById(R.id.title);
-        more = (ImageView) findViewById(R.id.more);
         Icon = (ImageView) findViewById(R.id.Icon);
         account = (TextView) findViewById(R.id.account);
         sex = (TextView) findViewById(R.id.sex);
