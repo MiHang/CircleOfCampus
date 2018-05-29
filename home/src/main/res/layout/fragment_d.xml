@@ -34,11 +34,10 @@
 
         <ImageView
             android:id="@+id/Icon"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="@dimen/icon"
+            android:layout_height="@dimen/icon"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_gravity="center"
             android:scaleType="fitEnd"
             android:src="@drawable/icon" />
     </RelativeLayout>
@@ -190,7 +189,7 @@
         android:id="@+id/Log_out"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/max_padding"
+        android:layout_margin="@dimen/middle_padding"
         android:background="@drawable/btn_bg"
         android:text="退出登录"
         android:textSize="@dimen/user_info_textSize"

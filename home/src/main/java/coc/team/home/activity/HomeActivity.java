@@ -49,6 +49,7 @@ public class HomeActivity extends AppCompatActivity {
         initView();
         displayUserButton(0);
         title.setText(Titles[0]);
+        //开启后台服务
         MyBroadcastReceiver myBro = new MyBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("coc.team.home.activity");
