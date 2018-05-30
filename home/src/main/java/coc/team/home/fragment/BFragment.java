@@ -39,8 +39,7 @@ import coc.team.home.adapter.MyMessageAdapter;
 
 public class BFragment extends Fragment {
 
-
-
+    private View view;
     private SwipeMenuRecyclerView recycler_view;
     MyMessageAdapter adapter;
     List<UserMsg> data=new ArrayList<>();
@@ -52,15 +51,20 @@ public class BFragment extends Fragment {
         this.BroadcastReceiver=BroadcastReceiver;
     }
 
+    @Override
+    public void onDestroyView() {
+        super .onDestroyView();
+        if (null != view) {
+            ((ViewGroup) view.getParent()).removeView(view);
+        }
+    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_msg, null);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        view = getActivity().getLayoutInflater().inflate(R.layout.fragment_msg, null);
         initView(view);
-
-
-
 
         if (BroadcastReceiver!=null){//添加广播回调监听，从而更新消息列表
             BroadcastReceiver.setMessageListener(new MessageListener() {
@@ -116,14 +120,19 @@ public class BFragment extends Fragment {
         adapter = new MyMessageAdapter(getContext(),data);
         adapter.setOnItemClickListener(onItemClickListener);
         recycler_view.setAdapter(adapter);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         return view;
     }
 
     private void initView(View view) {
 
         recycler_view = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
-
     }
+
     private OnItemClickListener onItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {

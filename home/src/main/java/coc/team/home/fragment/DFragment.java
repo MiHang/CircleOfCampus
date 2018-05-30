@@ -24,7 +24,7 @@ import coc.team.home.view.CircularImageView;
 
 public class DFragment extends Fragment{
 
-
+    private View view;
     private CircularImageView Icon;
     private Button Log_out;
     int icon = R.drawable.icon;
@@ -37,12 +37,20 @@ public class DFragment extends Fragment{
     private TextView UerName;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_mine, null);
+    public void onDestroyView() {
+        super .onDestroyView();
+        if (null != view) {
+            ((ViewGroup) view.getParent()).removeView(view);
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        view = getActivity().getLayoutInflater().inflate(R.layout.fragment_mine, null);
         initView(view);
         DisplayMetrics dm = getResources().getDisplayMetrics();
-
 
         helper = new HttpHelper(getContext());
         Log_out.setOnClickListener(new View.OnClickListener() {
@@ -90,6 +98,11 @@ public class DFragment extends Fragment{
                 });
             }
         }).start();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         return view;
     }
 

@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 import coc.team.home.R;
 import coc.team.home.adapter.MyPublishRecyclerAdapter;
-import coc.team.home.model.SocietyCircle;
 
 /**
  * 我的发布页面, 已审核的fragment

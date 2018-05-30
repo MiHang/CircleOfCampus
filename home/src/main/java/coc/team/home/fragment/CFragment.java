@@ -7,6 +7,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +21,11 @@ import coc.team.home.adapter.MyPublishFragmentAdapter;
 import coc.team.home.util.DensityUtil;
 
 /**
- * 我发布的页面
+ * 我发布的页面, 此fragment的写法是Fragment防止自动清理 (ViewPager滑动时，滑出屏幕后被清理)
  */
 public class CFragment  extends Fragment {
 
+    private View view;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private MyPublishFragmentAdapter myPublishFragmentAdapter;
@@ -31,10 +33,18 @@ public class CFragment  extends Fragment {
     private ArrayList<Fragment> fragments = new ArrayList<Fragment>();
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_publish, null);
+    public void onDestroyView() {
+        super .onDestroyView();
+        if (null != view) {
+            ((ViewGroup) view.getParent()).removeView(view);
+        }
+    }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        view = getActivity().getLayoutInflater().inflate(R.layout.fragment_publish, null);
         initView(view);
 
         // 添加导航栏列表数据
@@ -44,7 +54,7 @@ public class CFragment  extends Fragment {
         // 设置viewpager适配器
         fragments.add(new AuditedFragment());
         fragments.add(new UnauditedFragment());
-        myPublishFragmentAdapter = new MyPublishFragmentAdapter(getFragmentManager(), fragments);
+        myPublishFragmentAdapter = new MyPublishFragmentAdapter(getChildFragmentManager(), fragments);
         viewPager.setAdapter(myPublishFragmentAdapter);
 
         // 设置TabLayout和ViewPager的联动，该方法必须在设置tab标题之前，否则Tab标题会被清除
@@ -63,7 +73,11 @@ public class CFragment  extends Fragment {
         linearLayout.setDividerDrawable(ContextCompat.getDrawable(getContext(),
                 R.drawable.shape_tab_layout_divider));
         linearLayout.setDividerPadding(DensityUtil.dpToPx(getContext(), 10f));
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         return view;
     }
 
