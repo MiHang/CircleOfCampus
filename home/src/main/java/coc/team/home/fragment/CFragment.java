@@ -3,7 +3,6 @@ package coc.team.home.fragment;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -34,7 +33,7 @@ public class CFragment  extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_c, null);
+        View view = inflater.inflate(R.layout.fragment_publish, null);
 
         initView(view);
 
