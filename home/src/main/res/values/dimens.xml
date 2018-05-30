@@ -13,4 +13,5 @@
     <dimen name="user_info_textSize">20dp</dimen>
     <dimen name="icon_bg_height">200dp</dimen>
     <dimen name="icon">80dp</dimen>
+    <dimen name="tab_text_size">16dp</dimen>
 </resources>
