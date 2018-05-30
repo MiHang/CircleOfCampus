@@ -59,7 +59,16 @@ public class GoodFriendAdapter extends SwipeMenuAdapter<GoodFriendAdapter.ViewHo
     //将数据与界面进行绑定的操作
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-
+        holder.UserName.setText(data.get(position).getUserName());
+        holder.Column.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (itemListener!=null){
+                    itemListener.onItemClick((int) view.getTag());
+                }
+            }
+        });
+        holder.Column.setTag(position);
             //加载头像 查询服务器是否有头像图片，若无则按性别加载
             Glide.with(context)
                     .load(http.getPath()+"/res/img/"+data.get(position).getAccount())
@@ -78,16 +87,7 @@ public class GoodFriendAdapter extends SwipeMenuAdapter<GoodFriendAdapter.ViewHo
                         @Override
                         public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
 
-                            holder.UserName.setText(data.get(position).getUserName());
-                            holder.Column.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    if (itemListener!=null){
-                                        itemListener.onItemClick((int) view.getTag());
-                                    }
-                                }
-                            });
-                            holder.Column.setTag(position);
+
                             return false;
                         }
                     })

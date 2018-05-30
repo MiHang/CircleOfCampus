@@ -28,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 import coc.team.home.Interface.OnItemClickListener;
 import coc.team.home.R;
 import coc.team.home.adapter.GoodFriendAdapter;
+import coc.team.home.http.HttpHelper;
 import coc.team.home.model.Contact;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -48,12 +49,14 @@ public class AddFriendsFragment extends Fragment {
     private TextView result;
     GoodFriendAdapter mMenuAdapter;
     List<Contact> data=new ArrayList<>();
+    HttpHelper helper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_friends, null);
         initView(view);
+        helper=new HttpHelper(getContext());
         recycler_view.setLayoutManager(new LinearLayoutManager(getContext()));// 布局管理器。
         recycler_view.setHasFixedSize(true);// 如果Item够简单，高度是确定的，打开FixSize将提高性能。
         recycler_view.setItemAnimator(new DefaultItemAnimator());// 设置Item默认动画，加也行，不加也行。
@@ -96,13 +99,12 @@ public class AddFriendsFragment extends Fragment {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            final String s = getData(search.getText().toString());
+                            final String s = helper.getUserInfoBySearch(search.getText().toString());
                             result.post(new Runnable() {
                                 @Override
                                 public void run() {
-
+Toast.makeText(getContext(), search.getText()+""+s, Toast.LENGTH_SHORT).show();
                                     try {
-                                        if (!s.equals("")) {
                                             JSONObject js = new JSONObject(s);
                                             result.setText("搜索到" + js.getString("Result") + "条数据\n");
                                             JSONArray json = new JSONArray(js.getString("Info"));
@@ -114,8 +116,6 @@ public class AddFriendsFragment extends Fragment {
                                                 contact.setSex(jsonObject.getString("Sex"));
                                                 data.add(contact);
 
-
-
                                             }
                                             //延时2毫秒刷新
                                             new Handler().postDelayed(new Runnable() {
@@ -125,9 +125,7 @@ public class AddFriendsFragment extends Fragment {
                                                     mMenuAdapter.notifyDataSetChanged();
                                                 }
                                             }, 200);
-                                        } else {
-                                            result.setText("连接服务器失败\n");
-                                        }
+
 
 
                                     } catch (JSONException e) {
@@ -154,7 +152,7 @@ public class AddFriendsFragment extends Fragment {
     }
 
     public String getData(String account) {
-        String url = "http://192.168.1.157:8080/coc/search.do";
+        String url = "http://192.168.1.157:8080/coc/getUserInfoBy.do";
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .readTimeout(5, TimeUnit.SECONDS)//设置读取超时时间
                 .writeTimeout(5, TimeUnit.SECONDS)//设置写的超时时间
