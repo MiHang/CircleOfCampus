@@ -176,7 +176,7 @@ public class BFragment extends Fragment {
 
 
             SwipeMenuItem closeItem = new SwipeMenuItem(getContext())
-                    .setBackgroundDrawable(R.drawable.selector_purple)
+                    .setBackgroundDrawable(R.drawable.zd_selector)
                     .setText("置顶") // 文字，还可以设置文字颜色，大小等。。
                     .setTextColor(Color.WHITE)
                     .setWidth(width)
@@ -184,7 +184,7 @@ public class BFragment extends Fragment {
             swipeRightMenu.addMenuItem(closeItem); // 添加一个按钮到右侧菜单。
 
             SwipeMenuItem deleteItem = new SwipeMenuItem(getContext())
-                    .setBackgroundDrawable(R.drawable.selector_red)
+                    .setBackgroundDrawable(R.drawable.delete_selector)
                     .setImage(R.mipmap.ic_action_delete)
                     .setText("删除") // 文字，还可以设置文字颜色，大小等。。
                     .setTextColor(Color.WHITE)

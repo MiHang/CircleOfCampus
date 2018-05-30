@@ -7,6 +7,7 @@
     <dimen name="middle_padding">20dp</dimen>
     <dimen name="max_padding">30dp</dimen>
     <dimen name="title_size">20dp</dimen>
+    <dimen name="middle_side">17dp</dimen>
     <dimen name="column_width">60dp</dimen>
     <dimen name="column_height">70dp</dimen>
     <dimen name="contact_column_width">75dp</dimen>

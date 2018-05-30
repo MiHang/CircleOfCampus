@@ -63,7 +63,7 @@ public class ContactFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_e, null);
+        View view = inflater.inflate(R.layout.fragment_contact, null);
 
         initView(view);
 
@@ -87,23 +87,10 @@ public class ContactFragment extends Fragment {
         contact4.setUserName("林成功");
         contact4.setAccount("111");
         list.add(contact4);
-        Contact contact5 = new Contact();
-        contact5.setUserName("流");
-        contact5.setAccount("1211");
-        list.add(contact5);
-        Contact contact6 = new Contact();
-        contact6.setUserName("宁");
-        contact6.setAccount("111111");
-        list.add(contact6);
-
-        Contact contact7 = new Contact();
-        contact7.setUserName("成员");
-        contact7.setAccount("123");
-        list.add(contact7);
 
         Contact contact8 = new Contact();
         contact8.setUserName("比员");
-        contact8.setAccount("123");
+        contact8.setAccount("87654321@qq.com");
         list.add(contact8);
 
         Contact contact11 = new Contact();
@@ -112,25 +99,25 @@ public class ContactFragment extends Fragment {
         list.add(contact11);
         Contact contact12 = new Contact();
         contact12.setUserName("额员");
-        contact12.setAccount("123");
+        contact12.setAccount("87654321@qq.com");
         list.add(contact12);
 
         Contact contact22 = new Contact();
         contact22.setUserName("飞员");
-        contact22.setAccount("123");
+        contact22.setAccount("87654321@qq.com");
         list.add(contact22);
         Contact contact32 = new Contact();
         contact32.setUserName("个员");
-        contact32.setAccount("123");
+        contact32.setAccount("87654321@qq.com");
         list.add(contact32);
         Contact contact42 = new Contact();
         contact42.setUserName("b员");
-        contact42.setAccount("123");
+        contact42.setAccount("87654321@qq.com");
         list.add(contact42);
 
         Contact contact9 = new Contact();
         contact9.setUserName("次员");
-        contact1.setAccount("123");
+        contact1.setAccount("87654321@qq.com");
         list.add(contact9);
 
 
@@ -184,7 +171,7 @@ public class ContactFragment extends Fragment {
             @Override
             public void onItemClick(int position) {
                 if (itemClickListener!=null){
-                    itemClickListener.onItemClick(1);
+                    itemClickListener.onItemClick(2);
                 }
                 Toast.makeText(getContext(), "" + data.get(position).getAccount(), Toast.LENGTH_SHORT).show();
             }
@@ -288,7 +275,7 @@ public class ContactFragment extends Fragment {
 
 
             SwipeMenuItem closeItem = new SwipeMenuItem(getContext())
-                    .setBackgroundDrawable(R.drawable.selector_purple)
+                    .setBackgroundDrawable(R.drawable.zd_selector)
                     .setText("备注") // 文字，还可以设置文字颜色，大小等。。
                     .setTextColor(Color.WHITE)
                     .setWidth(width)
