@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import coc.team.home.R;
 import coc.team.home.http.HttpHelper;
+import coc.team.home.view.CircularImageView;
 
 /**
  * Created by 惠普 on 2018-05-11.
@@ -24,7 +25,7 @@ import coc.team.home.http.HttpHelper;
 public class DFragment extends Fragment{
 
 
-    private ImageView Icon;
+    private CircularImageView Icon;
     private Button Log_out;
     int icon = R.drawable.icon;
     private ImageView icon_bg;
@@ -94,7 +95,7 @@ public class DFragment extends Fragment{
 
     private void initView(View view) {
 
-        Icon = (ImageView) view.findViewById(R.id.Icon);
+        Icon = (CircularImageView) view.findViewById(R.id.Icon);
         Log_out = (Button) view.findViewById(R.id.Log_out);
         icon_bg = (ImageView) view.findViewById(R.id.icon_bg);
         account = (TextView) view.findViewById(R.id.account);

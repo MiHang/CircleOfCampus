@@ -65,14 +65,7 @@
                 android:paddingRight="@dimen/min_padding"
                 android:scaleType="center"
                 android:gravity="center"/>
-
         </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/divide_line_height"
-            android:background="@color/divide_color"></View>
-
     </LinearLayout>
 
 

@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -23,22 +20,19 @@
                 android:layout_height="140dp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitXY" />
-
             <View
                 android:id="@+id/view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white" />
-
         </LinearLayout>
 
-        <ImageView
+        <coc.team.home.view.CircularImageView
             android:id="@+id/Icon"
             android:layout_width="@dimen/icon"
             android:layout_height="@dimen/icon"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:scaleType="fitEnd"
             android:src="@drawable/icon" />
     </RelativeLayout>
 
