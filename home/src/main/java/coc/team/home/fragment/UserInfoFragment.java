@@ -1,8 +1,9 @@
 package coc.team.home.fragment;
 
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,39 +22,45 @@ import coc.team.home.http.HttpHelper;
  * Created by 惠普 on 2018-05-11.
  */
 
-public class DFragment extends Fragment{
+public class UserInfoFragment extends Fragment implements View.OnClickListener {
 
 
-    private ImageView Icon;
-    private Button Log_out;
-    int icon = R.drawable.icon;
-    private ImageView icon_bg;
     HttpHelper helper;
+    private ImageView Icon;
+    private TextView NickName;
+    private TextView UserName;
     private TextView account;
     private TextView sex;
     private TextView college;
     private TextView department;
-    private TextView UerName;
+    private Button send_btn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_mine, null);
+        View view = inflater.inflate(R.layout.fragment_f, null);
         initView(view);
-        DisplayMetrics dm = getResources().getDisplayMetrics();
 
+        Intent intent = getActivity().getIntent();
+        String nick = intent.getStringExtra("NickName");
+        if (nick != null) {
+            NickName.setText(nick);
+        } else {
+            NickName.setText("暂无备注");
+        }
+        GetServerData();
 
+        return view;
+    }
+
+    /**
+     * 查询服务器数据
+     */
+    public void GetServerData() {
         helper = new HttpHelper(getContext());
-        Log_out.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getContext(), "退出", Toast.LENGTH_SHORT).show();
-            }
-        });
-        new Thread(new Runnable() {
+        AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-
                 final String s = helper.getUserInfoByAccount("87654321@qq.com");
                 account.post(new Runnable() {
                     @Override
@@ -62,21 +69,21 @@ public class DFragment extends Fragment{
                         try {
                             JSONObject jsonObject = new JSONObject(s);
 
-                            if (jsonObject.getString("result").equals("success")){
+                            if (jsonObject.getString("result").equals("success")) {
                                 account.setText(jsonObject.getString("email"));
-                                UerName.setText(jsonObject.getString("userName"));
+                                UserName.setText("昵称:" + jsonObject.getString("userName"));
                                 department.setText(jsonObject.getString("facultyName"));
                                 college.setText(jsonObject.getString("campusName"));
 
-                                if (jsonObject.has("gender")){
-                                    if (jsonObject.getString("gender").equals("male")){
+                                if (jsonObject.has("gender")) {
+                                    if (jsonObject.getString("gender").equals("male")) {
                                         sex.setText("男");
-                                    }else{
+                                    } else {
                                         sex.setText("女");
                                     }
                                 }
-                            }else{
-                                Toast.makeText(getContext(),"查询失败",Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(getContext(), "查询失败", Toast.LENGTH_LONG).show();
                             }
 
                         } catch (JSONException e) {
@@ -88,22 +95,35 @@ public class DFragment extends Fragment{
 
                 });
             }
-        }).start();
-        return view;
+        });
     }
+
 
     private void initView(View view) {
-
         Icon = (ImageView) view.findViewById(R.id.Icon);
-        Log_out = (Button) view.findViewById(R.id.Log_out);
-        icon_bg = (ImageView) view.findViewById(R.id.icon_bg);
+        Icon.setOnClickListener(this);
+        NickName = (TextView) view.findViewById(R.id.NickName);
+        NickName.setOnClickListener(this);
+        UserName = (TextView) view.findViewById(R.id.UserName);
+        UserName.setOnClickListener(this);
         account = (TextView) view.findViewById(R.id.account);
+        account.setOnClickListener(this);
         sex = (TextView) view.findViewById(R.id.sex);
+        sex.setOnClickListener(this);
         college = (TextView) view.findViewById(R.id.college);
+        college.setOnClickListener(this);
         department = (TextView) view.findViewById(R.id.department);
-        UerName = (TextView) view.findViewById(R.id.userName);
-
+        department.setOnClickListener(this);
+        send_btn = (Button) view.findViewById(R.id.send_btn);
+        send_btn.setOnClickListener(this);
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.send_btn:
 
+                break;
+        }
+    }
 }

@@ -1,7 +1,5 @@
 package coc.team.home.fragment;
 
-import android.content.BroadcastReceiver;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,10 +9,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.common.utils.LanguageUtils;
 import com.common.utils.TimeUtil;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
 import com.yanzhenjie.recyclerview.swipe.OnSwipeMenuItemClickListener;
@@ -32,7 +28,6 @@ import java.util.List;
 
 import coc.team.home.BroadcastReceiver.MyBroadcastReceiver;
 import coc.team.home.Interface.MessageListener;
-import coc.team.home.activity.ContactActivity;
 import coc.team.home.Interface.OnItemClickListener;
 import coc.team.home.R;
 import coc.team.home.model.UserMsg;
@@ -61,7 +56,7 @@ public class BFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_b, null);
+        View view = inflater.inflate(R.layout.fragment_msg, null);
         initView(view);
 
 
