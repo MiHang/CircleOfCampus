@@ -113,7 +113,7 @@ public class HomeActivity extends AppCompatActivity {
                 headerRightText.setText("");
                 headerRightImage.setVisibility(View.GONE);
                 setHomeBottomNavNormal();
-                publish.setImageResource(R.drawable.icon_home_my_publish_normal);
+                publish.setImageResource(R.drawable.icon_home_my_publish_hover);
             };break;
             case 3: {
                 title.setText("我的");
