@@ -16,7 +16,7 @@ import org.json.JSONObject;
 import coc.team.home.R;
 import coc.team.home.http.HttpHelper;
 
-public class AddRequestActivity extends AppCompatActivity implements View.OnClickListener {
+public class AddRequestActivity extends AppCompatActivity  {
 
     private TextView header_left_text;
     private ImageView header_left_image;
@@ -151,15 +151,8 @@ public class AddRequestActivity extends AppCompatActivity implements View.OnClic
         department = (TextView) findViewById(R.id.department);
         send_btn = (Button) findViewById(R.id.send_btn);
 
-        send_btn.setOnClickListener(this);
+
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.send_btn:
 
-                break;
-        }
-    }
 }

@@ -22,7 +22,7 @@ import coc.team.home.http.HttpHelper;
  * Created by 惠普 on 2018-05-11.
  */
 
-public class UserInfoFragment extends Fragment implements View.OnClickListener {
+public class UserInfoFragment extends Fragment {
 
 
     HttpHelper helper;
@@ -101,29 +101,15 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener {
 
     private void initView(View view) {
         Icon = (ImageView) view.findViewById(R.id.Icon);
-        Icon.setOnClickListener(this);
+
         NickName = (TextView) view.findViewById(R.id.NickName);
-        NickName.setOnClickListener(this);
         UserName = (TextView) view.findViewById(R.id.UserName);
-        UserName.setOnClickListener(this);
         account = (TextView) view.findViewById(R.id.account);
-        account.setOnClickListener(this);
         sex = (TextView) view.findViewById(R.id.sex);
-        sex.setOnClickListener(this);
         college = (TextView) view.findViewById(R.id.college);
-        college.setOnClickListener(this);
         department = (TextView) view.findViewById(R.id.department);
-        department.setOnClickListener(this);
         send_btn = (Button) view.findViewById(R.id.send_btn);
-        send_btn.setOnClickListener(this);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.send_btn:
 
-                break;
-        }
-    }
 }

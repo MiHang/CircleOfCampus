@@ -25,7 +25,6 @@
         <activity android:name=".activity.DemoActivity"></activity>
 
 
-
         <service android:name=".background.MyService" />
 
         <activity
