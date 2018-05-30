@@ -1,10 +1,12 @@
-package coc.team.home.activity;
+package coc.team.home.fragment;
 
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,17 +19,13 @@ import coc.team.home.R;
 import coc.team.home.http.HttpHelper;
 
 /**
- * 好友列表界面
+ * Created by 惠普 on 2018-05-11.
  */
-public class UserInfoActivity extends AppCompatActivity {
+
+public class UserInfoFragment extends Fragment implements View.OnClickListener {
 
 
     HttpHelper helper;
-    private TextView header_left_text;
-    private ImageView header_left_image;
-    private TextView header_title;
-    private TextView header_right_text;
-    private ImageView header_right_image;
     private ImageView Icon;
     private TextView NickName;
     private TextView UserName;
@@ -38,22 +36,12 @@ public class UserInfoActivity extends AppCompatActivity {
     private Button send_btn;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_info);
-        initView();
-        header_title.setText("好友资料");
-        header_left_image.setVisibility(View.VISIBLE);
-        header_left_image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(UserInfoActivity.this, ContactActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
-                finish();
-            }
-        });
-        Intent intent = getIntent();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_f, null);
+        initView(view);
+
+        Intent intent = getActivity().getIntent();
         String nick = intent.getStringExtra("NickName");
         if (nick != null) {
             NickName.setText(nick);
@@ -62,13 +50,14 @@ public class UserInfoActivity extends AppCompatActivity {
         }
         GetServerData();
 
+        return view;
     }
 
     /**
      * 查询服务器数据
      */
     public void GetServerData() {
-        helper = new HttpHelper(this);
+        helper = new HttpHelper(getContext());
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -94,7 +83,7 @@ public class UserInfoActivity extends AppCompatActivity {
                                     }
                                 }
                             } else {
-                                Toast.makeText(getApplicationContext(), "查询失败", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), "查询失败", Toast.LENGTH_LONG).show();
                             }
 
                         } catch (JSONException e) {
@@ -110,22 +99,31 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
 
+    private void initView(View view) {
+        Icon = (ImageView) view.findViewById(R.id.Icon);
+        Icon.setOnClickListener(this);
+        NickName = (TextView) view.findViewById(R.id.NickName);
+        NickName.setOnClickListener(this);
+        UserName = (TextView) view.findViewById(R.id.UserName);
+        UserName.setOnClickListener(this);
+        account = (TextView) view.findViewById(R.id.account);
+        account.setOnClickListener(this);
+        sex = (TextView) view.findViewById(R.id.sex);
+        sex.setOnClickListener(this);
+        college = (TextView) view.findViewById(R.id.college);
+        college.setOnClickListener(this);
+        department = (TextView) view.findViewById(R.id.department);
+        department.setOnClickListener(this);
+        send_btn = (Button) view.findViewById(R.id.send_btn);
+        send_btn.setOnClickListener(this);
+    }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.send_btn:
 
-    private void initView() {
-        header_left_text = (TextView) findViewById(R.id.header_left_text);
-        header_left_image = (ImageView) findViewById(R.id.header_left_image);
-        header_title = (TextView) findViewById(R.id.header_title);
-        header_right_text = (TextView) findViewById(R.id.header_right_text);
-        header_right_image = (ImageView) findViewById(R.id.header_right_image);
-        Icon = (ImageView) findViewById(R.id.Icon);
-        NickName = (TextView) findViewById(R.id.NickName);
-        UserName = (TextView) findViewById(R.id.UserName);
-        account = (TextView) findViewById(R.id.account);
-        sex = (TextView) findViewById(R.id.sex);
-        college = (TextView) findViewById(R.id.college);
-        department = (TextView) findViewById(R.id.department);
-        send_btn = (Button) findViewById(R.id.send_btn);
-
+                break;
+        }
     }
 }

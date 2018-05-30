@@ -9,10 +9,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.List;
 import coc.team.home.BroadcastReceiver.MyBroadcastReceiver;
+import coc.team.home.NoScrollViewPager;
 import coc.team.home.R;
 import coc.team.home.adapter.MyFragmentAdapter;
 import coc.team.home.background.MyService;
@@ -27,7 +28,7 @@ import coc.team.home.fragment.DFragment;
 public class HomeActivity extends AppCompatActivity {
 
     MyFragmentAdapter adapter;
-    private ViewPager HomeViewPager;
+    private NoScrollViewPager HomeViewPager;
     List<Fragment> data = new ArrayList<>();
     private TextView message;
     private TextView circle;
@@ -123,7 +124,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void initView() {
 
-        HomeViewPager = (ViewPager) findViewById(R.id.HomeViewPager);
+        HomeViewPager = (NoScrollViewPager) findViewById(R.id.HomeViewPager);
         message = (TextView) findViewById(R.id.message);
         message.setOnClickListener(new View.OnClickListener() {
             @Override
