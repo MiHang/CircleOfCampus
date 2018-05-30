@@ -18,11 +18,10 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:orientation="vertical">
-
 
         <View
             android:layout_width="match_parent"
@@ -34,44 +33,40 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@android:color/background_light"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="8dp">
 
-            <TextView
+            <ImageView
                 android:id="@+id/circle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:text="校园圈"
-                android:textSize="@dimen/bottom_text_size" />
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_home_campus_normal" />
 
-            <TextView
+            <ImageView
                 android:id="@+id/message"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:text="消息"
-                android:textSize="@dimen/bottom_text_size" />
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_home_msg_normal" />
 
-            <TextView
-
+            <ImageView
                 android:id="@+id/publish"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:text="我的发布"
-                android:textSize="@dimen/bottom_text_size" />
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_home_my_publish_normal"/>
 
-            <TextView
+            <ImageView
                 android:id="@+id/mine"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:text="我的"
-                android:textSize="@dimen/bottom_text_size" />
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_home_my_normal" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

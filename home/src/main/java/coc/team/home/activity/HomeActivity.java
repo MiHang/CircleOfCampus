@@ -30,21 +30,15 @@ public class HomeActivity extends AppCompatActivity {
     MyFragmentAdapter adapter;
     private NoScrollViewPager HomeViewPager;
     List<Fragment> data = new ArrayList<>();
-    private TextView message;
-    private TextView circle;
-    private TextView publish;
-    private TextView mine;
+    private ImageView message;
+    private ImageView circle;
+    private ImageView publish;
+    private ImageView mine;
     private TextView headerRightText;
     private ImageView headerRightImage;
     private TextView headerLeftText;
     private ImageView headerLeftImage;
     private TextView title;
-    int[] Titles = {
-            R.string.circle,
-            R.string.message,
-            R.string.publish,
-            R.string.mine
-    };
 
     private int selectedPageId = 0;
 
@@ -54,7 +48,6 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         initView();
         headerSelect(0);
-        title.setText(Titles[0]);
 
         //开启后台服务
         MyBroadcastReceiver myBro = new MyBroadcastReceiver();
@@ -100,61 +93,83 @@ public class HomeActivity extends AppCompatActivity {
                 headerRightText.setText("");
                 headerRightImage.setImageResource(R.drawable.search);
                 headerRightImage.setVisibility(View.VISIBLE);
+                setHomeBottomNavNormal();
+                circle.setImageResource(R.drawable.icon_home_campus_hover);
             };break;
             case 1: {
                 headerLeftText.setText("");
                 headerLeftImage.setVisibility(View.GONE);
                 headerRightText.setText("好友");
                 headerRightImage.setVisibility(View.GONE);
+                setHomeBottomNavNormal();
+                message.setImageResource(R.drawable.icon_home_msg_hover);
             };break;
             case 2: {
                 headerLeftText.setText("");
                 headerLeftImage.setVisibility(View.GONE);
                 headerRightText.setText("");
                 headerRightImage.setVisibility(View.GONE);
+                setHomeBottomNavNormal();
+                publish.setImageResource(R.drawable.icon_home_my_publish_normal);
             };break;
             case 3: {
                 headerLeftText.setText("");
                 headerLeftImage.setVisibility(View.GONE);
                 headerRightText.setText("编辑");
                 headerRightImage.setVisibility(View.GONE);
+                setHomeBottomNavNormal();
+                mine.setImageResource(R.drawable.icon_home_my_hover);
             };break;
         }
+    }
+
+    /**
+     * 设置所有的底部导航栏的选中状态为normal
+     */
+    private void setHomeBottomNavNormal() {
+        message.setImageResource(R.drawable.icon_home_msg_normal);
+        circle.setImageResource(R.drawable.icon_home_campus_normal);
+        publish.setImageResource(R.drawable.icon_home_my_publish_normal);
+        mine.setImageResource(R.drawable.icon_home_my_normal);
     }
 
     private void initView() {
 
         HomeViewPager = (NoScrollViewPager) findViewById(R.id.HomeViewPager);
-        message = (TextView) findViewById(R.id.message);
+        message = (ImageView) findViewById(R.id.message);
         message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                title.setText(Titles[1]);
+                setHomeBottomNavNormal();
+                message.setImageResource(R.drawable.icon_home_msg_hover);
                 HomeViewPager.setCurrentItem(1, true);
             }
         });
 
-        circle = (TextView) findViewById(R.id.circle);
+        circle = (ImageView) findViewById(R.id.circle);
         circle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                title.setText(Titles[0]);
+                setHomeBottomNavNormal();
+                circle.setImageResource(R.drawable.icon_home_campus_hover);
                 HomeViewPager.setCurrentItem(0, true);
             }
         });
-        publish = (TextView) findViewById(R.id.publish);
+        publish = (ImageView) findViewById(R.id.publish);
         publish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                title.setText(Titles[2]);
+                setHomeBottomNavNormal();
+                publish.setImageResource(R.drawable.icon_home_my_publish_normal);
                 HomeViewPager.setCurrentItem(2, true);
             }
         });
-        mine = (TextView) findViewById(R.id.mine);
+        mine = (ImageView) findViewById(R.id.mine);
         mine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                title.setText(Titles[3]);
+                setHomeBottomNavNormal();
+                mine.setImageResource(R.drawable.icon_home_my_hover);
                 HomeViewPager.setCurrentItem(3, true);
             }
         });
