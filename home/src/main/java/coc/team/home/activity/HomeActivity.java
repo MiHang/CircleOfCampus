@@ -88,6 +88,7 @@ public class HomeActivity extends AppCompatActivity {
     public void headerSelect(int position){
         switch (position) {
             case 0: {
+                title.setText("校园圈");
                 headerLeftText.setText("发表");
                 headerLeftImage.setVisibility(View.GONE);
                 headerRightText.setText("");
@@ -97,6 +98,7 @@ public class HomeActivity extends AppCompatActivity {
                 circle.setImageResource(R.drawable.icon_home_campus_hover);
             };break;
             case 1: {
+                title.setText("消息");
                 headerLeftText.setText("");
                 headerLeftImage.setVisibility(View.GONE);
                 headerRightText.setText("好友");
@@ -105,6 +107,7 @@ public class HomeActivity extends AppCompatActivity {
                 message.setImageResource(R.drawable.icon_home_msg_hover);
             };break;
             case 2: {
+                title.setText("我的发布");
                 headerLeftText.setText("");
                 headerLeftImage.setVisibility(View.GONE);
                 headerRightText.setText("");
@@ -113,6 +116,7 @@ public class HomeActivity extends AppCompatActivity {
                 publish.setImageResource(R.drawable.icon_home_my_publish_normal);
             };break;
             case 3: {
+                title.setText("我的");
                 headerLeftText.setText("");
                 headerLeftImage.setVisibility(View.GONE);
                 headerRightText.setText("编辑");

@@ -13,11 +13,25 @@ import coc.team.home.R;
  */
 public class UnauditedFragment extends Fragment {
 
+    private View view;
+
+    @Override
+    public void onDestroyView() {
+        super .onDestroyView();
+        if (null != view) {
+            ((ViewGroup) view.getParent()).removeView(view);
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        view = getActivity().getLayoutInflater().inflate(R.layout.fragment_unaudited, null);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_unaudited, null);
-
         return view;
     }
 }
