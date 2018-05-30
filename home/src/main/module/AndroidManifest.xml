@@ -21,14 +21,20 @@
             </intent-filter>
         </activity>
 
+
         <activity android:name=".activity.DemoActivity"></activity>
+
+
 
         <service android:name=".background.MyService" />
 
-        <activity android:name=".activity.ContactActivity"
+        <activity
+            android:name=".activity.ContactActivity"
             android:windowSoftInputMode="adjustPan|stateHidden">
         </activity>
+        <activity android:name=".activity.AddRequestActivity">
 
+        </activity>
     </application>
 
 </manifest>

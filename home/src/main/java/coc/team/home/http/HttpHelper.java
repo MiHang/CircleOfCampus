@@ -28,7 +28,11 @@ public class HttpHelper {
         return url;
     }
 
-
+    /**
+     * 通过账号获取用户信息
+     * @param account
+     * @return
+     */
     public String getUserInfoByAccount(String account) {
         OkHttpClient okHttpClient = new OkHttpClient();
         JSONObject js = new JSONObject();
@@ -56,6 +60,40 @@ public class HttpHelper {
 
         return "";
     }
+
+    /**
+     * 通过账号获取用户信息
+     * @param account
+     * @return
+     */
+    public String getUserInfoBySearch(String account) {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        JSONObject js = new JSONObject();
+
+        try {
+            js.put("Search", account);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        MediaType mediaType = MediaType.parse("application/json;charset=utf8");
+        RequestBody requestBody = RequestBody.create(mediaType, js.toString());
+        Request request = new Request.Builder()
+                .url(url+"coc/getUserInfoBy.do")
+                .post(requestBody)
+                .build();
+        try {
+            Response response = okHttpClient.newCall(request).execute();
+            if (response.isSuccessful()) {
+                return response.body().string();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
     /**
      * 获取用户名与性别
      * @param Account

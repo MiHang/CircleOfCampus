@@ -1,5 +1,6 @@
 package coc.team.home.fragment;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
@@ -34,7 +35,7 @@ public class DFragment extends Fragment{
     private TextView sex;
     private TextView college;
     private TextView department;
-    private TextView UerName;
+    private TextView UserName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,11 +52,10 @@ public class DFragment extends Fragment{
                 Toast.makeText(getContext(), "退出", Toast.LENGTH_SHORT).show();
             }
         });
-        new Thread(new Runnable() {
+        AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-
-                final String s = helper.getUserInfoByAccount("87654321@qq.com");
+                final String s = helper.getUserInfoByAccount("jaye@163.com");
                 account.post(new Runnable() {
                     @Override
                     public void run() {
@@ -65,7 +65,7 @@ public class DFragment extends Fragment{
 
                             if (jsonObject.getString("result").equals("success")){
                                 account.setText(jsonObject.getString("email"));
-                                UerName.setText(jsonObject.getString("userName"));
+                                UserName.setText(jsonObject.getString("userName"));
                                 department.setText(jsonObject.getString("facultyName"));
                                 college.setText(jsonObject.getString("campusName"));
 
@@ -89,7 +89,8 @@ public class DFragment extends Fragment{
 
                 });
             }
-        }).start();
+        });
+
         return view;
     }
 
@@ -102,7 +103,7 @@ public class DFragment extends Fragment{
         sex = (TextView) view.findViewById(R.id.sex);
         college = (TextView) view.findViewById(R.id.college);
         department = (TextView) view.findViewById(R.id.department);
-        UerName = (TextView) view.findViewById(R.id.userName);
+        UserName = (TextView) view.findViewById(R.id.userName);
 
     }
 

@@ -61,7 +61,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                final String s = helper.getUserInfoByAccount("87654321@qq.com");
+                final String s = helper.getUserInfoByAccount("jaye@163.com");
                 account.post(new Runnable() {
                     @Override
                     public void run() {
