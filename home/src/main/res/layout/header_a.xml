@@ -1,29 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="@dimen/title_height"
     android:orientation="vertical"
-    android:background="@drawable/bg"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:background="@drawable/bg">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="horizontal">
+
             <TextView
-                android:id="@+id/user"
+                android:id="@+id/header_left_text"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:layout_alignParentRight="true"
-                android:paddingRight="@dimen/min_padding"
+                android:layout_alignParentLeft="true"
+                android:paddingLeft="@dimen/min_padding"
                 android:textColor="@color/white"
                 android:textSize="@dimen/title_size"
-                android:gravity="center"
-                android:text="好友" />
-            <TextView
+                android:gravity="center"/>
 
-                android:id="@+id/title"
+            <ImageView
+                android:id="@+id/header_left_image"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_alignParentLeft="true"
+                android:paddingLeft="@dimen/min_padding"
+                android:scaleType="center"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/header_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -31,6 +41,28 @@
                 android:textSize="@dimen/title_size"
                 android:gravity="center"
                 android:text="标题" />
+
+            <TextView
+                android:id="@+id/header_right_text"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_alignParentRight="true"
+                android:paddingRight="@dimen/min_padding"
+                android:textColor="@color/white"
+                android:textSize="@dimen/title_size"
+                android:gravity="center"/>
+
+            <ImageView
+                android:id="@+id/header_right_image"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_alignParentRight="true"
+                android:paddingRight="@dimen/min_padding"
+                android:scaleType="center"
+                android:gravity="center"/>
+
         </RelativeLayout>
 
         <View

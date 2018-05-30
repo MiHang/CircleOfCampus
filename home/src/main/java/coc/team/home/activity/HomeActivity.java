@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
@@ -32,23 +33,28 @@ public class HomeActivity extends AppCompatActivity {
     private TextView circle;
     private TextView publish;
     private TextView mine;
-    private TextView user;
+    private TextView headerRightText;
+    private ImageView headerRightImage;
+    private TextView headerLeftText;
+    private ImageView headerLeftImage;
     private TextView title;
     int[] Titles = {
             R.string.circle,
             R.string.message,
             R.string.publish,
             R.string.mine
-
     };
+
+    private int selectedPageId = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         initView();
-        displayUserButton(0);
+        headerSelect(0);
         title.setText(Titles[0]);
+
         //开启后台服务
         MyBroadcastReceiver myBro = new MyBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
@@ -68,36 +74,55 @@ public class HomeActivity extends AppCompatActivity {
         HomeViewPager.setAdapter(adapter);
         HomeViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
             @Override
             public void onPageSelected(int position) {
-                displayUserButton(position);
+                selectedPageId = position;
+                headerSelect(position);
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
+            public void onPageScrollStateChanged(int state) {}
         });
-
-
     }
 
     /**
-     * 隐藏与显示控件 —标题栏右侧"好友"
+     * 标题栏控件显示设置
      * @param position
      */
-    public void displayUserButton(int position){
-    if (position==1){
-        user.setVisibility(View.VISIBLE);
-    }else{
-        user.setVisibility(View.GONE);
+    public void headerSelect(int position){
+        switch (position) {
+            case 0: {
+                headerLeftText.setText("发表");
+                headerLeftImage.setVisibility(View.GONE);
+                headerRightText.setText("");
+                headerRightImage.setImageResource(R.drawable.search);
+                headerRightImage.setVisibility(View.VISIBLE);
+            };break;
+            case 1: {
+                headerLeftText.setText("");
+                headerLeftImage.setVisibility(View.GONE);
+                headerRightText.setText("好友");
+                headerRightImage.setVisibility(View.GONE);
+            };break;
+            case 2: {
+                headerLeftText.setText("");
+                headerLeftImage.setVisibility(View.GONE);
+                headerRightText.setText("");
+                headerRightImage.setVisibility(View.GONE);
+            };break;
+            case 3: {
+                headerLeftText.setText("");
+                headerLeftImage.setVisibility(View.GONE);
+                headerRightText.setText("编辑");
+                headerRightImage.setVisibility(View.GONE);
+            };break;
+        }
     }
-}
-       private void initView() {
+
+    private void initView() {
+
         HomeViewPager = (ViewPager) findViewById(R.id.HomeViewPager);
         message = (TextView) findViewById(R.id.message);
         message.setOnClickListener(new View.OnClickListener() {
@@ -133,19 +158,22 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        user = (TextView) findViewById(R.id.user);
-        user.setOnClickListener(new View.OnClickListener() {
+        headerRightText = (TextView) findViewById(R.id.header_right_text);
+        headerRightText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(HomeActivity.this, ContactActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
+
+                if (selectedPageId == 1) { // 当前页面为消息页
+                    Intent intent = new Intent(HomeActivity.this, ContactActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
+                }
             }
         });
-        title = (TextView) findViewById(R.id.title);
-
+        headerRightImage = (ImageView) findViewById(R.id.header_right_image);
+        headerLeftImage = (ImageView) findViewById(R.id.header_left_image);
+        headerLeftText = (TextView) findViewById(R.id.header_left_text);
+        title = (TextView) findViewById(R.id.header_title);
     }
-
-
 
 }
