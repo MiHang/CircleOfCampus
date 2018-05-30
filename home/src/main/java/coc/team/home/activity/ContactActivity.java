@@ -10,7 +10,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yanzhenjie.recyclerview.swipe.Closeable;
@@ -25,21 +27,20 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import coc.team.home.Interface.OnItemClickListener;
 import coc.team.home.LanguageUtils;
 import coc.team.home.MyEditText;
 import coc.team.home.R;
+import coc.team.home.adapter.GoodFriendAdapter;
+import coc.team.home.adapter.GoodFriendItemDecoration;
+import coc.team.home.adapter.MyIndexAdapter;
 import coc.team.home.model.Contact;
 import coc.team.home.model.Letter;
-import coc.team.home.adapter.MyIndexAdapter;
-import coc.team.home.adapter.GoodFriendItemDecoration;
-import coc.team.home.adapter.GoodFriendAdapter;
 
 public class ContactActivity extends AppCompatActivity {
 
-    private MyEditText Search;
-    private SwipeMenuRecyclerView rv;
-    private ListView IndexList;
+
     final List<Contact> data = new ArrayList<Contact>();
     LanguageUtils languageUtils = new LanguageUtils();
     private Map<Integer, String> Titles = new HashMap<>();//存放所有key的位置和内容
@@ -47,12 +48,33 @@ public class ContactActivity extends AppCompatActivity {
     MyIndexAdapter myAdapter;//索引列表适配器
     LinearLayoutManager layoutManager;//布局管理器
     GoodFriendAdapter adapter;
+    private TextView header_left_text;
+    private ImageView header_left_image;
+    private TextView header_title;
+    private TextView header_right_text;
+    private ImageView header_right_image;
+    private MyEditText Search;
+    private SwipeMenuRecyclerView rv;
+    private ListView IndexList;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact);
         initView();
-
+        header_title.setText("好友列表");
+        header_right_text.setVisibility(View.GONE);
+        header_left_image.setVisibility(View.VISIBLE);
+        header_left_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ContactActivity.this, HomeActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
+                finish();
+            }
+        });
         //设置布局管理器
         layoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(layoutManager);
@@ -122,7 +144,6 @@ public class ContactActivity extends AppCompatActivity {
         list.add(contact9);
 
 
-
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getUserName() != null) {
                 String lastName = list.get(i).getUserName().toUpperCase().charAt(0) + "";
@@ -158,7 +179,6 @@ public class ContactActivity extends AppCompatActivity {
         rv.addItemDecoration(itemDecoration);
 
 
-
         rv.setHasFixedSize(true);// 如果Item够简单，高度是确定的，打开FixSize将提高性能。
         rv.setItemAnimator(new DefaultItemAnimator());// 设置Item默认动画，加也行，不加也行。
 
@@ -173,7 +193,12 @@ public class ContactActivity extends AppCompatActivity {
         adapter.setItemListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Toast.makeText(ContactActivity.this, ""+data.get(position).getAccount(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ContactActivity.this, "" + data.get(position).getAccount(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ContactActivity.this, UserInfoActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
+                finish();
+
             }
         });
 
@@ -223,11 +248,6 @@ public class ContactActivity extends AppCompatActivity {
 
     }
 
-    private void initView() {
-        Search = (MyEditText) findViewById(R.id.Search);
-        rv = (SwipeMenuRecyclerView) findViewById(R.id.recycler_view);
-        IndexList = (ListView) findViewById(R.id.IndexList);
-    }
 
     @Override
     public void onBackPressed() {
@@ -277,9 +297,7 @@ public class ContactActivity extends AppCompatActivity {
             int width = getResources().getDimensionPixelSize(R.dimen.column_width);
 
             // MATCH_PARENT 自适应高度，保持和内容一样高；也可以指定菜单具体高度，也可以用WRAP_CONTENT。
-            int height =getResources().getDimensionPixelSize(R.dimen.column_height);
-
-
+            int height = getResources().getDimensionPixelSize(R.dimen.column_height);
 
 
             SwipeMenuItem closeItem = new SwipeMenuItem(getApplicationContext())
@@ -335,6 +353,18 @@ public class ContactActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+
+    private void initView() {
+        header_left_text = (TextView) findViewById(R.id.header_left_text);
+        header_left_image = (ImageView) findViewById(R.id.header_left_image);
+        header_title = (TextView) findViewById(R.id.header_title);
+        header_right_text = (TextView) findViewById(R.id.header_right_text);
+        header_right_image = (ImageView) findViewById(R.id.header_right_image);
+        Search = (MyEditText) findViewById(R.id.Search);
+        rv = (SwipeMenuRecyclerView) findViewById(R.id.recycler_view);
+        IndexList = (ListView) findViewById(R.id.IndexList);
     }
 
 

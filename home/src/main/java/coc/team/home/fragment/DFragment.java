@@ -11,17 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import coc.team.home.GlideCircleTransform;
 import coc.team.home.R;
 import coc.team.home.http.HttpHelper;
-import jp.wasabeef.glide.transformations.BlurTransformation;
 
 /**
  * Created by 惠普 on 2018-05-11.
@@ -44,7 +38,7 @@ public class DFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_d, null);
+        View view = inflater.inflate(R.layout.fragment_mine, null);
         initView(view);
         DisplayMetrics dm = getResources().getDisplayMetrics();
 
