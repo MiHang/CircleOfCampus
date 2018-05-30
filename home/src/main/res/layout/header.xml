@@ -49,12 +49,12 @@
                 android:id="@+id/header_right_text"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_alignParentRight="true"
+                android:layout_weight="1"
+                android:gravity="center"
                 android:paddingRight="@dimen/min_padding"
                 android:textColor="@color/white"
-                android:textSize="@dimen/title_size"
-                android:gravity="center"/>
+                android:textSize="@dimen/middle_side" />
 
             <ImageView
                 android:id="@+id/header_right_image"

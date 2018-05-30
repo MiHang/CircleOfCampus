@@ -16,6 +16,7 @@ import coc.team.home.Interface.OnItemClickListener;
 import coc.team.home.NoScrollViewPager;
 import coc.team.home.R;
 import coc.team.home.adapter.MyFragmentAdapter;
+import coc.team.home.fragment.AddFriendsFragment;
 import coc.team.home.fragment.ContactFragment;
 import coc.team.home.fragment.UserInfoFragment;
 
@@ -47,7 +48,7 @@ public class ContactActivity extends AppCompatActivity {
             public void onItemClick(int position) {
                 header_title.setText("好友资料");
                 header_right_text.setVisibility(View.GONE);
-                MyViewPager.setCurrentItem(1, true);
+                MyViewPager.setCurrentItem(position, true);
                 header_left_image.setVisibility(View.GONE);
                 //延时2毫秒刷新
                 new Handler().postDelayed(new Runnable() {
@@ -59,26 +60,44 @@ public class ContactActivity extends AppCompatActivity {
 
             }
         });
+        //返回点击监听
         header_left_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 header_title.setText("好友列表");
                 header_right_text.setVisibility(View.VISIBLE);
-                header_left_image.setVisibility(View.VISIBLE);
-                MyViewPager.setCurrentItem(0, true);
+                header_left_image.setVisibility(View.GONE);
+                MyViewPager.setCurrentItem(1, true);
             }
         });
+        data.add(new AddFriendsFragment());
         data.add(contactFragment);
         data.add(new UserInfoFragment());
         adapter = new MyFragmentAdapter(getSupportFragmentManager(), data);
         MyViewPager.setAdapter(adapter);
+        MyViewPager.setCurrentItem(1);
+        //添加好友点击监听
         header_right_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(ContactActivity.this, "点击", Toast.LENGTH_SHORT).show();
+                header_left_image.setVisibility(View.VISIBLE);
+                header_right_text.setVisibility(View.GONE);
+                MyViewPager.setCurrentItem(0, true);
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+     if (MyViewPager.getCurrentItem()==1){
+              super.onBackPressed();
+        }else {
+         header_title.setText("好友列表");
+         header_right_text.setVisibility(View.VISIBLE);
+         header_left_image.setVisibility(View.GONE);
+         MyViewPager.setCurrentItem(1, true);
+        }
     }
 
     /**

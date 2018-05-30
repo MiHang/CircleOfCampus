@@ -38,7 +38,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_f, null);
+        View view = inflater.inflate(R.layout.fragment_userinfo, null);
         initView(view);
 
         Intent intent = getActivity().getIntent();

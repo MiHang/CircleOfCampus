@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F7F7F5"
+    android:orientation="vertical">
+
+        <coc.team.home.MyEditText
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/contact_column_height"
+            android:layout_marginTop="@dimen/middle_padding"
+            android:background="@color/white"
+            android:gravity="center|left"
+            android:hint="用户ID/用户名"
+            android:maxLines="1"
+            android:paddingLeft="@dimen/max_padding"
+            android:textSize="@dimen/user_info_textSize" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divide_line_height"
+            android:background="@color/divide_color"></View>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/QR_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/contact_column_height"
+                    android:background="@color/white"
+                    android:drawableLeft="@drawable/search"
+                    android:gravity="center|left"
+                    android:maxLines="1"
+                    android:paddingLeft="@dimen/max_padding"
+                    android:text="扫一扫添加好友"
+                    android:textSize="@dimen/user_info_textSize" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/result"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center|left"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/middle_side"
+                            android:visibility="gone" />
+
+                        <include layout="@layout/view_recycler" />
+
+                </LinearLayout>
+        </FrameLayout>
+
+</LinearLayout>
