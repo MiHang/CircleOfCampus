@@ -79,17 +79,40 @@ public class HttpHelper {
         MediaType mediaType = MediaType.parse("application/json;charset=utf8");
         RequestBody requestBody = RequestBody.create(mediaType, js.toString());
         Request request = new Request.Builder()
-                .url(url+"coc/getUserInfoBy.do")
+                .url(url+"/coc/unclearSearch.do")
                 .post(requestBody)
                 .build();
         try {
             Response response = okHttpClient.newCall(request).execute();
             if (response.isSuccessful()) {
-                return response.body().string();
+           return    response.body().string();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+//        OkHttpClient okHttpClient = new OkHttpClient();
+//        JSONObject js = new JSONObject();
+//
+//        try {
+//            js.put("Search", account);
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        MediaType mediaType = MediaType.parse("application/json;charset=utf8");
+//        RequestBody requestBody = RequestBody.create(mediaType, js.toString());
+//        Request request = new Request.Builder()
+//                .url(url+"coc/unclearSearch.do")
+//                .post(requestBody)
+//                .build();
+//        try {
+//            Response response = okHttpClient.newCall(request).execute();
+//            if (response.isSuccessful()) {
+//                return response.body().string();
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         return "";
     }
