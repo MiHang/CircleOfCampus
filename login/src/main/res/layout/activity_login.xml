@@ -6,10 +6,10 @@
     android:layout_height="match_parent"
     tools:context="coc.team.login.LoginActivity">
 
-    <TextView
+    <coc.team.login.view.FontTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="我是登录页面!"
+        android:text="我是登录页面!abcdef123456"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

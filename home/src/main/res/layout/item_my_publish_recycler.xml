@@ -16,7 +16,7 @@
         android:layout_weight="1">
 
         <!-- 标题 -->
-        <TextView
+        <coc.team.common.view.FontTextView
             android:id="@+id/item_my_publish_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
             android:textSize="18dp"/>
 
         <!-- 申请时间 -->
-        <TextView
+        <coc.team.common.view.FontTextView
             android:id="@+id/item_my_publish_publish_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
