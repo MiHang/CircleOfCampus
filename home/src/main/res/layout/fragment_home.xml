@@ -78,7 +78,8 @@
                 android:textStyle="italic"
                 android:layout_toLeftOf="@+id/imageview1"
                 android:layout_centerVertical="true"
-                android:textColor="#EEB422"/>
+                android:textColor="#EEB422"
+                android:id="@+id/home_campus_corporation_notice"/>
 
             <ImageView
                 android:id="@+id/imageview1"

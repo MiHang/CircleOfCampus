@@ -28,7 +28,9 @@ public class AFragment extends Fragment {
     private View view;
     private List<Integer> images = new ArrayList<>();//声明数组
     private MyListView campusCircleListView;
-    private TextView home_campus_notice;
+    private TextView more_campus_notice;
+    private TextView more_corporation_notice;
+
 
     @Override
     public void onDestroyView() {
@@ -66,11 +68,19 @@ public class AFragment extends Fragment {
 
 
 
-        home_campus_notice = view.findViewById(R.id.home_campus_notice);
-        home_campus_notice.setOnClickListener(new View.OnClickListener() {
+        more_campus_notice = view.findViewById(R.id.home_campus_notice);
+        more_campus_notice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(),NoticeActivity.class);
+                startActivity(intent);
+            }
+        });
+        more_corporation_notice = view.findViewById(R.id.home_campus_corporation_notice);
+        more_corporation_notice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(),CorporationActivity.class);
                 startActivity(intent);
             }
         });
