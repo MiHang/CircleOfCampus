@@ -1,4 +1,4 @@
-package coc.team.home;
+package coc.team.common.view;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -8,9 +8,12 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import coc.team.common.R;
+import coc.team.common.util.FontUtil;
+
 
 /**
- * 自定义EditText
+ * 自定义EditText 并引入字体
  * 添加搜索与删除图片
  */
 
@@ -19,11 +22,13 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText impl
 
     public MyEditText(Context context) {
         super(context);
+        init(context);
 
     }
 
     public MyEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init(context);
 
         this.setSelection(getText().length());
         this.setCompoundDrawablesWithIntrinsicBounds(LeftDrawble,0,0,0);
@@ -53,9 +58,17 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText impl
 
     public MyEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init(context);
     }
 
-
+    /***
+     * 设置字体
+     *
+     * @return
+     */
+    public void init(Context context) {
+        setTypeface(FontUtil.setFont(context));
+    }
 
     @Override
     public boolean onTouch(View view, MotionEvent event) {

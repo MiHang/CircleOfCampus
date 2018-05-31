@@ -12,15 +12,18 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import coc.team.common.view.NoScrollViewPager;
 import coc.team.home.BroadcastReceiver.MyBroadcastReceiver;
-import coc.team.home.NoScrollViewPager;
+import coc.team.home.Interface.FragmentSwitchListener;
 import coc.team.home.R;
 import coc.team.home.adapter.MyFragmentAdapter;
 import coc.team.home.background.MyService;
 import coc.team.home.fragment.AFragment;
 import coc.team.home.fragment.BFragment;
 import coc.team.home.fragment.CFragment;
-import coc.team.home.fragment.DFragment;
+import coc.team.home.fragment.MineFragment;
+import coc.team.home.fragment.QRFragment;
 
 /**
  * 主界面
@@ -58,20 +61,25 @@ public class HomeActivity extends AppCompatActivity {
         intent.putExtra("send", "jaye@163.com");
         startService(intent);
 
-//        data.add(new AFragment());
-//        BFragment bFragment = new BFragment();
-////        bFragment.bind(myBro);
-//        data.add(bFragment);
-//        data.add(new CFragment());
-//        data.add(new DFragment());
-//        adapter = new MyFragmentAdapter(getSupportFragmentManager(), data);
-//        HomeViewPager.setAdapter(adapter);
+
         data.add(new AFragment());
         BFragment bFragment = new BFragment();
         bFragment.bind(myBro);
         data.add(bFragment);
         data.add(new CFragment());
-        data.add(new DFragment());
+        MineFragment mineFragment=new MineFragment();
+        mineFragment.setSwitchListener(new FragmentSwitchListener() {
+            @Override
+            public void displayThisFragment(boolean display) {
+                headerSelect(4);
+                HomeViewPager.setCurrentItem(4,true);
+            }
+        });
+        data.add(mineFragment);
+        QRFragment qrFragment = new QRFragment();
+        qrFragment.setAccount("assaas");
+
+        data.add(qrFragment);
         adapter = new MyFragmentAdapter(getSupportFragmentManager(), data);
         HomeViewPager.setAdapter(adapter);
         HomeViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -110,6 +118,7 @@ public class HomeActivity extends AppCompatActivity {
                 headerLeftText.setText("");
                 headerLeftImage.setVisibility(View.GONE);
                 headerRightText.setText("好友");
+                headerRightText.setVisibility(View.VISIBLE);
                 headerRightImage.setVisibility(View.GONE);
                 setHomeBottomNavNormal();
                 message.setImageResource(R.drawable.icon_home_msg_hover);
@@ -128,6 +137,15 @@ public class HomeActivity extends AppCompatActivity {
                 headerLeftText.setText("");
                 headerLeftImage.setVisibility(View.GONE);
                 headerRightText.setText("编辑");
+                headerRightImage.setVisibility(View.GONE);
+                setHomeBottomNavNormal();
+                mine.setImageResource(R.drawable.icon_home_my_hover);
+            };break;
+            case 4: {
+                title.setText("我的二维码");
+                headerLeftText.setText("");
+                headerLeftImage.setVisibility(View.VISIBLE);
+                headerRightText.setVisibility(View.GONE);
                 headerRightImage.setVisibility(View.GONE);
                 setHomeBottomNavNormal();
                 mine.setImageResource(R.drawable.icon_home_my_hover);
@@ -202,6 +220,13 @@ public class HomeActivity extends AppCompatActivity {
         headerLeftImage = (ImageView) findViewById(R.id.header_left_image);
         headerLeftText = (TextView) findViewById(R.id.header_left_text);
         title = (TextView) findViewById(R.id.header_title);
+        headerLeftImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                headerSelect(3);
+                HomeViewPager.setCurrentItem(3,true);
+            }
+        });
     }
 
 }

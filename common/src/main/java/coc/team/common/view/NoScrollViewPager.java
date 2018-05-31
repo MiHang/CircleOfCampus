@@ -1,4 +1,4 @@
-package coc.team.home;
+package coc.team.common.view;
 
 /**
  * Created by 惠普 on 2018-05-30.

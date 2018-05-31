@@ -27,9 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import coc.team.common.view.MyEditText;
 import coc.team.home.Interface.OnItemClickListener;
 import coc.team.home.LanguageUtils;
-import coc.team.home.MyEditText;
 import coc.team.home.R;
 import coc.team.home.adapter.GoodFriendAdapter;
 import coc.team.home.adapter.GoodFriendItemDecoration;

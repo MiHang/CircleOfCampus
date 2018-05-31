@@ -10,7 +10,7 @@
 
     <include layout="@layout/header" />
 
-    <coc.team.home.NoScrollViewPager
+    <coc.team.common.view.NoScrollViewPager
         android:id="@+id/MyViewPager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
