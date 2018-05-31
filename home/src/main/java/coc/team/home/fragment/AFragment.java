@@ -1,10 +1,13 @@
 package coc.team.home.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.youth.banner.Banner;
@@ -25,7 +28,7 @@ public class AFragment extends Fragment {
     private View view;
     private List<Integer> images = new ArrayList<>();//声明数组
     private MyListView campusCircleListView;
-
+    private TextView home_campus_notice;
 
     @Override
     public void onDestroyView() {
@@ -48,6 +51,7 @@ public class AFragment extends Fragment {
         images.add(R.drawable.lunbo02);
         images.add(R.drawable.lunbo04);
         banner.setImages(images);
+
         //banner设置方法全部调用完毕时最后调用
         banner.start();
 
@@ -59,6 +63,17 @@ public class AFragment extends Fragment {
         campusCircleListView = (MyListView) view.findViewById(R.id.home_campus_circle_list_view);
         campusCircleListView.setAdapter(new CampusCircleListViewAdapter(getContext(), items));
         campusCircleListView.setListViewHeightBasedOnChildren();
+
+
+
+        home_campus_notice = view.findViewById(R.id.home_campus_notice);
+        home_campus_notice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(),NoticeActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

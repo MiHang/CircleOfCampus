@@ -15,7 +15,10 @@
             android:layout_width="match_parent"
             android:layout_height="180dp"
             android:background="#eaeaea"
-            android:padding="10dp" />
+            android:padding="10dp"
+            app:indicator_height="8dp"
+            app:indicator_width="8dp"
+            />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -38,7 +41,8 @@
                 android:textStyle="italic"
                 android:layout_toLeftOf="@+id/imageview12"
                 android:layout_centerVertical="true"
-                android:textColor="#EEB422"/>
+                android:textColor="#EEB422"
+                android:id="@+id/home_campus_notice"/>
 
             <ImageView
                 android:id="@+id/imageview12"
