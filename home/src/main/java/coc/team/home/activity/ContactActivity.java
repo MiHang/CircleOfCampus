@@ -79,6 +79,7 @@ public class ContactActivity extends AppCompatActivity {
         header_right_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                header_title.setText("好友搜索");
                 header_left_image.setVisibility(View.VISIBLE);
                 header_right_text.setVisibility(View.GONE);
                 MyViewPager.setCurrentItem(0, true);

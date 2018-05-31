@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/mine_bg"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -175,7 +176,7 @@
 
     <coc.team.common.view.FontTextView
         android:id="@+id/QR"
-        android:background="@drawable/column_selector"
+        android:background="@drawable/linear_selector"
         android:layout_width="match_parent"
         android:layout_height="@dimen/mine_column_height"
         android:gravity="center|left"

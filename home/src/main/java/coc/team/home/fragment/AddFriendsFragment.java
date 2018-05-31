@@ -103,7 +103,7 @@ public class AddFriendsFragment extends Fragment {
                             result.post(new Runnable() {
                                 @Override
                                 public void run() {
-Toast.makeText(getContext(), search.getText()+""+s, Toast.LENGTH_SHORT).show();
+
                                     try {
                                             JSONObject js = new JSONObject(s);
                                             result.setText("搜索到" + js.getString("Result") + "条数据\n");
