@@ -71,4 +71,5 @@ dependencies {
     implementation files('libs/ormlite-core-5.0.jar')
     implementation files('libs/classes.jar')
     compile 'com.youth.banner:banner:1.4.10'
+    compile 'com.bigkoo:alertview:1.0.3'
 }

@@ -3,6 +3,6 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="linear_normal">#ffffff</color>
-    <color name="linear_pressed">#d9d9d9</color>
+    <color  name="linear_normal">#ffffff</color>
+    <color  name="linear_pressed">#d9d9d9</color>
 </resources>
