@@ -54,15 +54,13 @@
             android:textColor="@color/black"
             android:textSize="24sp" />
 
-        <LinearLayout
+        <coc.team.common.view.MyLinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/mine_column_height"
-            android:background="@drawable/column_selector"
-            android:clickable="true"
             android:orientation="horizontal">
 
 
-            <TextView
+            <coc.team.common.view.FontTextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
@@ -71,7 +69,7 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/user_info_textSize" />
 
-            <TextView
+            <coc.team.common.view.FontTextView
                 android:id="@+id/account"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -79,21 +77,19 @@
                 android:gravity="center|left"
                 android:text="暂无数据"
                 android:textSize="@dimen/user_info_textSize" />
-        </LinearLayout>
+        </coc.team.common.view.MyLinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/divide_line_height"
             android:background="@color/divide_color" />
 
-        <LinearLayout
+        <coc.team.common.view.MyLinearLayout
             android:layout_width="match_parent"
-            android:clickable="true"
-            android:layout_height="@dimen/mine_column_height"
-            android:background="@drawable/column_selector">
+            android:layout_height="@dimen/mine_column_height">
 
 
-            <TextView
+            <coc.team.common.view.FontTextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
@@ -102,7 +98,7 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/user_info_textSize" />
 
-            <TextView
+            <coc.team.common.view.FontTextView
                 android:id="@+id/sex"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -110,21 +106,19 @@
                 android:text="暂无数据"
                 android:gravity="center|left"
                 android:textSize="@dimen/user_info_textSize" />
-        </LinearLayout>
+        </coc.team.common.view.MyLinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/divide_line_height"
             android:background="@color/divide_color" />
 
-        <LinearLayout
+        <coc.team.common.view.MyLinearLayout
             android:layout_width="match_parent"
-            android:clickable="true"
-            android:layout_height="@dimen/mine_column_height"
-            android:background="@drawable/column_selector">
+            android:layout_height="@dimen/mine_column_height">
 
 
-            <TextView
+            <coc.team.common.view.FontTextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
@@ -133,7 +127,7 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/user_info_textSize" />
 
-            <TextView
+            <coc.team.common.view.FontTextView
                 android:id="@+id/college"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -141,21 +135,19 @@
                 android:text="暂无数据"
                 android:gravity="center|left"
                 android:textSize="@dimen/user_info_textSize" />
-        </LinearLayout>
+        </coc.team.common.view.MyLinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/divide_line_height"
             android:background="@color/divide_color" />
 
-        <LinearLayout
+        <coc.team.common.view.MyLinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/mine_column_height"
-            android:background="@drawable/column_selector"
-            android:clickable="true">
+            android:layout_height="@dimen/mine_column_height">
 
 
-            <TextView
+            <coc.team.common.view.FontTextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
@@ -164,7 +156,7 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/user_info_textSize" />
 
-            <TextView
+            <coc.team.common.view.FontTextView
                 android:id="@+id/department"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -172,7 +164,7 @@
                 android:text="暂无数据"
                 android:gravity="center|left"
                 android:textSize="@dimen/user_info_textSize" />
-        </LinearLayout>
+        </coc.team.common.view.MyLinearLayout>
 
         <View
             android:layout_width="match_parent"
@@ -181,7 +173,7 @@
 
     </LinearLayout>
 
-    <TextView
+    <coc.team.common.view.FontTextView
         android:id="@+id/QR"
         android:background="@drawable/column_selector"
         android:layout_width="match_parent"

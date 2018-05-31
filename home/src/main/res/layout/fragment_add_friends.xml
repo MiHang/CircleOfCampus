@@ -7,7 +7,7 @@
     android:background="#F7F7F5"
     android:orientation="vertical">
 
-        <coc.team.home.MyEditText
+        <coc.team.common.view.MyEditText
             android:id="@+id/search"
             android:layout_width="match_parent"
             android:layout_height="@dimen/contact_column_height"
@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-                <TextView
+                <coc.team.common.view.FontTextView
                     android:id="@+id/QR_btn"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/contact_column_height"
@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                        <TextView
+                        <coc.team.common.view.FontTextView
                             android:id="@+id/result"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

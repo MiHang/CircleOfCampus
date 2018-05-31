@@ -16,7 +16,7 @@
         android:layout_gravity="center_vertical"
         android:src="@drawable/icon" />
 
-    <TextView
+    <coc.team.common.view.FontTextView
         android:id="@+id/UserName"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -14,7 +14,7 @@
         android:background="#eaeaea"
         android:orientation="vertical">
 
-        <LinearLayout
+        <coc.team.common.view.MyLinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/user_info_textSize"
@@ -30,7 +30,7 @@
                 android:padding="@dimen/min_padding"
                 android:src="@drawable/icon" />
 
-            <LinearLayout
+            <coc.team.common.view.MyLinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignRight="@id/Icon"
@@ -51,138 +51,120 @@
                     android:layout_weight="1"
                     android:gravity="center|top"
                     android:text="昵称:万达" />
-            </LinearLayout>
+            </coc.team.common.view.MyLinearLayout>
 
-        </LinearLayout>
+        </coc.team.common.view.MyLinearLayout>
 
-        <LinearLayout
+        <coc.team.common.view.MyLinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical">
+            android:layout_height="@dimen/mine_column_height">
 
-            <LinearLayout
+
+            <coc.team.common.view.FontTextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text="用户ID："
+                android:textColor="@color/black"
+                android:textSize="@dimen/user_info_textSize" />
 
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:text="用户ID："
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/user_info_textSize" />
-
-                <TextView
-                    android:id="@+id/account"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="暂无数据"
-                    android:textSize="@dimen/user_info_textSize" />
-            </LinearLayout>
+            <coc.team.common.view.FontTextView
+                android:id="@+id/account"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="暂无数据"
+                android:textSize="@dimen/user_info_textSize" />
+        </coc.team.common.view.MyLinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/divide_line_height"
-                android:layout_marginBottom="@dimen/min_padding"
-                android:layout_marginTop="@dimen/min_padding"
                 android:background="@color/divide_color" />
 
-            <LinearLayout
+        <coc.team.common.view.MyLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/mine_column_height">
+
+
+            <coc.team.common.view.FontTextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text="性别："
+                android:textColor="@color/black"
+                android:textSize="@dimen/user_info_textSize" />
 
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:text="性别："
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/user_info_textSize" />
-
-                <TextView
-                    android:id="@+id/sex"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="暂无数据"
-                    android:textSize="@dimen/user_info_textSize" />
-            </LinearLayout>
+            <coc.team.common.view.FontTextView
+                android:id="@+id/sex"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="暂无数据"
+                android:textSize="@dimen/user_info_textSize" />
+        </coc.team.common.view.MyLinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/divide_line_height"
-                android:layout_marginBottom="@dimen/min_padding"
-                android:layout_marginTop="@dimen/min_padding"
                 android:background="@color/divide_color" />
 
-            <LinearLayout
+        <coc.team.common.view.MyLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/mine_column_height">
+
+
+            <coc.team.common.view.FontTextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text="学校："
+                android:textColor="@color/black"
+                android:textSize="@dimen/user_info_textSize" />
 
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:text="学校："
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/user_info_textSize" />
-
-                <TextView
-                    android:id="@+id/college"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="暂无数据"
-                    android:textSize="@dimen/user_info_textSize" />
-            </LinearLayout>
+            <coc.team.common.view.FontTextView
+                android:id="@+id/college"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="暂无数据"
+                android:textSize="@dimen/user_info_textSize" />
+        </coc.team.common.view.MyLinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/divide_line_height"
-                android:layout_marginBottom="@dimen/min_padding"
-                android:layout_marginTop="@dimen/min_padding"
                 android:background="@color/divide_color" />
 
-            <LinearLayout
+        <coc.team.common.view.MyLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/mine_column_height">
+
+
+            <coc.team.common.view.FontTextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text="院系："
+                android:textColor="@color/black"
+                android:textSize="@dimen/user_info_textSize" />
 
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:text="院系："
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/user_info_textSize" />
-
-                <TextView
-                    android:id="@+id/department"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="暂无数据"
-                    android:textSize="@dimen/user_info_textSize" />
-            </LinearLayout>
+            <coc.team.common.view.FontTextView
+                android:id="@+id/department"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="暂无数据"
+                android:textSize="@dimen/user_info_textSize" />
+        </coc.team.common.view.MyLinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/divide_line_height"
-                android:layout_marginBottom="@dimen/min_padding"
-                android:layout_marginTop="@dimen/min_padding"
                 android:background="@color/divide_color" />
 
         </LinearLayout>
@@ -198,4 +180,3 @@
             android:textSize="@dimen/user_info_textSize" />
     </LinearLayout>
 
-</LinearLayout>
