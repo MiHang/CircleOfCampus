@@ -60,6 +60,40 @@ public class HttpHelper {
 
         return "";
     }
+    /**
+     * 查询是否有用户请求添加好友
+     * @param account
+     * @return
+     */
+    public String QueryRequestAddFriendInfo(String account) {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        JSONObject js = new JSONObject();
+
+        try {
+            js.put("account", account);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        MediaType mediaType = MediaType.parse("application/json;charset=utf8");
+        RequestBody requestBody = RequestBody.create(mediaType, js.toString());
+        Request request = new Request.Builder()
+                .url(url+"coc/QueryRequestAddFriendInfo.do")
+                .post(requestBody)
+                .build();
+        try {
+            Response response = okHttpClient.newCall(request).execute();
+            if (response.isSuccessful()) {
+                return response.body().string();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
+
 
     /**
      * 通过账号获取用户信息
@@ -120,4 +154,44 @@ public class HttpHelper {
         }
         return "";
     }
+
+    /**
+     * 请求添加好友
+     * @param user1 用户1
+     * @param user2 用户2
+     * @param reason 申请理由
+     * @return
+     */
+    public String requestAddFriend(String user1,String user2,String reason) {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        JSONObject js = new JSONObject();
+
+        try {
+            js.put("user1", user1);
+            js.put("user2", user2);
+            js.put("reason", reason);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        MediaType mediaType = MediaType.parse("application/json;charset=utf8");
+        RequestBody requestBody = RequestBody.create(mediaType, js.toString());
+        Request request = new Request.Builder()
+                .url(url+"/coc/requestAddFriend.do")
+                .post(requestBody)
+                .build();
+        try {
+            Response response = okHttpClient.newCall(request).execute();
+            if (response.isSuccessful()) {
+                return    response.body().string();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
+
+
 }
