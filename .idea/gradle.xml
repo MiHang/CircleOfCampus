@@ -9,12 +9,6 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/campus" />
-            <option value="$PROJECT_DIR$/chat" />
-            <option value="$PROJECT_DIR$/common" />
-            <option value="$PROJECT_DIR$/home" />
-            <option value="$PROJECT_DIR$/login" />
-            <option value="$PROJECT_DIR$/manager" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

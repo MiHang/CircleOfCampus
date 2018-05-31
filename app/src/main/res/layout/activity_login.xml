@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:layout_editor_absoluteX="124dp"
+    tools:layout_editor_absoluteY="0dp"
+    tools:ignore="MissingConstraints"
+    android:background="@drawable/tuceng2"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:orientation="vertical"
+            android:layout_gravity="center">
+            <ImageButton
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:orientation="vertical"
+            android:layout_gravity="center">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+                android:background="#f7f97e27"
+                android:layout_gravity="center">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <EditText
+                        android:id="@+id/l1"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_gravity="center"
+                        android:text="账号"
+                        android:textColor="#fffefe"
+                        android:textSize="14dp"
+                        android:theme="@style/MyEditText" />
+                    <Button
+                        android:id="@+id/l2"
+                        android:layout_width="20dp"
+                        android:layout_height="10dp"
+                        android:layout_alignRight="@+id/l1"
+                        android:background="@drawable/tuceng10"
+                        android:layout_centerVertical="true"/>
+
+                </RelativeLayout>
+                <EditText
+                    android:id="@+id/app2"
+                    android:layout_width="300dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:text="密码"
+                    android:textColor="#fffefe"
+                    android:textSize="14dp"
+                    android:theme="@style/MyEditText" />
+
+                <Button
+                    android:layout_width="120dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dip"
+                    android:background="@drawable/tuceng3"
+                    android:text="登      录"
+                    android:textColor="#fffefe"
+                    android:textSize="18dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="150dp"
+                        android:layout_height="match_parent"
+                        android:width="150dp"
+                        android:text="新用户注册"
+                        android:textColor="#fffefe"
+                        android:textSize="12dp" />
+
+                    <TextView
+                        android:layout_width="150dp"
+                        android:layout_height="match_parent"
+                        android:gravity="right"
+                        android:text="忘记密码？"
+                        android:textColor="#fffefe"
+                        android:textSize="12dp" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+

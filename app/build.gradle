@@ -9,13 +9,6 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-        //ARouter
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = [ moduleName : project.getName() ]
-            }
-        }
     }
     buildTypes {
         release {
@@ -23,26 +16,31 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
     implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    implementation 'com.android.support:design:26.1.0'
 
-    //ARouter
-    implementation 'com.alibaba:arouter-api:1.3.1'
-    annotationProcessor 'com.alibaba:arouter-compiler:1.0.4'
+    implementation files('libs/java_websocket.jar')
+    implementation files('libs/pinyin4j-2.5.0.jar')
+    implementation files('libs/ormlite-android-5.0.jar')
+    implementation files('libs/ormlite-core-5.0.jar')
+    implementation files('libs/classes.jar')
 
-    if (!isModule.toBoolean()) { // 集成模式 - 添加组件
-        implementation project(':login')
-        implementation project(':campus')
-        implementation project(':chat')
-        implementation project(':home')
-        implementation project(':manager')
-    }
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.2.0'
+
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'jp.wasabeef:glide-transformations:2.0.1'
+    implementation 'com.yanzhenjie:recyclerview-swipe:1.0.2'
+    implementation 'com.youth.banner:banner:1.4.10'
+    implementation 'com.bigkoo:alertview:1.0.3'
 }

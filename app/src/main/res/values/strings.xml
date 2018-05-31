@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">CircleOfCampus</string>
+    <string name="app_name">校园圈</string>
+    <string name="circle">校园圈</string>
+    <string name="message">消息</string>
+    <string name="publish">我的发布</string>
+    <string name="mine">我的</string>
 </resources>
