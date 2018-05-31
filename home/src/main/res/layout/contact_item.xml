@@ -3,26 +3,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/Column"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/column_height"
+    android:layout_height="@dimen/contact_column_height"
     android:clickable="true"
     android:background="@drawable/list_item_bg"
     android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/UserIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_width="@dimen/contact_icon"
+        android:layout_height="@dimen/contact_icon"
+        android:layout_margin="@dimen/min_padding"
         android:layout_gravity="center_vertical"
-        android:scaleType="fitStart"
         android:src="@drawable/icon" />
 
-    <TextView
+    <coc.team.common.view.FontTextView
         android:id="@+id/UserName"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:text="用户名"
-        android:textSize="20dp" />
+        android:textSize="@dimen/user_info_textSize" />
 
 </LinearLayout>

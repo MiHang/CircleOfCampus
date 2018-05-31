@@ -13,19 +13,27 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuAdapter;
 
 import java.util.List;
 
+import coc.team.home.GlideCircleTransform;
 import coc.team.home.Interface.OnItemClickListener;
 import coc.team.home.R;
+import coc.team.home.http.HttpHelper;
 import coc.team.home.model.Contact;
 
-public class GoodFriendAdapter extends SwipeMenuAdapter<GoodFriendAdapter.ViewHolder> implements View.OnClickListener{
+public class GoodFriendAdapter extends SwipeMenuAdapter<GoodFriendAdapter.ViewHolder> {
     private List<Contact> data;
     private Context context;
     OnItemClickListener itemListener;
+    HttpHelper http;
 
 
     public void setItemListener(OnItemClickListener itemListener) {
@@ -35,6 +43,7 @@ public class GoodFriendAdapter extends SwipeMenuAdapter<GoodFriendAdapter.ViewHo
     public GoodFriendAdapter(Context context, List<Contact> data) {
         this.context = context;
         this.data = data;
+        http=new HttpHelper(context);
     }
 
     @Override
@@ -49,10 +58,41 @@ public class GoodFriendAdapter extends SwipeMenuAdapter<GoodFriendAdapter.ViewHo
 
     //将数据与界面进行绑定的操作
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.UserName.setText(data.get(position).getUserName());
-        holder.Column.setOnClickListener(this);
+        holder.Column.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (itemListener!=null){
+                    itemListener.onItemClick((int) view.getTag());
+                }
+            }
+        });
         holder.Column.setTag(position);
+//            //加载头像 查询服务器是否有头像图片，若无则按性别加载
+//            Glide.with(context)
+//                    .load(http.getPath()+"/res/img/"+data.get(position).getAccount())
+//                    .transform(new GlideCircleTransform(context))
+//                    .crossFade()
+//                    .listener(new RequestListener<String, GlideDrawable>() {
+//                        @Override
+//                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+//                            Glide.with(context)
+//                                    .load(http.getPath()+"/res/img/"+data.get(position).getSex())
+//                                    .transform(new GlideCircleTransform(context))
+//                                    .crossFade()
+//                                    .into(holder.UserIcon);
+//                            return false;
+//                        }
+//                        @Override
+//                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+//
+//
+//                            return false;
+//                        }
+//                    })
+//                    .into(holder.UserIcon);
+
     }
 
     //获取数据的数量
@@ -61,12 +101,7 @@ public class GoodFriendAdapter extends SwipeMenuAdapter<GoodFriendAdapter.ViewHo
         return data.size();
     }
 
-    @Override
-    public void onClick(View view) {
-        if (itemListener!=null){
-            itemListener.onItemClick((int) view.getTag());
-        }
-    }
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView UserIcon;

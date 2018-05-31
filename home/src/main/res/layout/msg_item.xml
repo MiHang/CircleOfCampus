@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/column_height"
+    android:background="@color/white"
     android:padding="8dp">
 
     <ImageView
         android:id="@+id/icon"
         android:layout_width="50dp"
-        android:layout_height="50dp"
-   />
+        android:layout_height="50dp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
+            <coc.team.common.view.FontTextView
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -35,7 +35,7 @@
                 android:textColor="@android:color/black"
                 android:textSize="22sp" />
 
-            <TextView
+            <coc.team.common.view.FontTextView
                 android:id="@+id/amount"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -50,7 +50,7 @@
                 android:textSize="22sp" />
         </LinearLayout>
 
-        <TextView
+        <coc.team.common.view.FontTextView
             android:id="@+id/msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
             android:textSize="22sp" />
     </LinearLayout>
 
-    <TextView
+    <coc.team.common.view.FontTextView
         android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

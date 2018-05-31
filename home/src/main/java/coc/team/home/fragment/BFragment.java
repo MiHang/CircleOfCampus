@@ -1,7 +1,5 @@
 package coc.team.home.fragment;
 
-import android.content.BroadcastReceiver;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,10 +9,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.common.utils.LanguageUtils;
 import com.common.utils.TimeUtil;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
 import com.yanzhenjie.recyclerview.swipe.OnSwipeMenuItemClickListener;
@@ -32,7 +28,6 @@ import java.util.List;
 
 import coc.team.home.BroadcastReceiver.MyBroadcastReceiver;
 import coc.team.home.Interface.MessageListener;
-import coc.team.home.activity.ContactActivity;
 import coc.team.home.Interface.OnItemClickListener;
 import coc.team.home.R;
 import coc.team.home.model.UserMsg;
@@ -44,8 +39,7 @@ import coc.team.home.adapter.MyMessageAdapter;
 
 public class BFragment extends Fragment {
 
-
-
+    private View view;
     private SwipeMenuRecyclerView recycler_view;
     MyMessageAdapter adapter;
     List<UserMsg> data=new ArrayList<>();
@@ -57,15 +51,20 @@ public class BFragment extends Fragment {
         this.BroadcastReceiver=BroadcastReceiver;
     }
 
+    @Override
+    public void onDestroyView() {
+        super .onDestroyView();
+        if (null != view) {
+            ((ViewGroup) view.getParent()).removeView(view);
+        }
+    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_b, null);
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            view = getActivity().getLayoutInflater().inflate(R.layout.fragment_msg, null);
         initView(view);
-
-
-
 
         if (BroadcastReceiver!=null){//添加广播回调监听，从而更新消息列表
             BroadcastReceiver.setMessageListener(new MessageListener() {
@@ -121,14 +120,19 @@ public class BFragment extends Fragment {
         adapter = new MyMessageAdapter(getContext(),data);
         adapter.setOnItemClickListener(onItemClickListener);
         recycler_view.setAdapter(adapter);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         return view;
     }
 
     private void initView(View view) {
 
         recycler_view = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
-
     }
+
     private OnItemClickListener onItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
@@ -181,7 +185,7 @@ public class BFragment extends Fragment {
 
 
             SwipeMenuItem closeItem = new SwipeMenuItem(getContext())
-                    .setBackgroundDrawable(R.drawable.selector_purple)
+                    .setBackgroundDrawable(R.drawable.zd_selector)
                     .setText("置顶") // 文字，还可以设置文字颜色，大小等。。
                     .setTextColor(Color.WHITE)
                     .setWidth(width)
@@ -189,7 +193,7 @@ public class BFragment extends Fragment {
             swipeRightMenu.addMenuItem(closeItem); // 添加一个按钮到右侧菜单。
 
             SwipeMenuItem deleteItem = new SwipeMenuItem(getContext())
-                    .setBackgroundDrawable(R.drawable.selector_red)
+                    .setBackgroundDrawable(R.drawable.delete_selector)
                     .setImage(R.mipmap.ic_action_delete)
                     .setText("删除") // 文字，还可以设置文字颜色，大小等。。
                     .setTextColor(Color.WHITE)

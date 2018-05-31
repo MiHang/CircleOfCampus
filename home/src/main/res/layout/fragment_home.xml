@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <com.youth.banner.Banner
+            android:id="@+id/banner"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:background="#eaeaea" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp">
+
+            <coc.team.common.view.FontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="校园官方公告"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                android:textColor="#EEB422"/>
+
+            <coc.team.common.view.FontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="更多"
+                android:textSize="18dp"
+                android:textStyle="italic"
+                android:layout_toLeftOf="@+id/imageview12"
+                android:layout_centerVertical="true"
+                android:textColor="#EEB422"
+                android:id="@+id/home_campus_notice"/>
+
+            <ImageView
+                android:id="@+id/imageview12"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:background="@drawable/xiangyou"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                />
+
+        </RelativeLayout>
+
+        <coc.team.home.view.MyListView
+            android:id="@+id/home_campus_circle_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </coc.team.home.view.MyListView>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp">
+
+            <coc.team.common.view.FontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="社团公告"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                android:textColor="#EEB422"/>
+
+            <coc.team.common.view.FontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="更多"
+                android:textSize="18dp"
+                android:textStyle="italic"
+                android:layout_toLeftOf="@+id/imageview1"
+                android:layout_centerVertical="true"
+                android:textColor="#EEB422"/>
+
+            <ImageView
+                android:id="@+id/imageview1"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:background="@drawable/xiangyou"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                />
+
+        </RelativeLayout>
+
+        <coc.team.home.view.MyListView
+            android:id="@+id/home_society_circle_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </coc.team.home.view.MyListView>
+
+    </LinearLayout>
+
+</ScrollView>
