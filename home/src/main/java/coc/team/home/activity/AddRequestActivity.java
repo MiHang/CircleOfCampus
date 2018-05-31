@@ -45,13 +45,43 @@ public class AddRequestActivity extends AppCompatActivity implements OnItemClick
     HttpHelper helper;
     EditText etName;
     private AlertView mAlertViewExt;//窗口拓展例子
-    boolean isClose;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_rquest);
         initView();
+        //查询两人是否好友
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                final String s = helper.QueryIsFriend("12","12");
+                account.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            JSONObject jsonObject = new JSONObject(s);
+                            if (!s.equals("")){
+                                if (jsonObject.getString("result").equals("yes")){
+
+                                }else{
+
+                                }
+                            }
+
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+
+                });
+            }
+        });
 
         //        Intent intent = getIntent();
 //        String Account = intent.getStringExtra("Account");
