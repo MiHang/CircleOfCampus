@@ -3,6 +3,25 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color  name="linear_normal">#ffffff</color>
+    <color  name="linear_pressed">#d9d9d9</color>
+
+    <color name="titleColor">#000000</color>
+    <color name="titleBgColor">#EFEFF4</color>
+    <color name="dividerColor">#d6d7dc</color>
+
     <color name="white">#ffffff</color>
+    <color name="mine_bg">#efeff4</color>
     <color name="index_bg">#40000000</color>
+    <color name="click_item_bg">#eaeaea</color>
+    <color name="black">#000000</color>
+    <color name="overlay">#40000000</color>
+    <color name="divide_color">#eaeaea</color>
+    <color name="transparent">#00000000</color><!--透明-->
+
+    <color name="btn_bg">#fd755f</color>
+    <color name="zd_pressed">#b2b2b2</color>
+    <color name="zd_normal">#bfbfbf</color>
+    <color name="delete_normal">#fc5c57</color>
+    <color name="delete_pressed">#f7837f</color>
 </resources>

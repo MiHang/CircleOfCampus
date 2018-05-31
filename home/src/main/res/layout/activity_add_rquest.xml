@@ -1,13 +1,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
-<include layout="@layout/header"></include>
+
+    <include layout="@layout/header"></include>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -73,12 +75,10 @@
                 android:textSize="@dimen/user_info_textSize" />
         </coc.team.common.view.MyLinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/divide_line_height"
-                android:layout_marginBottom="@dimen/min_padding"
-                android:layout_marginTop="@dimen/min_padding"
-                android:background="@color/divide_color" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divide_line_height"
+            android:background="@color/divide_color" />
 
         <coc.team.common.view.MyLinearLayout
             android:layout_width="match_parent"
@@ -99,17 +99,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="暂无数据"
                 android:gravity="center|left"
+                android:text="暂无数据"
                 android:textSize="@dimen/user_info_textSize" />
         </coc.team.common.view.MyLinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/divide_line_height"
-                android:layout_marginBottom="@dimen/min_padding"
-                android:layout_marginTop="@dimen/min_padding"
-                android:background="@color/divide_color" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divide_line_height"
+            android:background="@color/divide_color" />
 
         <coc.team.common.view.MyLinearLayout
             android:layout_width="match_parent"
@@ -130,17 +128,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="暂无数据"
                 android:gravity="center|left"
+                android:text="暂无数据"
                 android:textSize="@dimen/user_info_textSize" />
         </coc.team.common.view.MyLinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/divide_line_height"
-                android:layout_marginBottom="@dimen/min_padding"
-                android:layout_marginTop="@dimen/min_padding"
-                android:background="@color/divide_color" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divide_line_height"
+            android:background="@color/divide_color" />
 
         <coc.team.common.view.MyLinearLayout
             android:layout_width="match_parent"
@@ -161,29 +157,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="暂无数据"
                 android:gravity="center|left"
+                android:text="暂无数据"
                 android:textSize="@dimen/user_info_textSize" />
         </coc.team.common.view.MyLinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/divide_line_height"
-                android:layout_marginBottom="@dimen/min_padding"
-                android:layout_marginTop="@dimen/min_padding"
-                android:background="@color/divide_color" />
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/send_btn"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/middle_padding"
-            android:background="@drawable/btn_bg"
-            android:text="添加好友"
-            android:textColor="@color/white"
-            android:textSize="@dimen/user_info_textSize" />
+            android:layout_height="@dimen/divide_line_height"
+            android:background="@color/divide_color" />
+
+
+
+    <Button
+        android:id="@+id/send_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/middle_padding"
+        android:background="@drawable/btn_bg"
+        android:text="添加好友"
+        android:textColor="@color/white"
+        android:textSize="@dimen/user_info_textSize" />
     </LinearLayout>
+</LinearLayout>
 
 

@@ -1,5 +1,6 @@
 package coc.team.home.activity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,13 +11,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bigkoo.alertview.AlertView;
+import com.bigkoo.alertview.OnDismissListener;
+import com.bigkoo.alertview.OnItemClickListener;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import coc.team.home.R;
 import coc.team.home.http.HttpHelper;
 
-public class AddRequestActivity extends AppCompatActivity  {
+public class AddRequestActivity extends AppCompatActivity implements OnItemClickListener, OnDismissListener {
 
     private TextView header_left_text;
     private ImageView header_left_image;
@@ -150,9 +155,26 @@ public class AddRequestActivity extends AppCompatActivity  {
         college = (TextView) findViewById(R.id.college);
         department = (TextView) findViewById(R.id.department);
         send_btn = (Button) findViewById(R.id.send_btn);
+        send_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                new AlertView("上传头像", null, "取消", null,
+//                        new String[]{"拍照", "从相册中选择"},
+//                        this, AlertView.Style.ActionSheet, this).show();
+            }
+        });
 
 
     }
 
 
+    @Override
+    public void onDismiss(Object o) {
+
+    }
+
+    @Override
+    public void onItemClick(Object o, int position) {
+
+    }
 }

@@ -58,7 +58,7 @@ public class HomeActivity extends AppCompatActivity {
         intentFilter.addAction("coc.team.home.activity");
         registerReceiver(myBro, intentFilter);
         Intent intent = new Intent(this, MyService.class);
-        intent.putExtra("send", "jaye@163.com");
+        intent.putExtra("send", "jayevip@163.com");
         startService(intent);
 
 

@@ -25,14 +25,13 @@
 
             <ImageView
                 android:id="@+id/header_left_image"
-                android:layout_width="wrap_content"
+                android:layout_width="30dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:paddingLeft="@dimen/min_padding"
-                android:scaleType="center"
-                android:visibility="gone"
+                android:scaleType="centerInside"
                 android:src="@drawable/back" />
 
             <coc.team.common.view.FontTextView

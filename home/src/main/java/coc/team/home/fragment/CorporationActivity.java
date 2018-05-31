@@ -1,6 +1,5 @@
 package coc.team.home.fragment;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,7 +8,7 @@ import android.widget.TextView;
 
 import coc.team.home.R;
 
-public class NoticeActivity extends AppCompatActivity {
+public class CorporationActivity extends AppCompatActivity {
 
     private ImageView backIcon;
     private TextView headerTitle;
@@ -21,7 +20,7 @@ public class NoticeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_corporation);
 
         headerTitle = (TextView) findViewById(R.id.header_title);
-        headerTitle.setText("校园官方公告");
+        headerTitle.setText("社团公告");
 
         headerSearch = (ImageView) findViewById(R.id.header_right_image);
         headerSearch.setImageResource(R.drawable.search);
