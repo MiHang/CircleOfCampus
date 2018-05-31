@@ -96,7 +96,7 @@ public class CFragment  extends Fragment {
      * @param left
      * @param right
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+
     public void setTabLine(TabLayout tab, int left, int right){
         try {
             Class<?> tablayout = tab.getClass();
@@ -108,8 +108,11 @@ public class CFragment  extends Fragment {
                 child.setPadding(0,0,0,0);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT,1);
                 //修改两个tab的间距
-                params.setMarginStart(DensityUtil.dpToPx(getContext(), left));
-                params.setMarginEnd(DensityUtil.dpToPx(getContext(), right));
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    params.setMarginStart(DensityUtil.dpToPx(getContext(), left));
+                    params.setMarginEnd(DensityUtil.dpToPx(getContext(), right));
+                }
                 child.setLayoutParams(params);
                 child.invalidate();
             }

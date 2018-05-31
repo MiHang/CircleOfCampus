@@ -49,7 +49,7 @@ public class HomeActivity extends AppCompatActivity {
         initView();
         headerSelect(0);
 
-        //开启后台服务
+//        //开启后台服务
         MyBroadcastReceiver myBro = new MyBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("coc.team.home.activity");
@@ -58,6 +58,14 @@ public class HomeActivity extends AppCompatActivity {
         intent.putExtra("send", "jaye@163.com");
         startService(intent);
 
+//        data.add(new AFragment());
+//        BFragment bFragment = new BFragment();
+////        bFragment.bind(myBro);
+//        data.add(bFragment);
+//        data.add(new CFragment());
+//        data.add(new DFragment());
+//        adapter = new MyFragmentAdapter(getSupportFragmentManager(), data);
+//        HomeViewPager.setAdapter(adapter);
         data.add(new AFragment());
         BFragment bFragment = new BFragment();
         bFragment.bind(myBro);

@@ -20,20 +20,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
-        <activity android:name=".activity.DemoActivity"></activity>
-
+        <activity android:name=".activity.DemoActivity" />
 
         <service android:name=".background.MyService" />
 
         <activity
             android:name=".activity.ContactActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden">
-        </activity>
-        <activity android:name=".activity.AddRequestActivity">
-
-        </activity>
+            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
+        <activity android:name=".activity.AddRequestActivity"></activity>
     </application>
 
 </manifest>

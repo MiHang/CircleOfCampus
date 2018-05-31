@@ -1,8 +1,14 @@
 package coc.team.home.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.LayoutInflaterFactory;
@@ -68,10 +74,9 @@ public class DFragment extends Fragment {
                 Toast.makeText(getContext(), "退出", Toast.LENGTH_SHORT).show();
             }
         });
-        new Thread(new Runnable() {
+        AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-
                 final String s = helper.getUserInfoByAccount("jaye@163.com");
                 account.post(new Runnable() {
                     @Override
@@ -106,7 +111,7 @@ public class DFragment extends Fragment {
 
                 });
             }
-        }).start();
+        });
     }
 
     @Override
@@ -130,17 +135,23 @@ public class DFragment extends Fragment {
         userName = (TextView) view.findViewById(R.id.userName);
         QR = (TextView) view.findViewById(R.id.QR);
         QR.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("NewApi")
             @Override
             public void onClick(View view) {
                 Dialog dialog = new Dialog(getContext());
                 View v = LayoutInflater.from(getContext()).inflate(R.layout.qr_dialog, null);
                 ImageView img = v.findViewById(R.id.qr_img);
-                Bitmap bitmap=new QRCodeUtils(getContext()).createQRCodeWithLogo6(account.getText().toString(), 500, R.drawable.icon);
+                Bitmap bitmap=new QRCodeUtils(getContext()).createQRCodeWithLogo6(account.getText().toString(), 800, R.drawable.icon);
+
+
                 img.setImageBitmap(bitmap);
+
+
+                img.setBackground(getResources().getDrawable(R.drawable.bg));
+
                 dialog.setContentView(v);
                 Window dialogWindow = dialog.getWindow();
                 WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-                dialogWindow.setGravity(Gravity.CENTER);
 
         /*
          * lp.x与lp.y表示相对于原始位置的偏移.
@@ -172,6 +183,31 @@ public class DFragment extends Fragment {
 
         });
     }
-
+    /**
+     * 缩放Bitmap满屏
+     *
+     * @param bitmap
+     * @param screenWidth
+     * @param screenHight
+     * @return
+     */
+    public static Bitmap getBitmap(Bitmap bitmap, int screenWidth,
+                                   int screenHight)
+    {
+        int w = bitmap.getWidth();
+        int h = bitmap.getHeight();
+        Matrix matrix = new Matrix();
+        float scale = (float) screenWidth / w;
+        float scale2 = (float) screenHight / h;
+        // scale = scale < scale2 ? scale : scale2;
+        matrix.postScale(scale, scale);
+        Bitmap bmp = Bitmap.createBitmap(bitmap, 0, 0, w, h, matrix, true);
+        if (bitmap != null && !bitmap.equals(bmp) && !bitmap.isRecycled())
+        {
+            bitmap.recycle();
+            bitmap = null;
+        }
+        return bmp;// Bitmap.createBitmap(bitmap, 0, 0, w, h, matrix, true);
+    }
 
 }
