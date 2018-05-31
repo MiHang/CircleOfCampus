@@ -27,7 +27,8 @@
                 android:textSize="18dp"
                 android:textStyle="bold"
                 android:layout_centerVertical="true"
-                android:textColor="#EEB422"/>
+                android:textColor="#EEB422"
+                android:layout_marginLeft="15dp"/>
 
             <coc.team.common.view.FontTextView
                 android:layout_width="wrap_content"
@@ -47,6 +48,7 @@
                 android:background="@drawable/xiangyou"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
                 />
 
         </RelativeLayout>
@@ -68,7 +70,8 @@
                 android:textSize="18dp"
                 android:textStyle="bold"
                 android:layout_centerVertical="true"
-                android:textColor="#EEB422"/>
+                android:textColor="#EEB422"
+                android:layout_marginLeft="15dp"/>
 
             <coc.team.common.view.FontTextView
                 android:layout_width="wrap_content"
@@ -88,6 +91,8 @@
                 android:background="@drawable/xiangyou"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+
                 />
 
         </RelativeLayout>
