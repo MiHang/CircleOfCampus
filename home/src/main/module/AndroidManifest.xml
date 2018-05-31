@@ -28,7 +28,8 @@
             android:name=".activity.ContactActivity"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name=".activity.AddRequestActivity" />
-        <activity android:name=".fragment.NoticeActivity"></activity>
+        <activity android:name=".fragment.NoticeActivity" />
+        <activity android:name=".fragment.CorporationActivity"></activity>
     </application>
 
 </manifest>

@@ -8,20 +8,20 @@ import android.widget.ImageView;
 
 import coc.team.home.R;
 
-public class NoticeActivity extends AppCompatActivity {
+public class CorporationActivity extends AppCompatActivity {
 
-    private ImageView notice;
+    private ImageView corporation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notice);
+        setContentView(R.layout.activity_corporation);
 
-        notice = findViewById(R.id.home_campus_notice_1);
-        notice.setOnClickListener(new View.OnClickListener() {
+        corporation = findViewById(R.id.home_corporation_notice_1);
+        corporation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(NoticeActivity.this,AFragment.class);
+                Intent intent = new Intent(CorporationActivity.this,AFragment.class);
                 startActivity(intent);
             }
         });
