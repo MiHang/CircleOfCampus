@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingRight="15dp"
+    android:paddingLeft="15dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:layout_weight="1">
+
+        <!-- 标题 -->
+        <coc.team.common.view.FontTextView
+            android:id="@+id/item_my_publish_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="titletitletitletitle"
+            android:textColor="#000000"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textSize="18dp"/>
+
+        <!-- 申请时间 -->
+        <coc.team.common.view.FontTextView
+            android:id="@+id/item_my_publish_publish_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="申请时间：2018年05月30日"
+            android:textSize="12dp"/>
+
+    </LinearLayout>
+
+    <!-- 封面 -->
+    <ImageView
+        android:id="@+id/item_my_publish_cover"
+        android:layout_width="100dp"
+        android:layout_height="80dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/test_community_recruit"/>
+
+</LinearLayout>

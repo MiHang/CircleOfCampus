@@ -2,6 +2,7 @@ package coc.team.home.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -77,35 +78,31 @@ public class MyMessageAdapter extends SwipeMenuAdapter<MyMessageAdapter.ViewHold
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         Log.e("tag",data.get(position).getAccount()+data.get(position).getUserName()+data.get(position).getSex());
-        //加载头像 查询服务器是否有头像图片，若无则按性别加载
-        Glide.with(context)
-                .load(http.getPath()+"/res/img/"+data.get(position).getAccount())
-                .transform(new GlideCircleTransform(context))
-                .override(scale,scale)
-                .crossFade()
-                .listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-
-                                Glide.with(context)
-                                        .load(http.getPath()+"/res/img/"+data.get(position).getSex())
-                                        .transform(new GlideCircleTransform(context))
-                                        .override(scale,scale)
-                                        .crossFade()
-                                        .into(holder.icon);
-
-
-
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        return false;
-                    }
-                })
-                .into(holder.icon);
-
+        if (holder.icon.getDrawable() == null) {
+            //加载头像 查询服务器是否有头像图片，若无则按性别加载
+            Glide.with(context)
+                    .load(http.getPath()+"/res/img/"+data.get(position).getAccount())
+                    .transform(new GlideCircleTransform(context))
+                    .override(scale,scale)
+                    .crossFade()
+                    .listener(new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            Glide.with(context)
+                                    .load(http.getPath()+"/res/img/"+data.get(position).getSex())
+                                    .transform(new GlideCircleTransform(context))
+                                    .override(scale,scale)
+                                    .crossFade()
+                                    .into(holder.icon);
+                            return false;
+                        }
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            return false;
+                        }
+                    })
+                    .into(holder.icon);
+        }
 
 
         holder.name.setText(data.get(position).getUserName());

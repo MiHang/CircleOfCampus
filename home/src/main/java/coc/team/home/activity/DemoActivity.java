@@ -11,7 +11,7 @@ import coc.team.home.BroadcastReceiver.MyBroadcastReceiver;
 import coc.team.home.background.MyService;
 import coc.team.home.R;
 
-public class DemoActivity extends AppCompatActivity implements View.OnClickListener {
+public class DemoActivity extends AppCompatActivity {
 
     private Button start_service;
     private Button stop_service;
@@ -31,36 +31,21 @@ public class DemoActivity extends AppCompatActivity implements View.OnClickListe
         bind_service = (Button) findViewById(R.id.bind_service);
         unbind_service = (Button) findViewById(R.id.unbind_service);
 
-        start_service.setOnClickListener(this);
-        stop_service.setOnClickListener(this);
-        bind_service.setOnClickListener(this);
-        unbind_service.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.start_service:
+        start_service.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 MyBroadcastReceiver myBro=new MyBroadcastReceiver();
 
                 IntentFilter intentFilter=new IntentFilter();
                 intentFilter.addAction("coc.team.home.activity");
                 registerReceiver(myBro,intentFilter);
-                Intent intent=new Intent(this,MyService.class);
+                Intent intent=new Intent(getApplicationContext(),MyService.class);
                 intent.putExtra("send","123");
                 startService(intent);
+            }
+        });
 
-                break;
-            case R.id.stop_service:
-
-                break;
-            case R.id.bind_service:
-
-                break;
-            case R.id.unbind_service:
-
-                break;
-        }
     }
+
 
 }

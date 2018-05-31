@@ -39,5 +39,10 @@ dependencies {
 
     if (!isModule.toBoolean()) { // 集成模式 - 添加组件
         implementation project(':login')
+        implementation project(':campus')
+        implementation project(':chat')
+        implementation project(':home')
+        implementation project(':manager')
+
     }
 }
