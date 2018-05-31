@@ -26,7 +26,7 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
  * Created by 惠普 on 2018-05-11.
  */
 
-public class DFragment extends Fragment implements View.OnClickListener {
+public class DFragment extends Fragment {
 
 
     private ImageView Icon;
@@ -107,29 +107,13 @@ public class DFragment extends Fragment implements View.OnClickListener {
     private void initView(View view) {
 
         Icon = (ImageView) view.findViewById(R.id.Icon);
-        Icon.setOnClickListener(this);
         Log_out = (Button) view.findViewById(R.id.Log_out);
-        Log_out.setOnClickListener(this);
         icon_bg = (ImageView) view.findViewById(R.id.icon_bg);
-        icon_bg.setOnClickListener(this);
         account = (TextView) view.findViewById(R.id.account);
-        account.setOnClickListener(this);
         sex = (TextView) view.findViewById(R.id.sex);
-        sex.setOnClickListener(this);
         college = (TextView) view.findViewById(R.id.college);
-        college.setOnClickListener(this);
         department = (TextView) view.findViewById(R.id.department);
-        department.setOnClickListener(this);
         UerName = (TextView) view.findViewById(R.id.userName);
-        UerName.setOnClickListener(this);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.Log_out:
-
-                break;
-        }
-    }
 }

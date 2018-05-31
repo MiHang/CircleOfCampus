@@ -40,7 +40,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class SearchActivity extends AppCompatActivity implements View.OnClickListener {
+public class SearchActivity extends AppCompatActivity {
 
     private EditText search;
     private Button button;
@@ -75,7 +75,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         button = (Button) findViewById(R.id.button);
         result = (TextView) findViewById(R.id.result);
 
-        button.setOnClickListener(this);
         search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -143,16 +142,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
         });
         recycler_view = (SwipeMenuRecyclerView) findViewById(R.id.recycler_view);
-        recycler_view.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button:
-
-                break;
-        }
     }
 
 
