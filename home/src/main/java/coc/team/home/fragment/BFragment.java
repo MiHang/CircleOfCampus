@@ -60,10 +60,10 @@ public class BFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
 
-        view = getActivity().getLayoutInflater().inflate(R.layout.fragment_msg, null);
+            view = getActivity().getLayoutInflater().inflate(R.layout.fragment_msg, null);
         initView(view);
 
         if (BroadcastReceiver!=null){//添加广播回调监听，从而更新消息列表

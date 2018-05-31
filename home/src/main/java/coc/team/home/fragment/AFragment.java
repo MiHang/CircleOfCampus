@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import coc.team.home.R;
+import coc.team.home.adapter.CampusCircleListViewAdapter;
+import coc.team.home.view.MyListView;
 
 /**
  * Created by 惠普 on 2018-05-11.
@@ -20,13 +22,23 @@ import coc.team.home.R;
 
 public class AFragment extends Fragment {
 
+    private View view;
     private List<Integer> images = new ArrayList<>();//声明数组
+    private MyListView campusCircleListView;
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_a, null);
+    public void onDestroyView() {
+        super .onDestroyView();
+        if (null != view) {
+            ((ViewGroup) view.getParent()).removeView(view);
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        view = getActivity().getLayoutInflater().inflate(R.layout.fragment_home, null);
 
         Banner banner = (Banner) view.findViewById(R.id.banner);
         //设置图片加载器
@@ -39,8 +51,20 @@ public class AFragment extends Fragment {
         //banner设置方法全部调用完毕时最后调用
         banner.start();
 
-        return view;
+        ArrayList<String> items = new ArrayList<String>();
+        for (int i = 1; i < 4; i ++) {
+            items.add("Item " + i);
+        }
+
+        campusCircleListView = (MyListView) view.findViewById(R.id.home_campus_circle_list_view);
+        campusCircleListView.setAdapter(new CampusCircleListViewAdapter(getContext(), items));
+        campusCircleListView.setListViewHeightBasedOnChildren();
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return view;
+    }
 
 }
