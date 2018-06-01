@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.youth.banner.Banner;
@@ -27,8 +29,9 @@ public class AFragment extends Fragment {
     private View view;
     private List<Integer> images = new ArrayList<>();//声明数组
     private MyListView campusCircleListView;
-    private TextView more_campus_notice;
-    private TextView more_corporation_notice;
+    private MyListView societyCircleListView;
+    private LinearLayout more_campus_notice;
+    private LinearLayout more_corporation_notice;
 
     @Override
     public void onDestroyView() {
@@ -47,10 +50,12 @@ public class AFragment extends Fragment {
         //设置图片加载器
         banner.setImageLoader(new Lunbotu());
         //设置图片集合
-        images.add(R.drawable.lunbo01);
-        images.add(R.drawable.lunbo02);
-        images.add(R.drawable.lunbo04);
+        images.add(R.drawable.banner);
+        images.add(R.drawable.img_campus_kol);
+        images.add(R.drawable.img_54);
         banner.setImages(images);
+
+        banner.setDelayTime(3000);
 
         //banner设置方法全部调用完毕时最后调用
         banner.start();
@@ -60,13 +65,18 @@ public class AFragment extends Fragment {
             items.add("Item " + i);
         }
 
+        // 校园官方公告列表
         campusCircleListView = (MyListView) view.findViewById(R.id.home_campus_circle_list_view);
         campusCircleListView.setAdapter(new CampusCircleListViewAdapter(getContext(), items));
         campusCircleListView.setListViewHeightBasedOnChildren();
 
+        // 社团公告列表
+        societyCircleListView = (MyListView) view.findViewById(R.id.home_society_circle_list_view);
+        societyCircleListView.setAdapter(new CampusCircleListViewAdapter(getContext(), items));
+        societyCircleListView.setListViewHeightBasedOnChildren();
 
-
-        more_campus_notice = view.findViewById(R.id.home_campus_notice);
+        // 校园官方公告 更多
+        more_campus_notice = (LinearLayout) view.findViewById(R.id.home_campus_notice_more);
         more_campus_notice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,11 +84,13 @@ public class AFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        more_corporation_notice = view.findViewById(R.id.home_campus_corporation_notice);
+
+        // 社团公告 更多
+        more_corporation_notice = (LinearLayout)view.findViewById(R.id.home_corporation_notice_more);
         more_corporation_notice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(),CorporationActivity.class);
+                Intent intent = new Intent(getActivity(), CorporationActivity.class);
                 startActivity(intent);
             }
         });

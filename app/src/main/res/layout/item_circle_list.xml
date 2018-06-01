@@ -1,46 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="105dp"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:paddingLeft="25dp"
+    android:paddingRight="15dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
     android:orientation="horizontal">
 
-    <ImageView
+    <team.circleofcampus.view.RoundImageView
         android:id="@+id/imageView"
-        android:layout_width="300dp"
-        android:layout_height="100dp"
-        android:layout_weight="1"
-        android:padding="10dp"
-        app:srcCompat="@drawable/bunlo03" />
+        android:layout_width="120dp"
+        android:layout_height="70dp"
+        app:roundHeight="10dp"
+        app:roundWidth="10dp"
+        android:src="@drawable/img_sxcz"
+        android:scaleType="centerCrop"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
         android:layout_weight="1"
+        android:paddingLeft="10dp"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:gravity="center|left">
 
         <team.circleofcampus.view.FontTextView
             android:id="@+id/item_circle_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textColor="@color/black"
             android:text="标题"
-            android:textSize="25dp"/>
+            android:textSize="18dp"/>
 
         <team.circleofcampus.view.FontTextView
-            android:id="@+id/textView3"
+            android:id="@+id/item_circle_activity_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="时间"
-            android:textSize="15dp"
-            android:layout_marginTop="5dp"/>
+            android:text="时间：2018年06月01日"
+            android:textSize="12dp"/>
 
         <team.circleofcampus.view.FontTextView
-            android:id="@+id/textView"
+            android:id="@+id/item_circle_venue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="地点"
-            android:textSize="15dp"
-            android:layout_marginTop="5dp"/>
+            android:text="地点：学术交流中心"
+            android:textSize="12dp"/>
     </LinearLayout>
 </LinearLayout>
