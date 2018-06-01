@@ -1,5 +1,6 @@
 package team.circleofcampus.activity;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -94,7 +95,10 @@ public class LoginActivity extends AppCompatActivity {
      */
     @OnClick(R.id.login_btn)
     public void onClickLoginBtn(View view) {
-
+        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
+        finish();
     }
 
     /**
@@ -103,7 +107,9 @@ public class LoginActivity extends AppCompatActivity {
      */
     @OnClick(R.id.login_register_text)
     public void onClickRegister(View view) {
-
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
     }
 
     /**
@@ -112,6 +118,8 @@ public class LoginActivity extends AppCompatActivity {
      */
     @OnClick(R.id.login_forget_pwd_text)
     public void onClickForgetPwd(View view) {
-
+        Intent intent = new Intent(LoginActivity.this, ForgetPwdActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
     }
 }
