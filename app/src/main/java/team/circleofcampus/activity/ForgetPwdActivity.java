@@ -26,7 +26,7 @@ public class ForgetPwdActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forget_pwd);
         ButterKnife.bind(this);
-        headerTitle.setText("注册");
+        headerTitle.setText("重置密码");
     }
 
     /**
