@@ -55,15 +55,15 @@ public class AFragment extends Fragment {
         images.add(R.drawable.img_54);
         banner.setImages(images);
 
-        banner.setDelayTime(3000);
+        banner.setDelayTime(5000);
 
         //banner设置方法全部调用完毕时最后调用
         banner.start();
 
         ArrayList<String> items = new ArrayList<String>();
-        for (int i = 1; i < 4; i ++) {
-            items.add("Item " + i);
-        }
+        items.add("校园KOL 颜值担当 非你莫属");
+        items.add("\"书香成职\"系列活动成果展");
+        items.add("\"五四青年节\"文艺汇演");
 
         // 校园官方公告列表
         campusCircleListView = (MyListView) view.findViewById(R.id.home_campus_circle_list_view);
