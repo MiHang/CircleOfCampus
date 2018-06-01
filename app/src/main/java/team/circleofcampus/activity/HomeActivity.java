@@ -7,12 +7,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import team.circleofcampus.BroadcastReceiver.MyBroadcastReceiver;
 import team.circleofcampus.Interface.FragmentSwitchListener;
 import team.circleofcampus.R;
@@ -35,18 +40,28 @@ import team.circleofcampus.view.NoScrollViewPager;
 public class HomeActivity extends AppCompatActivity {
 
     MyFragmentAdapter adapter;
-    private NoScrollViewPager HomeViewPager;
-    List<Fragment> data = new ArrayList<>();
-    private ImageView message;
-    private ImageView circle;
-    private ImageView publish;
-    private ImageView mine;
-    private TextView headerRightText;
-    private ImageView headerRightImage;
-    private TextView headerLeftText;
-    private ImageView headerLeftImage;
-    private TextView title;
+    @BindView(R.id.HomeViewPager)
+    protected NoScrollViewPager HomeViewPager;
+    @BindView(R.id.message)
+    protected ImageView message;
+    @BindView(R.id.circle)
+    protected ImageView circle;
+    @BindView(R.id.publish)
+    protected ImageView publish;
+    @BindView(R.id.mine)
+    protected ImageView mine;
+    @BindView(R.id.header_right_text)
+    protected TextView headerRightText;
+    @BindView(R.id.header_right_image)
+    protected ImageView headerRightImage;
+    @BindView(R.id.header_left_text)
+    protected TextView headerLeftText;
+    @BindView(R.id.header_left_image)
+    protected ImageView headerLeftImage;
+    @BindView(R.id.header_title)
+    protected TextView title;
 
+    List<Fragment> data = new ArrayList<>();
     private int selectedPageId = 0;
 
     @Override
@@ -66,7 +81,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        initView();
+        ButterKnife.bind(this); // 绑定Activity
         headerSelect(0);
 
         // 开启后台服务
@@ -150,7 +165,7 @@ public class HomeActivity extends AppCompatActivity {
                 headerLeftText.setText("发表");
                 headerLeftImage.setVisibility(View.GONE);
                 headerRightText.setText("");
-                headerRightImage.setImageResource(R.drawable.search);
+                headerRightImage.setImageResource(R.drawable.icon_search_white);
                 headerRightImage.setVisibility(View.VISIBLE);
                 setHomeBottomNavNormal();
                 circle.setImageResource(R.drawable.icon_home_campus_hover);
@@ -223,77 +238,69 @@ public class HomeActivity extends AppCompatActivity {
         mine.setImageResource(R.drawable.icon_home_my_normal);
     }
 
-    private void initView() {
+    /**
+     * 标题栏右侧文字点击事件
+     * @param view
+     */
+    @OnClick(R.id.header_right_text)
+    protected void onClickRightText(final View view) {
+        if (selectedPageId == 1) { // 当前页面为消息页
+            Intent intent = new Intent(HomeActivity.this, ContactActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
+        }
+    }
 
-        HomeViewPager = (NoScrollViewPager) findViewById(R.id.HomeViewPager);
-        message = (ImageView) findViewById(R.id.message);
-        message.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setHomeBottomNavNormal();
-                message.setImageResource(R.drawable.icon_home_msg_hover);
-                HomeViewPager.setCurrentItem(1, true);
-            }
-        });
+    /**
+     * 标题栏返回图标点击事件
+     * @param view
+     */
+    @OnClick(R.id.header_left_image)
+    protected void onClickBackIcon(final View view) {
+        if (selectedPageId == 4) { // 我的二维码返回到我的页面
+            headerSelect(3);
+            HomeViewPager.setCurrentItem(3,true);
+        } else if (selectedPageId == 5 || selectedPageId == 6) { // 校园官方公告和社团公告返回到校园圈页面
+            headerSelect(0);
+            HomeViewPager.setCurrentItem(0,true);
+        }
+    }
 
-        circle = (ImageView) findViewById(R.id.circle);
-        circle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    /**
+     * 底部导航栏点击事件
+     * @param view
+     */
+    @OnClick({R.id.circle, R.id.message, R.id.publish, R.id.mine})
+    protected void onClickNav(final View view) {
+
+        // 缩放动画 - 将选中状态的图标缩小1/2（中心缩放）
+        ScaleAnimation scaleAnimation = new ScaleAnimation(1.0f, 0.5f, 1.0f, 0.5f,
+                view.getWidth() / 2, view.getHeight() / 2);
+        scaleAnimation.setDuration(100);
+        view.startAnimation(scaleAnimation);
+
+        switch (view.getId()) {
+            case R.id.circle:{
                 setHomeBottomNavNormal();
                 circle.setImageResource(R.drawable.icon_home_campus_hover);
                 HomeViewPager.setCurrentItem(0, true);
-            }
-        });
-        publish = (ImageView) findViewById(R.id.publish);
-        publish.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            };break;
+            case R.id.message:{
+                setHomeBottomNavNormal();
+                message.setImageResource(R.drawable.icon_home_msg_hover);
+                HomeViewPager.setCurrentItem(1, true);
+            };break;
+            case R.id.publish:{
                 setHomeBottomNavNormal();
                 publish.setImageResource(R.drawable.icon_home_my_publish_normal);
                 HomeViewPager.setCurrentItem(2, true);
-            }
-        });
-        mine = (ImageView) findViewById(R.id.mine);
-        mine.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            };break;
+            case R.id.mine:{
                 setHomeBottomNavNormal();
                 mine.setImageResource(R.drawable.icon_home_my_hover);
                 HomeViewPager.setCurrentItem(3, true);
-            }
-        });
-
-        headerRightText = (TextView) findViewById(R.id.header_right_text);
-        headerRightText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (selectedPageId == 1) { // 当前页面为消息页
-                    Intent intent = new Intent(HomeActivity.this, ContactActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
-                }
-            }
-        });
-        headerRightImage = (ImageView) findViewById(R.id.header_right_image);
-        headerLeftText = (TextView) findViewById(R.id.header_left_text);
-        title = (TextView) findViewById(R.id.header_title);
-
-        // 标题栏，返回图标
-        headerLeftImage = (ImageView) findViewById(R.id.header_left_image);
-        headerLeftImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selectedPageId == 4) { // 我的二维码返回到我的页面
-                    headerSelect(3);
-                    HomeViewPager.setCurrentItem(3,true);
-                } else if (selectedPageId == 5 || selectedPageId == 6) { // 校园官方公告和社团公告返回到校园圈页面
-                    headerSelect(0);
-                    HomeViewPager.setCurrentItem(0,true);
-                }
-            }
-        });
+            };break;
+        }
     }
 
 }

@@ -56,12 +56,12 @@
 
             <ImageView
                 android:id="@+id/header_right_image"
-                android:layout_width="wrap_content"
+                android:layout_width="30dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_alignParentRight="true"
                 android:paddingRight="@dimen/min_padding"
-                android:scaleType="center"
+                android:scaleType="centerInside"
                 android:gravity="center"/>
         </RelativeLayout>
     </LinearLayout>
