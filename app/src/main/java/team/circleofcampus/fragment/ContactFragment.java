@@ -1,6 +1,7 @@
 package team.circleofcampus.fragment;
 
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -14,12 +15,18 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.common.view.DialogTextView;
+import com.xiasuhuei321.loadingdialog.view.LoadingDialog;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
 import com.yanzhenjie.recyclerview.swipe.OnSwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,11 +35,13 @@ import java.util.List;
 import java.util.Map;
 
 import team.circleofcampus.Interface.OnItemClickListener;
+import team.circleofcampus.Interface.MoreFragmentListener;
 import team.circleofcampus.LanguageUtils;
 import team.circleofcampus.R;
 import team.circleofcampus.adapter.GoodFriendAdapter;
 import team.circleofcampus.adapter.GoodFriendItemDecoration;
 import team.circleofcampus.adapter.MyIndexAdapter;
+import team.circleofcampus.http.HttpHelper;
 import team.circleofcampus.model.Contact;
 import team.circleofcampus.model.Letter;
 import team.circleofcampus.view.MyEditText;
@@ -53,17 +62,20 @@ public class ContactFragment extends Fragment {
     MyIndexAdapter myAdapter;//索引列表适配器
     LinearLayoutManager layoutManager;//布局管理器
     GoodFriendAdapter adapter;
-    OnItemClickListener itemClickListener;
+    MoreFragmentListener listener;
+    HttpHelper helper;
+    LoadingDialog dialog;
+    private DialogTextView num;
 
-    public void setItemClickListener(OnItemClickListener itemClickListener) {
-        this.itemClickListener = itemClickListener;
+
+    public void setListener(MoreFragmentListener listener) {
+        this.listener = listener;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contact, null);
-
         initView(view);
 
         //设置布局管理器
@@ -72,111 +84,130 @@ public class ContactFragment extends Fragment {
         //设置增加或删除条目的动画
         rv.setItemAnimator(new DefaultItemAnimator());
 
-        List<Contact> list = new ArrayList<Contact>();
-
-        Contact contact1 = new Contact();
-        contact1.setUserName("啊爬子");
-        contact1.setAccount("1");
-        list.add(contact1);
-        Contact contact2 = new Contact();
-        contact2.setUserName("王贤");
-        contact2.setAccount("2");
-        list.add(contact2);
-        Contact contact4 = new Contact();
-        contact4.setUserName("林成功");
-        contact4.setAccount("111");
-        list.add(contact4);
-
-        Contact contact8 = new Contact();
-        contact8.setUserName("比员");
-        contact8.setAccount("87654321@qq.com");
-        list.add(contact8);
-
-        Contact contact11 = new Contact();
-        contact11.setUserName("第员");
-        contact11.setAccount("123");
-        list.add(contact11);
-        Contact contact12 = new Contact();
-        contact12.setUserName("额员");
-        contact12.setAccount("87654321@qq.com");
-        list.add(contact12);
-
-        Contact contact22 = new Contact();
-        contact22.setUserName("飞员");
-        contact22.setAccount("87654321@qq.com");
-        list.add(contact22);
-        Contact contact32 = new Contact();
-        contact32.setUserName("个员");
-        contact32.setAccount("87654321@qq.com");
-        list.add(contact32);
-        Contact contact42 = new Contact();
-        contact42.setUserName("b员");
-        contact42.setAccount("87654321@qq.com");
-        list.add(contact42);
-
-        Contact contact9 = new Contact();
-        contact9.setUserName("次员");
-        contact1.setAccount("87654321@qq.com");
-        list.add(contact9);
+        final List<Contact> list = new ArrayList<Contact>();
 
 
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getUserName() != null) {
-                String lastName = list.get(i).getUserName().toUpperCase().charAt(0) + "";
-                if (languageUtils.isChinese(list.get(i).getUserName())) {
-                    lastName = languageUtils.toEnglish(list.get(i).getUserName().charAt(0));
-                }
+//        Contact contact6 = new Contact();
+//        contact6.setUserName("宁");
+//        contact6.setAccount("111111");
+//        list.add(contact6);
 
-                Contact contact = new Contact();
-                contact.setLastName(lastName);
 
-                contact.setUserIcon(list.get(i).getUserIcon());
-                contact.setUserName(list.get(i).getUserName());
-                contact.setAccount(list.get(i).getAccount());
-                data.add(contact);
-            }
-        }
-        Collections.sort(data);//按字母顺序排序
+        dialog = new LoadingDialog(getContext());
+        dialog.setLoadingText("加载中")
+                .setSuccessText("加载成功")//显示加载成功时的文字
+                .setFailedText("加载失败")
+                .closeSuccessAnim()
+                .setShowTime(1000)
+                .setInterceptBack(false)
+                .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
+                .show();
 
+
+        helper = new HttpHelper(getContext());
         adapter = new GoodFriendAdapter(getContext(), data);
-
-        //标题
-        Titles.put(0, data.get(0).getLastName());
-        for (int i = 1; i < data.size(); i++) {
-            if (!data.get(i).getLastName().equals(data.get(i - 1).getLastName())) {
-                Titles.put(i, data.get(i).getLastName());
-            }
-
-        }
-
-
-        GoodFriendItemDecoration itemDecoration = new GoodFriendItemDecoration(getContext());
-        itemDecoration.setTitles(Titles);
-        rv.addItemDecoration(itemDecoration);
-
-
-        rv.setHasFixedSize(true);// 如果Item够简单，高度是确定的，打开FixSize将提高性能。
-        rv.setItemAnimator(new DefaultItemAnimator());// 设置Item默认动画，加也行，不加也行。
-
-        // 为SwipeRecyclerView的Item创建菜单就两句话，不错就是这么简单：
-        // 设置菜单创建器。
-        rv.setSwipeMenuCreator(swipeMenuCreator);
-        // 设置菜单Item点击监听。
-        rv.setSwipeMenuItemClickListener(menuItemClickListener);
-
-
         rv.setAdapter(adapter);
         adapter.setItemListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                if (itemClickListener!=null){
-                    itemClickListener.onItemClick(2);
+                if (listener != null) {
+                    String[] str = {
+                            data.get(position).getAccount(),
+                            data.get(position).getUserName()
+                    };
+                    listener.setValueExtra(2, str);
                 }
-                Toast.makeText(getContext(), "" + data.get(position).getAccount(), Toast.LENGTH_SHORT).show();
+
             }
         });
 
-        setSideBar();
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+
+                final String s = helper.queryFriendInfo("jaye@163.com");
+                rv.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            JSONObject jsonObject = new JSONObject(s);
+                            if (!s.equals("")) {
+                                num.setText("共" + jsonObject.getString("result") + "位联系人");
+                                JSONArray jsonArray = new JSONArray(jsonObject.getString("Info"));
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject js = new JSONObject(jsonArray.get(i).toString());
+                                    Contact contact = new Contact();
+                                    contact.setUserName(js.getString("nickName"));
+
+                                    contact.setAccount(js.getString("account"));
+                                    list.add(contact);
+                                }
+                                for (int i = 0; i < list.size(); i++) {
+                                    if (list.get(i).getUserName() != null) {
+                                        String lastName = list.get(i).getUserName().toUpperCase().charAt(0) + "";
+                                        if (languageUtils.isChinese(list.get(i).getUserName())) {
+                                            lastName = languageUtils.toEnglish(list.get(i).getUserName().charAt(0));
+                                        }
+
+                                        Contact contact = new Contact();
+                                        contact.setLastName(lastName);
+
+                                        contact.setUserIcon(list.get(i).getUserIcon());
+                                        contact.setUserName(list.get(i).getUserName());
+                                        contact.setAccount(list.get(i).getAccount());
+                                        data.add(contact);
+                                    }
+                                }
+                                Collections.sort(data);//按字母顺序排序
+                                if (data.size() > 0) {
+                                    IndexList.setVisibility(View.VISIBLE);
+                                }
+                                setSideBar();
+
+                                adapter.notifyDataSetChanged();
+                                if (data.size() > 0) {
+                                    //标题
+                                    Titles.put(0, data.get(0).getLastName());
+                                    for (int i = 1; i < data.size(); i++) {
+                                        if (!data.get(i).getLastName().equals(data.get(i - 1).getLastName())) {
+                                            Titles.put(i, data.get(i).getLastName());
+                                        }
+
+                                    }
+                                }
+
+                                GoodFriendItemDecoration itemDecoration = new GoodFriendItemDecoration(getContext());
+                                itemDecoration.setTitles(Titles);
+                                rv.addItemDecoration(itemDecoration);
+
+
+                                rv.setHasFixedSize(true);// 如果Item够简单，高度是确定的，打开FixSize将提高性能。
+                                rv.setItemAnimator(new DefaultItemAnimator());// 设置Item默认动画，加也行，不加也行。
+                                // 为SwipeRecyclerView的Item创建菜单就两句话，不错就是这么简单：
+                                // 设置菜单创建器。
+                                rv.setSwipeMenuCreator(swipeMenuCreator);
+                                // 设置菜单Item点击监听。
+                                rv.setSwipeMenuItemClickListener(menuItemClickListener);
+
+                                dialog.loadSuccess();
+                            } else {
+                                num.setText("暂无联系人");
+                                dialog.loadFailed();
+                            }
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+
+                });
+            }
+        });
+
 
         //滑动监听
         rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -229,6 +260,7 @@ public class ContactFragment extends Fragment {
         rv = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
         IndexList = (ListView) view.findViewById(R.id.IndexList);
 
+        num = (DialogTextView) view.findViewById(R.id.num);
     }
 
     /**

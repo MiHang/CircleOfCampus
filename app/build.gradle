@@ -42,4 +42,5 @@ dependencies {
     implementation 'com.youth.banner:banner:1.4.10'
     implementation 'com.bigkoo:alertview:1.0.3'
     implementation 'com.lcodecorex:tkrefreshlayout:1.0.7'
+    compile 'com.github.ForgetAll:LoadingDialog:v1.0.4'
 }

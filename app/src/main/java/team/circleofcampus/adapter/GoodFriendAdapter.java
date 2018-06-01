@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.common.view.CircleImageView;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuAdapter;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import team.circleofcampus.Interface.OnItemClickListener;
 import team.circleofcampus.R;
 import team.circleofcampus.http.HttpHelper;
 import team.circleofcampus.model.Contact;
+import team.circleofcampus.view.FontTextView;
 
 /**
  * 好友列表适配器
@@ -96,14 +98,14 @@ public class GoodFriendAdapter extends SwipeMenuAdapter<GoodFriendAdapter.ViewHo
 
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        public ImageView UserIcon;
-        public TextView UserName;
+        public CircleImageView UserIcon;
+        public FontTextView UserName;
         public LinearLayout Column;
         public ViewHolder(View rootView) {
             super(rootView);
             this.Column = (LinearLayout) rootView.findViewById(R.id.Column);
-            this.UserIcon = (ImageView) rootView.findViewById(R.id.UserIcon);
-            this.UserName = (TextView) rootView.findViewById(R.id.UserName);
+            this.UserIcon = (CircleImageView) rootView.findViewById(R.id.UserIcon);
+            this.UserName = (FontTextView) rootView.findViewById(R.id.UserName);
             if(isAndroid5()){
                 this.Column.setBackgroundResource(R.drawable.contact_pressed);//添加点击效果
             }

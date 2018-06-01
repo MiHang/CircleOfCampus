@@ -11,25 +11,49 @@
 
     <include layout="@layout/search_text" />
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:background="@color/white"
-        android:layout_height="wrap_content">
+        android:background="@color/mine_bg"
+        android:scrollbars="none"
+        android:layout_height="match_parent">
 
-        <include layout="@layout/view_recycler" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <ListView
-            android:id="@+id/IndexList"
-            android:layout_width="30dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="@dimen/max_padding"
-            android:layout_marginTop="@dimen/max_padding"
-            android:divider="@color/transparent"
-            android:dividerHeight="0dp"
-            android:listSelector="@color/transparent"
-            android:paddingRight="@dimen/min_padding"
-            android:scrollbars="none" />
-    </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white">
+
+
+                <include layout="@layout/view_recycler" />
+
+                <ListView
+                    android:id="@+id/IndexList"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="@dimen/max_padding"
+                    android:layout_marginTop="@dimen/max_padding"
+                    android:visibility="gone"
+                    android:divider="@color/transparent"
+                    android:dividerHeight="0dp"
+                    android:listSelector="@color/transparent"
+                    android:paddingRight="@dimen/min_padding"
+                    android:scrollbars="none" />
+            </RelativeLayout>
+
+            <com.common.view.DialogTextView
+                android:id="@+id/num"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/middle_padding"
+                android:gravity="center"
+                android:textSize="@dimen/tab_text_size" />
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

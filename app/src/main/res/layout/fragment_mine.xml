@@ -192,7 +192,7 @@
                 android:id="@+id/Log_out"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/middle_padding"
+                android:layout_margin="@dimen/min_padding"
                 android:background="@drawable/btn_bg"
                 android:text="退出登录"
                 android:textSize="@dimen/user_info_textSize"

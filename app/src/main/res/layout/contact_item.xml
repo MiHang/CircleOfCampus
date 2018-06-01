@@ -8,7 +8,7 @@
     android:background="@drawable/list_item_bg"
     android:orientation="horizontal">
 
-    <ImageView
+    <com.common.view.CircleImageView
         android:id="@+id/UserIcon"
         android:layout_width="@dimen/contact_icon"
         android:layout_height="@dimen/contact_icon"
@@ -22,6 +22,6 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:text="用户名"
-        android:textSize="@dimen/user_info_textSize" />
+        android:textSize="@dimen/userInfo_text_size" />
 
 </LinearLayout>
