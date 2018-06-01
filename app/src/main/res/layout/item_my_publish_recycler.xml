@@ -24,7 +24,7 @@
             android:textColor="#000000"
             android:maxLines="2"
             android:ellipsize="end"
-            android:textSize="18dp"/>
+            android:textSize="16dp"/>
 
         <!-- 申请时间 -->
         <team.circleofcampus.view.FontTextView

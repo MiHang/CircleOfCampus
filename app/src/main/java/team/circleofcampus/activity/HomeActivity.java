@@ -18,9 +18,9 @@ import team.circleofcampus.Interface.FragmentSwitchListener;
 import team.circleofcampus.R;
 import team.circleofcampus.adapter.MyFragmentAdapter;
 import team.circleofcampus.background.MyService;
-import team.circleofcampus.fragment.AFragment;
-import team.circleofcampus.fragment.BFragment;
-import team.circleofcampus.fragment.CFragment;
+import team.circleofcampus.fragment.CircleFragment;
+import team.circleofcampus.fragment.MessageFragment;
+import team.circleofcampus.fragment.MyPublishFragment;
 import team.circleofcampus.fragment.MineFragment;
 import team.circleofcampus.fragment.QRFragment;
 import team.circleofcampus.view.NoScrollViewPager;
@@ -47,6 +47,16 @@ public class HomeActivity extends AppCompatActivity {
     private int selectedPageId = 0;
 
     @Override
+    public void onBackPressed() {
+        if (selectedPageId == 4) {
+            headerSelect(3);
+            HomeViewPager.setCurrentItem(3,true);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
@@ -62,11 +72,11 @@ public class HomeActivity extends AppCompatActivity {
         intent.putExtra("send", "jayevip@163.com");
         startService(intent);
 
-        data.add(new AFragment());
-        BFragment bFragment = new BFragment();
+        data.add(new CircleFragment());
+        MessageFragment bFragment = new MessageFragment();
         bFragment.bind(myBro);
         data.add(bFragment);
-        data.add(new CFragment());
+        data.add(new MyPublishFragment());
         MineFragment mineFragment=new MineFragment();
         mineFragment.setSwitchListener(new FragmentSwitchListener() {
             @Override

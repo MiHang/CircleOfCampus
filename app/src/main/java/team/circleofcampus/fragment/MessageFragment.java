@@ -35,7 +35,7 @@ import team.circleofcampus.model.UserMsg;
 /**
  * 消息列表界面
  */
-public class BFragment extends Fragment {
+public class MessageFragment extends Fragment {
 
     private View view;
     private SwipeMenuRecyclerView recycler_view;

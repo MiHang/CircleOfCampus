@@ -24,7 +24,7 @@ import team.circleofcampus.view.MyListView;
 /**
  * Created by 惠普 on 2018-05-11.
  */
-public class AFragment extends Fragment {
+public class CircleFragment extends Fragment {
 
     private View view;
     private List<Integer> images = new ArrayList<>();//声明数组

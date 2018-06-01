@@ -24,7 +24,7 @@ import team.circleofcampus.util.FontUtil;
 /**
  * 我发布的页面, 此fragment的写法是Fragment防止自动清理 (ViewPager滑动时，滑出屏幕后被清理)
  */
-public class CFragment  extends Fragment {
+public class MyPublishFragment extends Fragment {
 
     private View view;
     private TabLayout tabLayout;
