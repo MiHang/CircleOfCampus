@@ -8,7 +8,7 @@ import android.graphics.Typeface;
  */
 public class FontUtil {
 
-    private static String fongUrl = "font/msyhl.ttc";
+    private static String fongUrl = "font/msyh.ttc";
     private static Typeface tf;
 
     /***

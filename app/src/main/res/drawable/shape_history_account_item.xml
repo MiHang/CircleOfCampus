@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 定义当button 处于pressed 状态时的形态-->
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="#c8f5a664"/>
+        </shape>
+    </item>
+
+    <!-- 定义当button 处于默认状态时的形态-->
+    <item>
+        <shape>
+            <solid android:color="#c8ffffff"/>
+        </shape>
+    </item>
+
+</selector>

@@ -30,62 +30,81 @@
 
         <LinearLayout
             android:layout_width="300dp"
-            android:layout_height="wrap_content"
+            android:layout_height="240dp"
             android:orientation="vertical"
-            android:background="#fcbc8c"
+            android:background="@drawable/bg_login_white_translucent"
             android:padding="15dp"
             android:layout_gravity="center">
 
             <!-- 账号 -->
-            <EditText
+            <team.circleofcampus.view.FontEditText
                 android:id="@+id/login_account_edit_text"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="账号"
+                android:layout_height="wrap_content"
+                android:theme="@style/LoginEditText"
+                android:drawableLeft="@drawable/text_account"
+                android:drawableRight="@drawable/icon_login_arrow_down"
+                android:textSize="16dp"
                 android:textColor="@color/white"
-                android:textSize="14dp"
-                android:theme="@style/LoginEditText" />
+                android:maxLines="1"
+                android:singleLine="true"
+                android:digits="0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@."/>
 
             <!-- 密码 -->
-            <EditText
-                android:id="@+id/app2"
+            <team.circleofcampus.view.FontEditText
+                android:id="@+id/login_pwd_edit_text"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:layout_gravity="center"
-                android:text="密码"
+                android:drawableLeft="@drawable/text_pwd"
+                android:paddingRight="10dp"
                 android:textColor="@color/white"
-                android:textSize="14dp"
-                android:theme="@style/LoginEditText" />
+                android:textSize="16dp"
+                android:theme="@style/LoginEditText"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:inputType="textPassword"
+                android:imeOptions="actionDone"/>
 
-            <Button
+            <team.circleofcampus.view.FontButton
+                android:id="@+id/login_btn"
                 android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:background="@drawable/bg_login_btn"
+                android:layout_height="45dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/shape_login_btn"
                 android:text="登录"
                 android:textColor="@color/white"
-                android:textSize="16dp" />
+                android:textSize="18dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:width="150dp"
+                <team.circleofcampus.view.FontTextView
+                    android:id="@+id/login_register_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="新用户注册"
-                    android:textColor="#fffefe"
-                    android:textSize="12dp" />
+                    android:textColor="@color/white"
+                    android:textSize="14dp" />
 
                 <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:gravity="right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <team.circleofcampus.view.FontTextView
+                    android:id="@+id/login_forget_pwd_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="忘记密码？"
-                    android:textColor="#fffefe"
-                    android:textSize="12dp" />
+                    android:textColor="@color/white"
+                    android:textSize="14dp" />
 
             </LinearLayout>
 
