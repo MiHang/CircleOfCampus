@@ -22,6 +22,7 @@ import butterknife.OnClick;
 import team.circleofcampus.Interface.FragmentSwitchListener;
 import team.circleofcampus.R;
 import team.circleofcampus.adapter.CampusCircleListViewAdapter;
+import team.circleofcampus.util.DensityUtil;
 import team.circleofcampus.view.MyListView;
 
 /**
@@ -64,6 +65,11 @@ public class CircleFragment extends Fragment {
         // 设置下拉刷新部分的HeadView
         BezierLayout headerView = new BezierLayout(getContext());
         refreshLayout.setHeaderView(headerView);
+
+        // 设置下拉刷新控件相关参数
+        refreshLayout.setMaxHeadHeight(100);
+        refreshLayout.setHeaderHeight(80);
+        refreshLayout.setEnableLoadmore(false);
 
         // 下拉刷新
         refreshLayout.setOnRefreshListener(new RefreshListenerAdapter(){

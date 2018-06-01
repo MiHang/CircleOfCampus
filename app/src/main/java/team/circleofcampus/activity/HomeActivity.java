@@ -201,8 +201,8 @@ public class HomeActivity extends AppCompatActivity {
             case 4: {
                 title.setText("我的二维码");
                 headerLeftText.setText("");
+                headerRightText.setText("");
                 headerLeftImage.setVisibility(View.VISIBLE);
-                headerRightText.setVisibility(View.GONE);
                 headerRightImage.setVisibility(View.GONE);
                 setHomeBottomNavNormal();
                 mine.setImageResource(R.drawable.icon_home_my_hover);
@@ -210,8 +210,8 @@ public class HomeActivity extends AppCompatActivity {
             case 5: {
                 title.setText("校园官方公告");
                 headerLeftText.setText("");
+                headerRightText.setText("");
                 headerLeftImage.setVisibility(View.VISIBLE);
-                headerRightText.setVisibility(View.GONE);
                 headerRightImage.setVisibility(View.GONE);
                 setHomeBottomNavNormal();
                 circle.setImageResource(R.drawable.icon_home_campus_hover);
@@ -219,8 +219,8 @@ public class HomeActivity extends AppCompatActivity {
             case 6: {
                 title.setText("社团公告");
                 headerLeftText.setText("");
+                headerRightText.setText("");
                 headerLeftImage.setVisibility(View.VISIBLE);
-                headerRightText.setVisibility(View.GONE);
                 headerRightImage.setVisibility(View.GONE);
                 setHomeBottomNavNormal();
                 circle.setImageResource(R.drawable.icon_home_campus_hover);

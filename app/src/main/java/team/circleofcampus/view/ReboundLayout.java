@@ -21,7 +21,7 @@ public class ReboundLayout extends ViewGroup {
     /**
      * 拉动阻尼
      */
-    private static final float PULL_DAMP = 0.2f;
+    private static final float PULL_DAMP = 0.3f;
     /**
      * Scroller滑动的速度
      */
