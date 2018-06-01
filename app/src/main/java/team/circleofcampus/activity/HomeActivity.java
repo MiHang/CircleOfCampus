@@ -18,11 +18,14 @@ import team.circleofcampus.Interface.FragmentSwitchListener;
 import team.circleofcampus.R;
 import team.circleofcampus.adapter.MyFragmentAdapter;
 import team.circleofcampus.background.MyService;
+import team.circleofcampus.fragment.CampusCircleFragment;
 import team.circleofcampus.fragment.CircleFragment;
 import team.circleofcampus.fragment.MessageFragment;
 import team.circleofcampus.fragment.MyPublishFragment;
 import team.circleofcampus.fragment.MineFragment;
 import team.circleofcampus.fragment.QRFragment;
+import team.circleofcampus.fragment.SocietyCircleFragment;
+import team.circleofcampus.model.SocietyCircle;
 import team.circleofcampus.view.NoScrollViewPager;
 
 
@@ -51,6 +54,9 @@ public class HomeActivity extends AppCompatActivity {
         if (selectedPageId == 4) {
             headerSelect(3);
             HomeViewPager.setCurrentItem(3,true);
+        } else if (selectedPageId == 5 || selectedPageId == 6) {
+            headerSelect(0);
+            HomeViewPager.setCurrentItem(0,false);
         } else {
             super.onBackPressed();
         }
@@ -63,7 +69,7 @@ public class HomeActivity extends AppCompatActivity {
         initView();
         headerSelect(0);
 
-//        //开启后台服务
+        // 开启后台服务
         MyBroadcastReceiver myBro = new MyBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("coc.team.home.activity");
@@ -72,11 +78,28 @@ public class HomeActivity extends AppCompatActivity {
         intent.putExtra("send", "jayevip@163.com");
         startService(intent);
 
-        data.add(new CircleFragment());
+        // 校园圈
+        CircleFragment circleFragment = new CircleFragment();
+        circleFragment.setSwitchListener(new FragmentSwitchListener() {
+            @Override
+            public void displayThisFragment(boolean display) {}
+            @Override
+            public void displayThisFragment(int currentId, boolean display) {
+                headerSelect(currentId);
+                HomeViewPager.setCurrentItem(currentId,false);
+            }
+        });
+        data.add(circleFragment);
+
+        // 消息
         MessageFragment bFragment = new MessageFragment();
         bFragment.bind(myBro);
         data.add(bFragment);
+
+        // 我的发布
         data.add(new MyPublishFragment());
+
+        // 我的
         MineFragment mineFragment=new MineFragment();
         mineFragment.setSwitchListener(new FragmentSwitchListener() {
             @Override
@@ -84,24 +107,33 @@ public class HomeActivity extends AppCompatActivity {
                 headerSelect(4);
                 HomeViewPager.setCurrentItem(4,true);
             }
+            @Override
+            public void displayThisFragment(int currentId, boolean display) {}
         });
         data.add(mineFragment);
+
+        // 我的二维码
         QRFragment qrFragment = new QRFragment();
         qrFragment.setAccount("assaas");
-
         data.add(qrFragment);
+
+        // 更多校园官方公告
+        CampusCircleFragment campusCircleFragment = new CampusCircleFragment();
+        data.add(campusCircleFragment);
+        // 更多社团公告
+        SocietyCircleFragment societyCircleFragment = new SocietyCircleFragment();
+        data.add(societyCircleFragment);
+
         adapter = new MyFragmentAdapter(getSupportFragmentManager(), data);
         HomeViewPager.setAdapter(adapter);
         HomeViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
-
             @Override
             public void onPageSelected(int position) {
                 selectedPageId = position;
                 headerSelect(position);
             }
-
             @Override
             public void onPageScrollStateChanged(int state) {}
         });
@@ -159,6 +191,24 @@ public class HomeActivity extends AppCompatActivity {
                 headerRightImage.setVisibility(View.GONE);
                 setHomeBottomNavNormal();
                 mine.setImageResource(R.drawable.icon_home_my_hover);
+            };break;
+            case 5: {
+                title.setText("校园官方公告");
+                headerLeftText.setText("");
+                headerLeftImage.setVisibility(View.VISIBLE);
+                headerRightText.setVisibility(View.GONE);
+                headerRightImage.setVisibility(View.GONE);
+                setHomeBottomNavNormal();
+                circle.setImageResource(R.drawable.icon_home_campus_hover);
+            };break;
+            case 6: {
+                title.setText("社团公告");
+                headerLeftText.setText("");
+                headerLeftImage.setVisibility(View.VISIBLE);
+                headerRightText.setVisibility(View.GONE);
+                headerRightImage.setVisibility(View.GONE);
+                setHomeBottomNavNormal();
+                circle.setImageResource(R.drawable.icon_home_campus_hover);
             };break;
         }
     }
@@ -227,14 +277,21 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
         headerRightImage = (ImageView) findViewById(R.id.header_right_image);
-        headerLeftImage = (ImageView) findViewById(R.id.header_left_image);
         headerLeftText = (TextView) findViewById(R.id.header_left_text);
         title = (TextView) findViewById(R.id.header_title);
+
+        // 标题栏，返回图标
+        headerLeftImage = (ImageView) findViewById(R.id.header_left_image);
         headerLeftImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                headerSelect(3);
-                HomeViewPager.setCurrentItem(3,true);
+                if (selectedPageId == 4) { // 我的二维码返回到我的页面
+                    headerSelect(3);
+                    HomeViewPager.setCurrentItem(3,true);
+                } else if (selectedPageId == 5 || selectedPageId == 6) { // 校园官方公告和社团公告返回到校园圈页面
+                    headerSelect(0);
+                    HomeViewPager.setCurrentItem(0,true);
+                }
             }
         });
     }

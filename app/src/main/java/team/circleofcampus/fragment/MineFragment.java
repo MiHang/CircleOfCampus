@@ -26,7 +26,7 @@ import team.circleofcampus.view.CircularImageView;
  */
 public class MineFragment extends Fragment {
 
-   private View view;
+    private View view;
     private CircularImageView Icon;
     private Button Log_out;
     int icon = R.drawable.icon;
@@ -115,7 +115,6 @@ public class MineFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        initView(view);
         return view;
     }
 
@@ -138,8 +137,6 @@ public class MineFragment extends Fragment {
                 if (switchListener!=null){
                     switchListener.displayThisFragment(true);
                 }
-
-
             }
 
         });

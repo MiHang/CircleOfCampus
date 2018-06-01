@@ -1,28 +1,24 @@
 package team.circleofcampus.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.youth.banner.Banner;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import team.circleofcampus.Interface.FragmentSwitchListener;
 import team.circleofcampus.R;
-import team.circleofcampus.activity.CorporationActivity;
-import team.circleofcampus.activity.NoticeActivity;
 import team.circleofcampus.adapter.CampusCircleListViewAdapter;
 import team.circleofcampus.view.MyListView;
 
 /**
- * Created by 惠普 on 2018-05-11.
+ * 校园圈
  */
 public class CircleFragment extends Fragment {
 
@@ -32,6 +28,14 @@ public class CircleFragment extends Fragment {
     private MyListView societyCircleListView;
     private LinearLayout more_campus_notice;
     private LinearLayout more_corporation_notice;
+
+    FragmentSwitchListener switchListener;
+    public FragmentSwitchListener getSwitchListener() {
+        return switchListener;
+    }
+    public void setSwitchListener(FragmentSwitchListener switchListener) {
+        this.switchListener = switchListener;
+    }
 
     @Override
     public void onDestroyView() {
@@ -80,8 +84,9 @@ public class CircleFragment extends Fragment {
         more_campus_notice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(),NoticeActivity.class);
-                startActivity(intent);
+                if (switchListener!=null){
+                    switchListener.displayThisFragment(5, true);
+                }
             }
         });
 
@@ -90,8 +95,9 @@ public class CircleFragment extends Fragment {
         more_corporation_notice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), CorporationActivity.class);
-                startActivity(intent);
+                if (switchListener!=null){
+                    switchListener.displayThisFragment(6, true);
+                }
             }
         });
     }

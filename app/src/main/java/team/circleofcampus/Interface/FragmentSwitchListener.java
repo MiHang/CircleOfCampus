@@ -6,4 +6,5 @@ package team.circleofcampus.Interface;
 
 public interface FragmentSwitchListener {
     void displayThisFragment(boolean display);
+    void displayThisFragment(int currentId, boolean display);
 }
