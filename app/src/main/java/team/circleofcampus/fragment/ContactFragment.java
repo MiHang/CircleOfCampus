@@ -13,9 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.common.view.DialogTextView;
+import com.common.utils.LanguageUtils;
 import com.xiasuhuei321.loadingdialog.view.LoadingDialog;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
 import com.yanzhenjie.recyclerview.swipe.OnSwipeMenuItemClickListener;
@@ -34,9 +35,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import team.circleofcampus.Interface.OnItemClickListener;
 import team.circleofcampus.Interface.MoreFragmentListener;
-import team.circleofcampus.LanguageUtils;
+import team.circleofcampus.Interface.OnItemClickListener;
 import team.circleofcampus.R;
 import team.circleofcampus.adapter.GoodFriendAdapter;
 import team.circleofcampus.adapter.GoodFriendItemDecoration;
@@ -46,9 +46,11 @@ import team.circleofcampus.model.Contact;
 import team.circleofcampus.model.Letter;
 import team.circleofcampus.view.MyEditText;
 
+
 /**
  * Created by 惠普 on 2018-05-11.
  */
+
 public class ContactFragment extends Fragment {
 
 
@@ -64,10 +66,9 @@ public class ContactFragment extends Fragment {
     GoodFriendAdapter adapter;
     MoreFragmentListener listener;
     HttpHelper helper;
+    private SwipeMenuRecyclerView recycler_view;
+    private TextView num;
     LoadingDialog dialog;
-    private DialogTextView num;
-
-
     public void setListener(MoreFragmentListener listener) {
         this.listener = listener;
     }
@@ -76,6 +77,7 @@ public class ContactFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contact, null);
+
         initView(view);
 
         //设置布局管理器
@@ -83,16 +85,12 @@ public class ContactFragment extends Fragment {
         rv.setLayoutManager(layoutManager);
         //设置增加或删除条目的动画
         rv.setItemAnimator(new DefaultItemAnimator());
-
+        adapter = new GoodFriendAdapter(getContext(), data);
+        rv.setAdapter(adapter);
         final List<Contact> list = new ArrayList<Contact>();
 
 
-//        Contact contact6 = new Contact();
-//        contact6.setUserName("宁");
-//        contact6.setAccount("111111");
-//        list.add(contact6);
-
-
+        helper = new HttpHelper(getContext());
         dialog = new LoadingDialog(getContext());
         dialog.setLoadingText("加载中")
                 .setSuccessText("加载成功")//显示加载成功时的文字
@@ -102,24 +100,6 @@ public class ContactFragment extends Fragment {
                 .setInterceptBack(false)
                 .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
                 .show();
-
-
-        helper = new HttpHelper(getContext());
-        adapter = new GoodFriendAdapter(getContext(), data);
-        rv.setAdapter(adapter);
-        adapter.setItemListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                if (listener != null) {
-                    String[] str = {
-                            data.get(position).getAccount(),
-                            data.get(position).getUserName()
-                    };
-                    listener.setValueExtra(2, str);
-                }
-
-            }
-        });
 
         AsyncTask.execute(new Runnable() {
             @Override
@@ -143,6 +123,7 @@ public class ContactFragment extends Fragment {
                                     contact.setAccount(js.getString("account"));
                                     list.add(contact);
                                 }
+
                                 for (int i = 0; i < list.size(); i++) {
                                     if (list.get(i).getUserName() != null) {
                                         String lastName = list.get(i).getUserName().toUpperCase().charAt(0) + "";
@@ -160,22 +141,17 @@ public class ContactFragment extends Fragment {
                                     }
                                 }
                                 Collections.sort(data);//按字母顺序排序
-                                if (data.size() > 0) {
-                                    IndexList.setVisibility(View.VISIBLE);
-                                }
-                                setSideBar();
-
                                 adapter.notifyDataSetChanged();
-                                if (data.size() > 0) {
-                                    //标题
-                                    Titles.put(0, data.get(0).getLastName());
-                                    for (int i = 1; i < data.size(); i++) {
-                                        if (!data.get(i).getLastName().equals(data.get(i - 1).getLastName())) {
-                                            Titles.put(i, data.get(i).getLastName());
-                                        }
 
+                                //标题
+                                Titles.put(0, data.get(0).getLastName());
+                                for (int i = 1; i < data.size(); i++) {
+                                    if (!data.get(i).getLastName().equals(data.get(i - 1).getLastName())) {
+                                        Titles.put(i, data.get(i).getLastName());
                                     }
+
                                 }
+
 
                                 GoodFriendItemDecoration itemDecoration = new GoodFriendItemDecoration(getContext());
                                 itemDecoration.setTitles(Titles);
@@ -184,11 +160,71 @@ public class ContactFragment extends Fragment {
 
                                 rv.setHasFixedSize(true);// 如果Item够简单，高度是确定的，打开FixSize将提高性能。
                                 rv.setItemAnimator(new DefaultItemAnimator());// 设置Item默认动画，加也行，不加也行。
+
                                 // 为SwipeRecyclerView的Item创建菜单就两句话，不错就是这么简单：
                                 // 设置菜单创建器。
                                 rv.setSwipeMenuCreator(swipeMenuCreator);
                                 // 设置菜单Item点击监听。
                                 rv.setSwipeMenuItemClickListener(menuItemClickListener);
+
+
+                                adapter.setItemListener(new OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(int position) {
+                                        if (listener != null) {
+                                            String[] str={
+                                                    data.get(position).getAccount(),
+                                                    data.get(position).getUserName()
+                                            };
+                                            listener.setValueExtra(2,str);
+                                        }
+
+                                    }
+                                });
+
+                                setSideBar();
+
+                                //滑动监听
+                                rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                                    @Override
+                                    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                                        super.onScrollStateChanged(recyclerView, newState);
+                                    }
+
+                                    @Override
+                                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+
+                                        int x1 = layoutManager.findFirstVisibleItemPosition();//可见范围内的第一项的位置
+                                        int x2 = layoutManager.findLastVisibleItemPosition();//可见范围内的最后一项的位置
+                                        int itemCount = layoutManager.getItemCount();//recyclerview中的item的所有的数目
+
+
+                                        //修改选中状态
+                                        for (Letter l : d) {
+                                            if (l.isHover() == true) {
+                                                l.setHover(false);
+                                                break;
+                                            }
+                                        }
+                                        for (Letter l : d) {
+                                            if (l.getLetter().toUpperCase().equals(data.get(x1).getLastName())) {
+                                                l.setHover(!l.isHover());
+
+                                                break;
+                                            }
+                                        }
+
+                                        //延时2毫秒刷新
+                                        new Handler().postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                myAdapter.notifyDataSetChanged();
+                                            }
+                                        }, 200);
+
+
+                                    }
+                                });
 
                                 dialog.loadSuccess();
                             } else {
@@ -209,48 +245,6 @@ public class ContactFragment extends Fragment {
         });
 
 
-        //滑动监听
-        rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-
-                int x1 = layoutManager.findFirstVisibleItemPosition();//可见范围内的第一项的位置
-                int x2 = layoutManager.findLastVisibleItemPosition();//可见范围内的最后一项的位置
-                int itemCount = layoutManager.getItemCount();//recyclerview中的item的所有的数目
-
-
-                //修改选中状态
-                for (Letter l : d) {
-                    if (l.isHover() == true) {
-                        l.setHover(false);
-                        break;
-                    }
-                }
-                for (Letter l : d) {
-                    if (l.getLetter().toUpperCase().equals(data.get(x1).getLastName())) {
-                        l.setHover(!l.isHover());
-
-                        break;
-                    }
-                }
-
-                //延时2毫秒刷新
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        myAdapter.notifyDataSetChanged();
-                    }
-                }, 200);
-
-
-            }
-        });
-
         return view;
     }
 
@@ -260,7 +254,8 @@ public class ContactFragment extends Fragment {
         rv = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
         IndexList = (ListView) view.findViewById(R.id.IndexList);
 
-        num = (DialogTextView) view.findViewById(R.id.num);
+        num = (TextView) view.findViewById(R.id.num);
+
     }
 
     /**
