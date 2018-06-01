@@ -35,8 +35,10 @@
                 android:text="邮 箱："/>
 
             <team.circleofcampus.view.FontEditText
+                android:id="@+id/forget_pwd_email_edit_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingRight="10dp"
                 android:layout_weight="1"
                 android:theme="@style/NoUnderlineEditText"
                 android:maxLines="1"
@@ -73,8 +75,10 @@
                 android:text="验证码："/>
 
             <team.circleofcampus.view.FontEditText
+                android:id="@+id/forget_verification_code_edit_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingRight="10dp"
                 android:layout_weight="1"
                 android:theme="@style/NoUnderlineEditText"
                 android:maxLines="1"
@@ -82,6 +86,55 @@
                 android:textSize="16dp"
                 android:textColor="@color/black"
                 android:inputType="number"
+                android:imeOptions="actionNext"/>
+
+            <team.circleofcampus.view.FontButton
+                android:id="@+id/forget_verification_code_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:background="@drawable/shape_email_code_btn"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:text="获取验证码"/>
+
+        </LinearLayout>
+        <!-- 分割线 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@color/divide_color"/>
+
+        <!-- 新密码 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|left"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="10dp"
+            android:orientation="horizontal">
+
+            <team.circleofcampus.view.FontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:text="新密码："/>
+
+            <team.circleofcampus.view.FontEditText
+                android:id="@+id/forget_new_pwd_edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dp"
+                android:layout_weight="1"
+                android:theme="@style/NoUnderlineEditText"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textSize="16dp"
+                android:textColor="@color/black"
+                android:inputType="textPassword"
                 android:imeOptions="actionNext"/>
 
         </LinearLayout>
@@ -92,6 +145,59 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:background="@color/divide_color"/>
+
+        <!-- 确认密码 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|left"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="10dp"
+            android:orientation="horizontal">
+
+            <team.circleofcampus.view.FontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:text="确认密码："/>
+
+            <team.circleofcampus.view.FontEditText
+                android:id="@+id/forget_confirm_pwd_edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dp"
+                android:layout_weight="1"
+                android:theme="@style/NoUnderlineEditText"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textSize="16dp"
+                android:textColor="@color/black"
+                android:inputType="textPassword"
+                android:imeOptions="actionNext"/>
+
+        </LinearLayout>
+        <!-- 分割线 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@color/divide_color"/>
+
+        <!-- 重置密码按钮 -->
+        <team.circleofcampus.view.FontButton
+            android:id="@+id/forget_reset_pwd_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:textColor="@color/white"
+            android:textSize="18dp"
+            android:text="重置密码"
+            android:background="@drawable/shape_login_btn"/>
 
     </LinearLayout>
 

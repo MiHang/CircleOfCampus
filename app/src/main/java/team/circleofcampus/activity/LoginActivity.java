@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import team.circleofcampus.Interface.OnItemListPopupClickListener;
 import team.circleofcampus.R;
 import team.circleofcampus.adapter.HistoryAccountListPopupAdapter;
 
@@ -29,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     protected Button login;
 
     private ListPopupWindow lpw; // 列表弹出框
+    private HistoryAccountListPopupAdapter historyAccountListPopupAdapter;
     // 弹出框数据 - 历史登陆账号
     private ArrayList<String> historyAccounts = new ArrayList<String>();
 
@@ -51,19 +53,24 @@ public class LoginActivity extends AppCompatActivity {
         historyAccounts.add("jaye");
 
         // 列表弹出框
+        historyAccountListPopupAdapter = new HistoryAccountListPopupAdapter(
+                LoginActivity.this, historyAccounts);
         lpw = new ListPopupWindow(this);
-        lpw.setAdapter(new HistoryAccountListPopupAdapter(LoginActivity.this, historyAccounts));
+        lpw.setAdapter(historyAccountListPopupAdapter);
         lpw.setAnchorView(account);
         lpw.setModal(true);
         lpw.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_login_white_translucent));
-
-        // 下拉列表Item监听
-        lpw.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        historyAccountListPopupAdapter.setOnItemListPopupClickListener(new OnItemListPopupClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                account.setText(historyAccounts.get(position));
-                // 将光标移动到末尾
-                account.setSelection(account.getText().length());
+            public void onItemClick(int position, int itemId) {
+                if (itemId == R.id.item_history_account) {
+                    account.setText(historyAccounts.get(position));
+                    // 将光标移动到末尾
+                    account.setSelection(account.getText().length());
+                } else if (itemId == R.id.item_history_account_remove) {
+                    historyAccounts.remove(position);
+                    historyAccountListPopupAdapter.notifyDataSetChanged();
+                }
                 lpw.dismiss();
             }
         });

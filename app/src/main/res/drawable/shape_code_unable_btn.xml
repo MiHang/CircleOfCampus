@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 定义当button 处于默认状态时的形态-->
+    <item>
+        <shape>
+            <solid android:color="#b2b2b2"/>
+            <corners android:radius="5dp" />
+        </shape>
+    </item>
+
+</selector>
