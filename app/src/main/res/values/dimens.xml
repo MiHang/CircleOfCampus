@@ -3,6 +3,7 @@
     <dimen name="title_height">45dp</dimen>
     <dimen name="mine_column_height">40dp</dimen>
     <dimen name="divide_line_height">0.1dp</dimen>
+    <dimen name="normal_padding">5dp</dimen>
     <dimen name="min_padding">10dp</dimen>
     <dimen name="radius">12dp</dimen>
     <dimen name="middle_padding">20dp</dimen>
@@ -16,8 +17,9 @@
     <dimen name="bottom_text_size">20dp</dimen>
     <dimen name="user_info_textSize">16dp</dimen>
     <dimen name="icon_bg_height">200dp</dimen>
-    <dimen name="icon">80dp</dimen>
+    <dimen name="icon">60dp</dimen>
     <dimen name="contact_icon">50dp</dimen>
     <dimen name="tab_text_size">16dp</dimen>
+    <dimen name="userInfo_text_size">18dp</dimen>
 
 </resources>

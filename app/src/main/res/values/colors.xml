@@ -24,4 +24,6 @@
     <color name="zd_normal">#bfbfbf</color>
     <color name="delete_normal">#fc5c57</color>
     <color name="delete_pressed">#f7837f</color>
+
+    <color name="click_overlay_color">#d7d7db</color>
 </resources>

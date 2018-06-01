@@ -20,34 +20,38 @@
             android:background="@color/white"
             android:orientation="horizontal">
 
-            <ImageView
+            <com.common.view.CircleImageView
                 android:id="@+id/Icon"
                 android:layout_width="@dimen/icon"
                 android:layout_height="@dimen/icon"
-                android:padding="@dimen/min_padding"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/middle_padding"
                 android:src="@drawable/icon" />
 
             <team.circleofcampus.view.MyLinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignRight="@id/Icon"
                 android:orientation="vertical">
 
-                <TextView
+                <team.circleofcampus.view.FontTextView
                     android:id="@+id/NickName"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textSize="@dimen/userInfo_text_size"
                     android:gravity="center|bottom"
-                    android:text="小明" />
+                    android:maxLines="1"
+                    android:text="备注:无" />
 
-                <TextView
+                <team.circleofcampus.view.FontTextView
                     android:id="@+id/UserName"
+                    android:textSize="@dimen/userInfo_text_size"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center|top"
-                    android:text="昵称:万达" />
+                    android:text="昵称:" />
             </team.circleofcampus.view.MyLinearLayout>
 
         </team.circleofcampus.view.MyLinearLayout>
@@ -70,8 +74,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="暂无数据"
-                android:textSize="@dimen/user_info_textSize" />
+                android:gravity="center|left"
+                android:text="服务器暂无数据"
+                android:textSize="@dimen/userInfo_text_size" />
         </team.circleofcampus.view.MyLinearLayout>
 
         <View android:layout_width="match_parent"
@@ -96,8 +101,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="暂无数据"
-                android:textSize="@dimen/user_info_textSize" />
+                android:gravity="center|left"
+                android:text="该用户太懒了,暂未设置"
+                android:textSize="@dimen/userInfo_text_size" />
         </team.circleofcampus.view.MyLinearLayout>
 
         <View android:layout_width="match_parent"
@@ -122,8 +128,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="暂无数据"
-                android:textSize="@dimen/user_info_textSize" />
+                android:text="服务器暂无数据"
+                android:gravity="center|left"
+                android:textSize="@dimen/userInfo_text_size" />
         </team.circleofcampus.view.MyLinearLayout>
 
         <View android:layout_width="match_parent"
@@ -148,8 +155,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="暂无数据"
-                android:textSize="@dimen/user_info_textSize" />
+                android:text="服务器暂无数据"
+                android:gravity="center|left"
+                android:textSize="@dimen/userInfo_text_size"/>
         </team.circleofcampus.view.MyLinearLayout>
 
         <View android:layout_width="match_parent"
