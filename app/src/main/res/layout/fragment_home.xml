@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<team.circleofcampus.view.ReboundLayout
+<com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/circle_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#edece7"
+    app:tr_wave_height="100dp"
+    app:tr_head_height="80dp"
+    app:tr_enable_loadmore="false"
     android:focusableInTouchMode="true"
     android:focusable="true">
 
@@ -11,139 +15,142 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#ffffff"
+        android:overScrollMode="never"
         android:scrollbars="none">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
 
-            <!-- 轮播图 -->
-            <com.youth.banner.Banner
-                android:id="@+id/banner"
-                android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:padding="10dp"
-                android:background="#edece7" />
-
-            <!-- 校园官方公告 -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:gravity="center|left">
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
 
-                <TextView
-                    android:layout_width="5dp"
-                    android:layout_height="20dp"
-                    android:background="#fc5c57"/>
+                <!-- 轮播图 -->
+                <com.youth.banner.Banner
+                    android:id="@+id/banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:padding="10dp"
+                    android:background="#edece7" />
 
-                <team.circleofcampus.view.FontTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="1"
-                    android:text="校园官方公告"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:textColor="#fc5c57" />
-
-                <!-- 校园官方公告 更多-->
+                <!-- 校园官方公告 -->
                 <LinearLayout
-                    android:id="@+id/home_campus_notice_more"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center|left"
-                    android:clickable="true">
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:gravity="center|left">
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="20dp"
+                        android:background="#fc5c57"/>
+
                     <team.circleofcampus.view.FontTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="2dp"
-                        android:text="更多"
-                        android:textSize="14dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:text="校园官方公告"
+                        android:textSize="18dp"
+                        android:textStyle="bold"
                         android:textColor="#fc5c57" />
-                    <ImageView
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
-                        android:src="@drawable/icon_double_arrow_right"
-                        android:scaleType="centerInside"/>
+
+                    <!-- 校园官方公告 更多-->
+                    <LinearLayout
+                        android:id="@+id/home_campus_notice_more"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="center|left"
+                        android:clickable="true">
+                        <team.circleofcampus.view.FontTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="2dp"
+                            android:text="更多"
+                            android:textSize="14dp"
+                            android:textColor="#fc5c57" />
+                        <ImageView
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:src="@drawable/icon_double_arrow_right"
+                            android:scaleType="centerInside"/>
+                    </LinearLayout>
+
                 </LinearLayout>
+                <!-- 校园官方公告列表 -->
+                <team.circleofcampus.view.MyListView
+                    android:id="@+id/home_campus_circle_list_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </team.circleofcampus.view.MyListView>
 
-            </LinearLayout>
-            <!-- 校园官方公告列表 -->
-            <team.circleofcampus.view.MyListView
-                android:id="@+id/home_campus_circle_list_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </team.circleofcampus.view.MyListView>
-
-            <!-- 分割线 -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#d8d8d8"/>
-
-            <!-- 社团公告 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:gravity="center|left">
-
+                <!-- 分割线 -->
                 <TextView
-                    android:layout_width="5dp"
-                    android:layout_height="20dp"
-                    android:background="#fc5c57"/>
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#d8d8d8"/>
 
-                <team.circleofcampus.view.FontTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="1"
-                    android:text="社团公告"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:textColor="#fc5c57" />
-
-                <!-- 社团公告 更多-->
+                <!-- 社团公告 -->
                 <LinearLayout
-                    android:id="@+id/home_corporation_notice_more"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center|left"
-                    android:clickable="true">
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:gravity="center|left">
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="20dp"
+                        android:background="#fc5c57"/>
+
                     <team.circleofcampus.view.FontTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="2dp"
-                        android:text="更多"
-                        android:textSize="14dp"
-                        android:textColor="#fc5c57"/>
-                    <ImageView
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
-                        android:src="@drawable/icon_double_arrow_right"
-                        android:scaleType="centerInside"/>
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:text="社团公告"
+                        android:textSize="18dp"
+                        android:textStyle="bold"
+                        android:textColor="#fc5c57" />
+
+                    <!-- 社团公告 更多-->
+                    <LinearLayout
+                        android:id="@+id/home_corporation_notice_more"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="center|left"
+                        android:clickable="true">
+                        <team.circleofcampus.view.FontTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="2dp"
+                            android:text="更多"
+                            android:textSize="14dp"
+                            android:textColor="#fc5c57"/>
+                        <ImageView
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:src="@drawable/icon_double_arrow_right"
+                            android:scaleType="centerInside"/>
+                    </LinearLayout>
+
                 </LinearLayout>
+                <!-- 社团公告列表 -->
+                <team.circleofcampus.view.MyListView
+                    android:id="@+id/home_society_circle_list_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </team.circleofcampus.view.MyListView>
 
             </LinearLayout>
-            <!-- 社团公告列表 -->
-            <team.circleofcampus.view.MyListView
-                android:id="@+id/home_society_circle_list_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </team.circleofcampus.view.MyListView>
+        </ScrollView>
+</com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
 
-        </LinearLayout>
-    </ScrollView>
 
-</team.circleofcampus.view.ReboundLayout>

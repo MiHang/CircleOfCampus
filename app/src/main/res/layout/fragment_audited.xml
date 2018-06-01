@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<team.circleofcampus.view.ReboundLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <team.circleofcampus.view.ReboundLayout
+    android:layout_height="match_parent">
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/my_publish_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/my_publish_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </android.support.v7.widget.RecyclerView>
-    </team.circleofcampus.view.ReboundLayout>
-
-</LinearLayout>
+    </android.support.v7.widget.RecyclerView>
+</team.circleofcampus.view.ReboundLayout>

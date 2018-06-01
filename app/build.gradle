@@ -41,4 +41,5 @@ dependencies {
     implementation 'com.yanzhenjie:recyclerview-swipe:1.0.2'
     implementation 'com.youth.banner:banner:1.4.10'
     implementation 'com.bigkoo:alertview:1.0.3'
+    implementation 'com.lcodecorex:tkrefreshlayout:1.0.7'
 }

@@ -1,6 +1,7 @@
 package team.circleofcampus.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -10,8 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+import com.lcodecore.tkrefreshlayout.header.bezierlayout.BezierLayout;
+
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import team.circleofcampus.R;
 import team.circleofcampus.adapter.MyPublishRecyclerAdapter;
 import team.circleofcampus.model.SocietyCircle;
@@ -23,9 +30,11 @@ import team.circleofcampus.model.SocietyCircle;
 public class AuditedFragment extends Fragment {
 
     private View view;
-    private RecyclerView recyclerView;
     private MyPublishRecyclerAdapter myPublishRecyclerAdapter;
     private ArrayList<SocietyCircle> societyCircles = new ArrayList<SocietyCircle>();
+
+    @BindView(R.id.my_publish_recycler_view)
+    protected RecyclerView recyclerView;
 
     @Override
     public void onDestroyView() {
@@ -38,15 +47,13 @@ public class AuditedFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_audited, null);
+        ButterKnife.bind(this, view);
 
         loadListData(); // 加载列表数据
 
         // 设置recycler适配器
-        recyclerView = view.findViewById(R.id.my_publish_recycler_view);
         myPublishRecyclerAdapter = new MyPublishRecyclerAdapter(societyCircles);
-
         //设置布局管理器
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         //设置adapter
@@ -55,7 +62,6 @@ public class AuditedFragment extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         //添加分割线
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
-
     }
 
     @Override
