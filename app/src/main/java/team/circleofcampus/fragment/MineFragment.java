@@ -177,23 +177,4 @@ public class MineFragment extends Fragment {
         return bmp;// Bitmap.createBitmap(bitmap, 0, 0, w, h, matrix, true);
     }
 
-    public RadioGroup getGenderRadioGroup() {
-        return genderRadioGroup;
-    }
-
-    public RadioButton getMaleRb() {
-        return maleRb;
-    }
-
-    public RadioButton getFemaleRb() {
-        return femaleRb;
-    }
-
-    public EditText getUserName() {
-        return userName;
-    }
-
-    public TextView getSex() {
-        return sex;
-    }
 }
