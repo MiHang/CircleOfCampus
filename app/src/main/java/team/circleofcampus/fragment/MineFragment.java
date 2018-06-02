@@ -18,12 +18,11 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import team.circleofcampus.Interface.FragmentSwitchListener;
 import team.circleofcampus.R;
 import team.circleofcampus.http.HttpHelper;
-import team.circleofcampus.view.CircularImageView;
+import team.circleofcampus.view.CircleImageView;
 
 /**
  * Created by 惠普 on 2018-05-11.
@@ -31,7 +30,7 @@ import team.circleofcampus.view.CircularImageView;
 public class MineFragment extends Fragment {
 
     private View view;
-    private CircularImageView Icon;
+    private CircleImageView Icon;
     private Button Log_out;
     int icon = R.drawable.icon;
     private ImageView icon_bg;
@@ -127,7 +126,7 @@ public class MineFragment extends Fragment {
 
     private void initView(View view) {
 
-        Icon = (CircularImageView) view.findViewById(R.id.Icon);
+        Icon = (CircleImageView) view.findViewById(R.id.Icon);
         Log_out = (Button) view.findViewById(R.id.Log_out);
         icon_bg = (ImageView) view.findViewById(R.id.icon_bg);
         account = (TextView) view.findViewById(R.id.account);
