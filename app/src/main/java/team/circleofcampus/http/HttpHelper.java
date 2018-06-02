@@ -18,7 +18,7 @@ import okhttp3.Response;
  */
 
 public class HttpHelper {
-    String url="http://192.168.1.157:8080/";
+    public static String url="http://192.168.1.157:8080/";
     Context context;
     public HttpHelper(Context context){
         this.context=context;
