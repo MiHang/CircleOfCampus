@@ -26,4 +26,6 @@
     <color name="delete_pressed">#f7837f</color>
 
     <color name="click_overlay_color">#d7d7db</color>
+
+        <color name="icon_border_color">#eaeaea</color>
 </resources>
