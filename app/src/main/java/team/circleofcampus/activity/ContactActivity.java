@@ -1,6 +1,5 @@
 package team.circleofcampus.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import team.circleofcampus.R;
-import team.circleofcampus.adapter.MyFragmentAdapter;
+import team.circleofcampus.adapter.MyFragmentPagerAdapter;
 import team.circleofcampus.fragment.AddFriendsFragment;
 import team.circleofcampus.fragment.ContactFragment;
 import team.circleofcampus.fragment.UserInfoFragment;
@@ -23,7 +22,7 @@ import team.circleofcampus.view.NoScrollViewPager;
  */
 public class ContactActivity extends AppCompatActivity {
 
-    MyFragmentAdapter adapter;
+    MyFragmentPagerAdapter adapter;
    public List<Fragment> data = new ArrayList<>();
     public FontTextView header_left_text;
     public ImageView header_left_image;
@@ -61,7 +60,7 @@ public class ContactActivity extends AppCompatActivity {
         data.add(new AddFriendsFragment());
         data.add(contactFragment);
         data.add(userInfoFragment);
-        adapter = new MyFragmentAdapter(getSupportFragmentManager(), data);
+        adapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), data);
         MyViewPager.setAdapter(adapter);
         MyViewPager.setCurrentItem(1);
         //添加好友点击监听

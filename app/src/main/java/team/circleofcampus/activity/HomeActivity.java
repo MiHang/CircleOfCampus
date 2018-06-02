@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,7 +20,7 @@ import butterknife.OnClick;
 import team.circleofcampus.BroadcastReceiver.MyBroadcastReceiver;
 import team.circleofcampus.Interface.FragmentSwitchListener;
 import team.circleofcampus.R;
-import team.circleofcampus.adapter.MyFragmentAdapter;
+import team.circleofcampus.adapter.MyFragmentPagerAdapter;
 import team.circleofcampus.background.MyService;
 import team.circleofcampus.fragment.CampusCircleFragment;
 import team.circleofcampus.fragment.CircleFragment;
@@ -30,7 +29,6 @@ import team.circleofcampus.fragment.MyPublishFragment;
 import team.circleofcampus.fragment.MineFragment;
 import team.circleofcampus.fragment.QRFragment;
 import team.circleofcampus.fragment.SocietyCircleFragment;
-import team.circleofcampus.model.SocietyCircle;
 import team.circleofcampus.view.NoScrollViewPager;
 
 
@@ -39,7 +37,7 @@ import team.circleofcampus.view.NoScrollViewPager;
  */
 public class HomeActivity extends AppCompatActivity {
 
-    MyFragmentAdapter adapter;
+    MyFragmentPagerAdapter adapter;
     @BindView(R.id.HomeViewPager)
     protected NoScrollViewPager HomeViewPager;
     @BindView(R.id.message)
@@ -139,7 +137,7 @@ public class HomeActivity extends AppCompatActivity {
         SocietyCircleFragment societyCircleFragment = new SocietyCircleFragment();
         data.add(societyCircleFragment);
 
-        adapter = new MyFragmentAdapter(getSupportFragmentManager(), data);
+        adapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), data);
         HomeViewPager.setAdapter(adapter);
         HomeViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

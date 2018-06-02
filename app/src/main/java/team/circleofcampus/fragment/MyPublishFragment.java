@@ -1,6 +1,5 @@
 package team.circleofcampus.fragment;
 
-import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -17,7 +16,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import team.circleofcampus.R;
-import team.circleofcampus.adapter.MyPublishFragmentAdapter;
+import team.circleofcampus.adapter.MyFragmentPagerAdapter;
 import team.circleofcampus.util.DensityUtil;
 import team.circleofcampus.util.FontUtil;
 
@@ -29,7 +28,7 @@ public class MyPublishFragment extends Fragment {
     private View view;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private MyPublishFragmentAdapter myPublishFragmentAdapter;
+    private MyFragmentPagerAdapter myPublishFragmentAdapter;
 
     private ArrayList<Fragment> fragments = new ArrayList<Fragment>();
 
@@ -55,7 +54,7 @@ public class MyPublishFragment extends Fragment {
         // 设置viewpager适配器
         fragments.add(new AuditedFragment());
         fragments.add(new UnauditedFragment());
-        myPublishFragmentAdapter = new MyPublishFragmentAdapter(getChildFragmentManager(), fragments);
+        myPublishFragmentAdapter = new MyFragmentPagerAdapter(getChildFragmentManager(), fragments);
         viewPager.setAdapter(myPublishFragmentAdapter);
 
         // 设置TabLayout和ViewPager的联动，该方法必须在设置tab标题之前，否则Tab标题会被清除

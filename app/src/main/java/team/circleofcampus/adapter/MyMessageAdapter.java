@@ -17,11 +17,11 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuAdapter;
 
 import java.util.List;
 
-import team.circleofcampus.GlideCircleTransform;
 import team.circleofcampus.Interface.OnItemClickListener;
 import team.circleofcampus.R;
 import team.circleofcampus.http.HttpHelper;
 import team.circleofcampus.model.UserMsg;
+import team.circleofcampus.view.CircleImageView;
 
 
 /**
@@ -69,18 +69,25 @@ public class MyMessageAdapter extends SwipeMenuAdapter<MyMessageAdapter.ViewHold
             //加载头像 查询服务器是否有头像图片，若无则按性别加载
             Glide.with(context)
                     .load(http.getPath()+"/res/img/"+data.get(position).getAccount())
-                    .transform(new GlideCircleTransform(context))
                     .override(scale,scale)
                     .crossFade()
                     .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
                         public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            Glide.with(context)
-                                    .load(http.getPath()+"/res/img/"+data.get(position).getSex())
-                                    .transform(new GlideCircleTransform(context))
-                                    .override(scale,scale)
-                                    .crossFade()
-                                    .into(holder.icon);
+                            if(data.get(position).getSex().equals("male")){
+                                Glide.with(context)
+                                        .load(R.drawable.man)
+                                        .override(scale,scale)
+                                        .crossFade()
+                                        .into(holder.icon);
+                            }else{
+                                Glide.with(context)
+                                        .load(R.drawable.woman)
+                                        .override(scale,scale)
+                                        .crossFade()
+                                        .into(holder.icon);
+                            }
+
                             return false;
                         }
                         @Override
@@ -107,7 +114,7 @@ public class MyMessageAdapter extends SwipeMenuAdapter<MyMessageAdapter.ViewHold
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        public ImageView icon;
+        public CircleImageView icon;
         public TextView name;
         public TextView msg;
         public TextView Amount;
@@ -115,7 +122,7 @@ public class MyMessageAdapter extends SwipeMenuAdapter<MyMessageAdapter.ViewHold
 
         public ViewHolder(View rootView) {
             super(rootView);
-            this.icon = (ImageView) rootView.findViewById(R.id.icon);
+            this.icon = (CircleImageView) rootView.findViewById(R.id.icon);
             this.name = (TextView) rootView.findViewById(R.id.name);
             this.msg = (TextView) rootView.findViewById(R.id.msg);
             this.Amount = (TextView) rootView.findViewById(R.id.amount);
