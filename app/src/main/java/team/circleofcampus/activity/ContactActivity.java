@@ -1,5 +1,6 @@
 package team.circleofcampus.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -40,7 +41,7 @@ public class ContactActivity extends AppCompatActivity {
         initView();
         header_title.setText("好友列表");
         header_right_text.setText("添加好友");
-        header_left_image.setVisibility(View.GONE);
+//        header_left_image.setVisibility(View.GONE);
 
 
 
@@ -48,10 +49,13 @@ public class ContactActivity extends AppCompatActivity {
         header_left_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                header_title.setText("好友列表");
-                header_right_text.setVisibility(View.VISIBLE);
-                header_left_image.setVisibility(View.GONE);
-                MyViewPager.setCurrentItem(1, true);
+                if(MyViewPager.getCurrentItem()==1){
+                  onBackPressed();
+                }else {//好友资料
+                    header_title.setText("好友列表");
+                    header_right_text.setVisibility(View.VISIBLE);
+                    MyViewPager.setCurrentItem(1, true);
+                }
             }
         });
         data.add(new AddFriendsFragment());
