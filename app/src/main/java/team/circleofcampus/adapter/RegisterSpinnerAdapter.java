@@ -32,12 +32,18 @@ public class RegisterSpinnerAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return items.get(position);
+        if (items.size() > 0) {
+            return items.get(position);
+        }
+        return null;
     }
 
     @Override
     public long getItemId(int position) {
-        return items.get(position).getItemId();
+        if (items.size() > 0) {
+            return items.get(position).getItemId();
+        }
+        return position;
     }
 
     @Override
@@ -51,7 +57,7 @@ public class RegisterSpinnerAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.itemName.setText(items.get(position).getItemName());
+        if (items.size() > 0) holder.itemName.setText(items.get(position).getItemName());
 
         return convertView;
     }

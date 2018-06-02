@@ -3,6 +3,7 @@ package team.circleofcampus.http;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -12,18 +13,17 @@ import okhttp3.Response;
 /**
  * Created by Jaye Li on 2018/6/2.
  */
-
 public class HttpRequest {
 
+    public static final String URL = "http://192.168.1.188:8080/";
     private static final MediaType mediatype = MediaType.parse("application/json;charset=utf-8");
 
     /**
      * okhttp请求
-     * @param url - 请求地址
-     * @param param - 请求参数
-     * @return 请求结果, 失败返回null
+     * @param url
+     * @param param
      */
-    public static String postRequest(String url, String param) throws IOException {
+    public static String postRequest(String url, String param) {
 
         RequestBody requestBody = RequestBody.create(mediatype, param);
         Request request = new Request.Builder()
@@ -31,21 +31,22 @@ public class HttpRequest {
                 .post(requestBody)
                 .build();
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .connectTimeout(10, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
                 .build();
-
-        Response response = okHttpClient.newCall(request).execute();
-        if (response.isSuccessful()) {
-            return response.body().string();
-        } else {
-            try {
-                throw new Exception("request error : error code = " + response.code());
-            } catch (Exception e) {
-                e.printStackTrace();
+        try {
+            Response response = okHttpClient.newCall(request).execute();
+            if (response.isSuccessful()) {
+                return response.body().string();
+            } else {
+                throw new Exception("request failed, error code = " + response.code());
             }
-            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
 }

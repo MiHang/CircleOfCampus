@@ -48,7 +48,7 @@
                 android:textColor="@color/white"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:digits="0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@."/>
+                android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@."/>
 
             <!-- 密码 -->
             <team.circleofcampus.view.FontEditText

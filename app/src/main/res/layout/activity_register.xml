@@ -46,7 +46,7 @@
                 android:textSize="16dp"
                 android:textColor="@color/black"
                 android:hint="3 - 10个字母数字或符号.@"
-                android:digits="0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@."
+                android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@."
                 android:imeOptions="actionNext"/>
 
         </LinearLayout>
@@ -223,6 +223,7 @@
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textSize="16dp"
+                android:hint="6-12位"
                 android:textColor="@color/black"
                 android:inputType="textPassword"
                 android:imeOptions="actionNext"/>
@@ -265,7 +266,7 @@
                 android:textSize="16dp"
                 android:textColor="@color/black"
                 android:inputType="textPassword"
-                android:imeOptions="actionNext"/>
+                android:imeOptions="actionDone"/>
 
         </LinearLayout>
         <!-- 分割线 -->
