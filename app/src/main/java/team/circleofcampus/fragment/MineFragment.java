@@ -9,12 +9,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import team.circleofcampus.Interface.FragmentSwitchListener;
 import team.circleofcampus.R;
@@ -36,9 +40,12 @@ public class MineFragment extends Fragment {
     private TextView sex;
     private TextView college;
     private TextView department;
-    private TextView UerName;
-    private TextView userName;
+    private EditText userName;
     private TextView QR;
+
+    private RadioGroup genderRadioGroup;
+    private RadioButton maleRb;
+    private RadioButton femaleRb;
 
     FragmentSwitchListener switchListener;
 
@@ -85,7 +92,7 @@ public class MineFragment extends Fragment {
 
                             if (jsonObject.getString("result").equals("success")) {
                                 account.setText(jsonObject.getString("email"));
-                                UerName.setText(jsonObject.getString("userName"));
+                                userName.setText(jsonObject.getString("userName"));
                                 department.setText(jsonObject.getString("facultyName"));
                                 college.setText(jsonObject.getString("campusName"));
 
@@ -125,11 +132,13 @@ public class MineFragment extends Fragment {
         icon_bg = (ImageView) view.findViewById(R.id.icon_bg);
         account = (TextView) view.findViewById(R.id.account);
         sex = (TextView) view.findViewById(R.id.sex);
+        genderRadioGroup = (RadioGroup) view.findViewById(R.id.mine_gender_radio_group);
+        maleRb = (RadioButton) view.findViewById(R.id.mine_gender_male_rb);
+        femaleRb = (RadioButton) view.findViewById(R.id.mine_gender_female_rb);
         college = (TextView) view.findViewById(R.id.college);
         department = (TextView) view.findViewById(R.id.department);
-        UerName = (TextView) view.findViewById(R.id.userName);
-
-        userName = (TextView) view.findViewById(R.id.userName);
+        userName = (EditText) view.findViewById(R.id.userName);
+        userName.setEnabled(false);
         QR = (TextView) view.findViewById(R.id.QR);
         QR.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,6 +150,7 @@ public class MineFragment extends Fragment {
 
         });
     }
+
     /**
      * 缩放Bitmap满屏
      *
@@ -168,4 +178,23 @@ public class MineFragment extends Fragment {
         return bmp;// Bitmap.createBitmap(bitmap, 0, 0, w, h, matrix, true);
     }
 
+    public RadioGroup getGenderRadioGroup() {
+        return genderRadioGroup;
+    }
+
+    public RadioButton getMaleRb() {
+        return maleRb;
+    }
+
+    public RadioButton getFemaleRb() {
+        return femaleRb;
+    }
+
+    public EditText getUserName() {
+        return userName;
+    }
+
+    public TextView getSex() {
+        return sex;
+    }
 }

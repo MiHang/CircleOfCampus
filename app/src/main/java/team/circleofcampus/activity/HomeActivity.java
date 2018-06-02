@@ -61,6 +61,10 @@ public class HomeActivity extends AppCompatActivity {
     @BindView(R.id.header_title)
     protected TextView title;
 
+    private boolean isEditMine = false; // 我的页面是否处于编辑状态
+    private String userName;
+    private MineFragment mineFragment; // 我的页面
+
     List<Fragment> data = new ArrayList<>();
     private int selectedPageId = 0;
 
@@ -115,7 +119,7 @@ public class HomeActivity extends AppCompatActivity {
         data.add(new MyPublishFragment());
 
         // 我的
-        MineFragment mineFragment=new MineFragment();
+        mineFragment = new MineFragment();
         mineFragment.setSwitchListener(new FragmentSwitchListener() {
             @Override
             public void displayThisFragment(boolean display) {
@@ -169,6 +173,13 @@ public class HomeActivity extends AppCompatActivity {
                 headerRightImage.setVisibility(View.VISIBLE);
                 setHomeBottomNavNormal();
                 circle.setImageResource(R.drawable.icon_home_campus_hover);
+                isEditMine = false;
+                if (null != mineFragment) {
+                    mineFragment.getUserName().setText(userName);
+                    mineFragment.getUserName().setEnabled(false);
+                    mineFragment.getGenderRadioGroup().setVisibility(View.GONE);
+                    mineFragment.getSex().setVisibility(View.VISIBLE);
+                }
             };break;
             case 1: {
                 title.setText("消息");
@@ -179,6 +190,13 @@ public class HomeActivity extends AppCompatActivity {
                 headerRightImage.setVisibility(View.GONE);
                 setHomeBottomNavNormal();
                 message.setImageResource(R.drawable.icon_home_msg_hover);
+                isEditMine = false;
+                if (null != mineFragment) {
+                    mineFragment.getUserName().setText(userName);
+                    mineFragment.getUserName().setEnabled(false);
+                    mineFragment.getGenderRadioGroup().setVisibility(View.GONE);
+                    mineFragment.getSex().setVisibility(View.VISIBLE);
+                }
             };break;
             case 2: {
                 title.setText("我的发布");
@@ -188,6 +206,13 @@ public class HomeActivity extends AppCompatActivity {
                 headerRightImage.setVisibility(View.GONE);
                 setHomeBottomNavNormal();
                 publish.setImageResource(R.drawable.icon_home_my_publish_hover);
+                isEditMine = false;
+                if (null != mineFragment) {
+                    mineFragment.getUserName().setText(userName);
+                    mineFragment.getUserName().setEnabled(false);
+                    mineFragment.getGenderRadioGroup().setVisibility(View.GONE);
+                    mineFragment.getSex().setVisibility(View.VISIBLE);
+                }
             };break;
             case 3: {
                 title.setText("我的");
@@ -206,6 +231,13 @@ public class HomeActivity extends AppCompatActivity {
                 headerRightImage.setVisibility(View.GONE);
                 setHomeBottomNavNormal();
                 mine.setImageResource(R.drawable.icon_home_my_hover);
+                isEditMine = false;
+                if (null != mineFragment) {
+                    mineFragment.getUserName().setText(userName);
+                    mineFragment.getUserName().setEnabled(false);
+                    mineFragment.getGenderRadioGroup().setVisibility(View.GONE);
+                    mineFragment.getSex().setVisibility(View.VISIBLE);
+                }
             };break;
             case 5: {
                 title.setText("校园官方公告");
@@ -215,6 +247,13 @@ public class HomeActivity extends AppCompatActivity {
                 headerRightImage.setVisibility(View.GONE);
                 setHomeBottomNavNormal();
                 circle.setImageResource(R.drawable.icon_home_campus_hover);
+                isEditMine = false;
+                if (null != mineFragment) {
+                    mineFragment.getUserName().setText(userName);
+                    mineFragment.getUserName().setEnabled(false);
+                    mineFragment.getGenderRadioGroup().setVisibility(View.GONE);
+                    mineFragment.getSex().setVisibility(View.VISIBLE);
+                }
             };break;
             case 6: {
                 title.setText("社团公告");
@@ -224,6 +263,13 @@ public class HomeActivity extends AppCompatActivity {
                 headerRightImage.setVisibility(View.GONE);
                 setHomeBottomNavNormal();
                 circle.setImageResource(R.drawable.icon_home_campus_hover);
+                isEditMine = false;
+                if (null != mineFragment) {
+                    mineFragment.getUserName().setText(userName);
+                    mineFragment.getUserName().setEnabled(false);
+                    mineFragment.getGenderRadioGroup().setVisibility(View.GONE);
+                    mineFragment.getSex().setVisibility(View.VISIBLE);
+                }
             };break;
         }
     }
@@ -248,6 +294,28 @@ public class HomeActivity extends AppCompatActivity {
             Intent intent = new Intent(HomeActivity.this, ContactActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
+        } else if (selectedPageId == 3) { // 我的页面
+            if (!isEditMine) {
+                isEditMine = true;
+                headerRightText.setText("保存");
+                userName = mineFragment.getUserName().getText().toString();
+                mineFragment.getUserName().setEnabled(true);
+                mineFragment.getSex().setVisibility(View.GONE);
+                mineFragment.getGenderRadioGroup().setVisibility(View.VISIBLE);
+                userName = mineFragment.getUserName().getText().toString();
+            } else {
+                isEditMine = false;
+                headerRightText.setText("编辑");
+                userName = mineFragment.getUserName().getText().toString();
+                if (mineFragment.getMaleRb().isChecked()) {
+                    mineFragment.getSex().setText("男");
+                } else if (mineFragment.getFemaleRb().isChecked()) {
+                    mineFragment.getSex().setText("女");
+                }
+                mineFragment.getUserName().setEnabled(false);
+                mineFragment.getGenderRadioGroup().setVisibility(View.GONE);
+                mineFragment.getSex().setVisibility(View.VISIBLE);
+            }
         }
     }
 
