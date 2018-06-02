@@ -56,6 +56,7 @@ public class UserInfoFragment extends Fragment {
         initView(view);
 
         final ContactActivity activity= (ContactActivity) getActivity();
+
         activity.contactFragment.setListener(new MoreFragmentListener() {
             @Override
             public void setValueExtra(int position, String[] str) {
