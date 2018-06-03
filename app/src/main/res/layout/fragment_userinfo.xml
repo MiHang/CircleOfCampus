@@ -37,7 +37,7 @@
                 <team.circleofcampus.view.FontTextView
                     android:id="@+id/NickName"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:textSize="@dimen/userInfo_text_size"
                     android:gravity="center|bottom"
@@ -48,7 +48,7 @@
                     android:id="@+id/UserName"
                     android:textSize="@dimen/userInfo_text_size"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center|top"
                     android:text="昵称:" />

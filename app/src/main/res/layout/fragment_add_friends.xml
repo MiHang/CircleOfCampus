@@ -15,6 +15,7 @@
             android:hint="用户ID/用户名"
             android:maxLines="1"
             android:paddingLeft="@dimen/max_padding"
+            android:paddingRight="@dimen/max_padding"
             android:textSize="@dimen/user_info_textSize" />
 
         <View

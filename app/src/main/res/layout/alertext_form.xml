@@ -5,7 +5,7 @@
     <EditText
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:id="@+id/etName"
+        android:id="@+id/edit"
         android:hint="请填写申请理由"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
