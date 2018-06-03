@@ -9,7 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+import com.common.utils.Symbol;
 import com.common.view.CircleImageView;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuAdapter;
 
@@ -63,29 +69,19 @@ public class GoodFriendAdapter extends SwipeMenuAdapter<GoodFriendAdapter.ViewHo
             }
         });
         holder.Column.setTag(position);
-//            //加载头像 查询服务器是否有头像图片，若无则按性别加载
-//            Glide.with(context)
-//                    .load(http.getPath()+"/res/img/"+data.get(position).getAccount())
-//                    .transform(new GlideCircleTransform(context))
-//                    .crossFade()
-//                    .listener(new RequestListener<String, GlideDrawable>() {
-//                        @Override
-//                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-//                            Glide.with(context)
-//                                    .load(http.getPath()+"/res/img/"+data.get(position).getSex())
-//                                    .transform(new GlideCircleTransform(context))
-//                                    .crossFade()
-//                                    .into(holder.UserIcon);
-//                            return false;
-//                        }
-//                        @Override
-//                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-//
-//
-//                            return false;
-//                        }
-//                    })
-//                    .into(holder.UserIcon);
+            //加载头像 查询服务器是否有头像图片，若无则按性别加载
+        int res=R.drawable.woman;
+
+        if (data.get(position).getSex()==null||data.get(position).getSex().equals("male")) {
+            res=R.drawable.man;
+
+        }
+        Toast.makeText(context, ""+data.get(position).getSex(), Toast.LENGTH_SHORT).show();
+        Glide.with(context)
+                .load(http.getPath()+"/res/img/"+data.get(position).getAccount())
+                .crossFade()
+               .error(res)
+                .into(holder.UserIcon);
 
     }
 

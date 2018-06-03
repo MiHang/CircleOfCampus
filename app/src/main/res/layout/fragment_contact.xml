@@ -35,7 +35,7 @@
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:gravity="center"
-            android:text="阿萨斯"
+            android:text=""
             android:layout_height="wrap_content" />
     </RelativeLayout>
 

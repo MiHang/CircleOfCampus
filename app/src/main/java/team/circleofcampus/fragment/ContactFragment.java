@@ -119,6 +119,7 @@ public class ContactFragment extends Fragment {
                                     JSONObject js = new JSONObject(jsonArray.get(i).toString());
                                     Contact contact = new Contact();
                                     contact.setUserName(js.getString("nickName"));
+                                    contact.setSex(js.getString("sex"));
 
                                     contact.setAccount(js.getString("account"));
                                     list.add(contact);
@@ -133,6 +134,7 @@ public class ContactFragment extends Fragment {
 
                                         Contact contact = new Contact();
                                         contact.setLastName(lastName);
+                                        contact.setSex(list.get(i).getSex());
 
                                         contact.setUserIcon(list.get(i).getUserIcon());
                                         contact.setUserName(list.get(i).getUserName());
