@@ -105,6 +105,7 @@ Toast.makeText(getApplicationContext(), "开启服务", Toast.LENGTH_SHORT).show
                     public void sendMessage(byte[] bytes) {
                         Toast.makeText(getApplicationContext(), "主页接收到消息", Toast.LENGTH_SHORT).show();
 
+
                     }
                 });
 
