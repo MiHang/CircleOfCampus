@@ -110,7 +110,6 @@ public class ContactFragment extends Fragment implements com.bigkoo.alertview.On
         myAdapter = new MyIndexAdapter(getContext(), d);
         IndexList.setAdapter(myAdapter);
 
-        setData();
 
         helper = new HttpHelper(getContext());
         dialog = new LoadingDialog(getContext());
@@ -123,7 +122,7 @@ public class ContactFragment extends Fragment implements com.bigkoo.alertview.On
                 .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
                 .show();
 
-
+        setData();
 
 
         return view;
@@ -312,9 +311,6 @@ public void setData(){
 
     Closeable closeable;
 
-    public Closeable getCloseable() {
-        return closeable;
-    }
 
     public void setCloseable(Closeable closeable) {
         this.closeable = closeable;
