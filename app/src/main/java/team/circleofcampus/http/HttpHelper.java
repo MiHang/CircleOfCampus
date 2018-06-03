@@ -164,6 +164,43 @@ public class HttpHelper {
     }
 
     /**
+     * 修改备注
+     * @param user1 user1
+     * @return
+     */
+    public String updateFriendNote(String user1,String user2,String nickName) {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        JSONObject js = new JSONObject();
+
+        try {
+            js.put("user1", user1);
+            js.put("user2", user2);
+            js.put("note", nickName);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        MediaType mediaType = MediaType.parse("application/json;charset=utf8");
+        RequestBody requestBody = RequestBody.create(mediaType, js.toString());
+        Request request = new Request.Builder()
+                .url(url+"coc/updateFriendNote.do")
+                .post(requestBody)
+                .build();
+        try {
+            Response response = okHttpClient.newCall(request).execute();
+            if(response.isSuccessful()){
+                return response.body().string();
+            }else{
+                return response.code()+"";
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+    /**
      * 获取用户名与性别
      * @param Account
      * @return

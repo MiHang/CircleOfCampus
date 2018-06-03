@@ -49,7 +49,7 @@ public class ContactActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(MyViewPager.getCurrentItem()==1){
-                  onBackPressed();
+                  finish();
                 }else {//好友资料
                     header_title.setText("好友列表");
                     header_right_text.setVisibility(View.VISIBLE);
@@ -79,7 +79,7 @@ public class ContactActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
      if (MyViewPager.getCurrentItem()==1){
-              super.onBackPressed();
+              finish();
         }else {
          header_title.setText("好友列表");
          header_right_text.setVisibility(View.VISIBLE);
@@ -88,18 +88,7 @@ public class ContactActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * 隐藏与显示控件 —标题栏右侧"好友"
-     *
-     * @param position
-     */
-    public void displayUserButton(int position) {
-        if (position == 1) {
-            header_right_text.setVisibility(View.VISIBLE);
-        } else {
-            header_right_text.setVisibility(View.GONE);
-        }
-    }
+
 
 
     private void initView() {

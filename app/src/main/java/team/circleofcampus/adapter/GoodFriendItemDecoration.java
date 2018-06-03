@@ -53,6 +53,7 @@ public class GoodFriendItemDecoration extends RecyclerView.ItemDecoration {
         TextHeight=fm.bottom-fm.top;//计算文字高度
         TextBottom=fm.bottom;
 
+
         BgPaint=new Paint();
         BgPaint.setAntiAlias(true);
         BgPaint.setDither(true);

@@ -1,5 +1,6 @@
 package team.circleofcampus.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -32,6 +33,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import team.circleofcampus.Interface.OnItemClickListener;
 import team.circleofcampus.R;
+import team.circleofcampus.activity.AddRequestActivity;
 import team.circleofcampus.adapter.GoodFriendAdapter;
 import team.circleofcampus.http.HttpHelper;
 import team.circleofcampus.model.Contact;
@@ -64,7 +66,10 @@ public class AddFriendsFragment extends Fragment {
         mMenuAdapter.setItemListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Toast.makeText(getContext(), "" + position, Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(getActivity(), AddRequestActivity.class);
+                intent.putExtra("user2",data.get(position).getAccount());
+                startActivity(intent);
+//                Toast.makeText(getContext(), "" + position, Toast.LENGTH_SHORT).show();
             }
         });
         recycler_view.setAdapter(mMenuAdapter);
@@ -148,37 +153,5 @@ public class AddFriendsFragment extends Fragment {
         result = (TextView) view.findViewById(R.id.result);
     }
 
-    public String getData(String account) {
-        String url = "http://192.168.1.157:8080/coc/getUserInfoBy.do";
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .readTimeout(5, TimeUnit.SECONDS)//设置读取超时时间
-                .writeTimeout(5, TimeUnit.SECONDS)//设置写的超时时间
-                .connectTimeout(5, TimeUnit.SECONDS)//设置连接超时时间
-                .build();
 
-        JSONObject js = new JSONObject();
-
-        try {
-            js.put("Search", account);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        MediaType mediaType = MediaType.parse("application/json;charset=utf8");
-        RequestBody requestBody = RequestBody.create(mediaType, js.toString());
-        Request request = new Request.Builder()
-                .url(url)
-                .post(requestBody)
-                .build();
-        try {
-            Response response = okHttpClient.newCall(request).execute();
-            if (response.isSuccessful()) {
-                return response.body().string();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return "";
-    }
 }
