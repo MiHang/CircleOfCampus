@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/middle_padding"
+    android:layout_marginTop="@dimen/middle_padding"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/Time"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <include layout="@layout/dialog_receive" />
+
+    <include layout="@layout/dialog_send" />
+
+</LinearLayout>

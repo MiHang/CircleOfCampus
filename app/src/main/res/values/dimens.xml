@@ -24,4 +24,18 @@
 
     <dimen name="mine_icon">90dp</dimen>
     <dimen name="icon_border_width">2dp</dimen>
+
+    <dimen name="label_padding">13dp</dimen>
+    <!--分割线高度-->
+    <dimen name="divider_height">0.5dp</dimen>
+    <!--聊天文本最大宽度-->
+    <dimen name="max_textView_width">200dp</dimen>
+    <!--聊天文本最大高度-->
+    <dimen name="max_textView_height">400dp</dimen>
+    <dimen name="chat_textSize">20dp</dimen>
+    <dimen name="icon_padding">2dp</dimen>
+    <dimen name="Icon">60dp</dimen>
+    <dimen name="maxImg">160dp</dimen>
+    <dimen name="edittext_radius">10dp</dimen>
+    <dimen name="edittext_line">2dp</dimen>
 </resources>

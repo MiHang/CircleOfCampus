@@ -8,7 +8,6 @@
 
     <color name="titleColor">#000000</color>
     <color name="titleBgColor">#EFEFF4</color>
-    <color name="dividerColor">#d6d7dc</color>
 
     <color name="white">#ffffff</color>
     <color name="mine_bg">#efeff4</color>
@@ -25,7 +24,14 @@
     <color name="delete_normal">#fc5c57</color>
     <color name="delete_pressed">#f7837f</color>
 
-    <color name="click_overlay_color">#d7d7db</color>
 
         <color name="icon_border_color">#eaeaea</color>
+
+    <!--控件点击时颜色-->
+    <color name="click_overlay_color">#d7d7db</color>
+    <!--覆盖颜色-->
+    <color name="bgColor_overlay">#40000000</color>
+    <!--分割线颜色-->
+    <color name="dividerColor">#d6d7dc</color>
+    <color name="EditText_color">#000000</color>
 </resources>

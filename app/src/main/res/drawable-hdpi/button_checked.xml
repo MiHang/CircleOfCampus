@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"  >
+
+
+    <!-- 填充的颜色 -->
+
+    <solid android:color="@color/bgColor_overlay" />
+
+
+    <!-- 设置边框宽度 -->
+    <stroke
+        android:width="@dimen/edittext_line"
+        android:color="@color/dividerColor" />
+
+    <!-- 四个角的弧度 -->
+    <corners android:radius="@dimen/edittext_radius" />
+    <!-- padding：TextView里面的文字与TextView边界的间隔 -->
+
+
+
+
+</shape>
