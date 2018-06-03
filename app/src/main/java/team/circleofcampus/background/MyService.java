@@ -18,6 +18,8 @@ import org.json.JSONObject;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 import team.circleofcampus.Interface.MessageListener;
 import team.circleofcampus.util.HttpUtils;
@@ -33,6 +35,7 @@ public class MyService extends Service {
     WebSocketClient myClient;
     String send;
     MessageListener listener;
+    List<byte[]> data=new ArrayList<>();
 
     public void setMessageListener(MessageListener listener) {
         this.listener = listener;
@@ -80,17 +83,19 @@ public class MyService extends Service {
                  */
                 @Override
                 public void onMessage(ByteBuffer bytes) {
-                    if (listener!=null){
-                        Log.d(TAG, "接收到"+bytes.toString());
-                    Intent intent=new Intent();
-                    intent.putExtra("Msg", bytes.array());
-                    intent.setAction("coc.team.home.activity");
-                    sendBroadcast(intent);
+                    Log.d(TAG, "接收到"+bytes.toString());
+
                     ByteUtils utils=new ByteUtils();
                     Msg msg =utils.toT(bytes.array());
 
                     Log.d(TAG,"消息"+ msg.getSend()+":"+msg.getText());
-                        listener.sendMessage(bytes.array());
+                    if (listener!=null){
+
+                            listener.sendMessage(bytes.array());
+
+
+                    }else{
+                        data.add(bytes.array());
                     }
 
 

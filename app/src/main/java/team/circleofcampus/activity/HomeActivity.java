@@ -1,8 +1,12 @@
 package team.circleofcampus.activity;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -68,6 +72,7 @@ public class HomeActivity extends AppCompatActivity {
     List<Fragment> data = new ArrayList<>();
     private int selectedPageId = 0;
     public MyService myService;
+    Intent intent;
     @Override
     public void onBackPressed() {
         if (selectedPageId == 4) {
@@ -82,24 +87,50 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        // 开启后台服务
+        ServiceConnection conn = new ServiceConnection() {
+            @Override
+            public void onServiceDisconnected(ComponentName name) {}
+
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                //返回一个MsgService对象
+                myService = ((MyService.MsgBinder)service).getService();
+Toast.makeText(getApplicationContext(), "开启服务", Toast.LENGTH_SHORT).show();
+
+                myService.setMessageListener(new MessageListener() {
+                    @Override
+                    public void sendMessage(byte[] bytes) {
+                        Toast.makeText(getApplicationContext(), "主页接收到消息", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
+            }
+        };
+
+        bindService( intent , conn , Context.BIND_AUTO_CREATE);
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this); // 绑定Activity
         headerSelect(0);
-
-        // 开启后台服务
-         myService=new MyService();
-        Intent intent = new Intent(this, myService.getClass());
+        myService=new MyService();
+        intent = new Intent(this, myService.getClass());
         intent.putExtra("send", "jayevip@163.com");
         startService(intent);
-        myService.setMessageListener(new MessageListener() {
-            @Override
-            public void sendMessage(byte[] bytes) {
-                Toast.makeText(getApplicationContext(), "主页接收到消息", Toast.LENGTH_SHORT).show();
 
-            }
-        });
+
+//        startService(intent);
+
+
+
 
         // 校园圈
         CircleFragment circleFragment = new CircleFragment();

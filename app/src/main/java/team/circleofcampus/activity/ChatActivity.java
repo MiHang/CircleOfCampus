@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -42,15 +41,9 @@ import com.example.library.Fragment.FaceFragment;
 import com.example.library.Interface.PictureClickListener;
 
 import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,12 +53,10 @@ import team.circleofcampus.Interface.LabelFragmentListener;
 import team.circleofcampus.Interface.MessageListener;
 import team.circleofcampus.Interface.RecordItemListener;
 import team.circleofcampus.R;
-import team.circleofcampus.adapter.MyFragmentAdapter;
+import team.circleofcampus.adapter.MyFragmentPagerAdapter;
 import team.circleofcampus.adapter.RecordAdapter;
 import team.circleofcampus.background.MyService;
 import team.circleofcampus.fragment.LabelFragment;
-import team.circleofcampus.model.UserMsg;
-import team.circleofcampus.util.HttpUtils;
 import team.circleofcampus.view.CustomViewPager;
 import team.circleofcampus.view.FontTextView;
 
@@ -94,7 +85,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     ByteUtils utils = new ByteUtils();
     SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
 
-    MyFragmentAdapter fragmentAdapter;
+    MyFragmentPagerAdapter fragmentAdapter;
     List<Fragment> fragments = new ArrayList<>();
     LabelFragment b = new LabelFragment();
     FaceFragment a;
@@ -123,15 +114,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         header_left_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                finish();
             }
         });
 
         ServiceConnection conn = new ServiceConnection() {
             @Override
-            public void onServiceDisconnected(ComponentName name) {
-
-            }
+            public void onServiceDisconnected(ComponentName name) {}
 
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
@@ -224,7 +213,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         fragments.add(b);
-        fragmentAdapter = new MyFragmentAdapter(getSupportFragmentManager(), fragments);
+        fragmentAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), fragments);
         FaceViewPager.setAdapter(fragmentAdapter);
 
 
