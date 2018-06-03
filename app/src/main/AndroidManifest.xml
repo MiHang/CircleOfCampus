@@ -22,9 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activity.MainActivity" />
-        <activity android:name=".activity.LoginActivity">
-
-        </activity>
+        <activity android:name=".activity.LoginActivity"></activity>
         <activity android:name=".activity.RegisterActivity" />
         <activity
             android:name=".activity.HomeActivity"
@@ -36,20 +34,17 @@
             </intent-filter>
         </activity>
 
-
         <service android:name=".background.MyService" />
 
         <activity
             android:name=".activity.ContactActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden" >
-
-        </activity>
+            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
         <activity android:name=".activity.AddRequestActivity" />
-        <activity android:name=".activity.ForgetPwdActivity"></activity>
-        <activity android:name=".activity.ChatActivity"
-            android:windowSoftInputMode="adjustResize">
-
-        </activity>
+        <activity android:name=".activity.ForgetPwdActivity" />
+        <activity
+            android:name=".activity.ChatActivity"
+            android:windowSoftInputMode="adjustResize"></activity>
+        <activity android:name=".activity.AlterUserInfoActivity"></activity>
     </application>
 
 </manifest>

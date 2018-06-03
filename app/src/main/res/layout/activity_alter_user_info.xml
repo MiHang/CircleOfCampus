@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="true"
+    android:background="@drawable/bg"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <!-- 标题栏 -->
+    <include layout="@layout/header"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:orientation="vertical">
+
+        <!-- ID -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|left"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="50dp"
+            android:orientation="horizontal">
+
+            <team.circleofcampus.view.FontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:text="email："/>
+
+            <team.circleofcampus.view.FontEditText
+                android:id="@+id/alter_email_edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dp"
+                android:layout_weight="1"
+                android:theme="@style/NoUnderlineEditText"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textSize="16dp"
+                android:textColor="@color/black"
+                android:inputType="textEmailAddress"
+                android:imeOptions="actionNext"
+                android:enabled="false"/>
+
+        </LinearLayout>
+        <!-- 分割线 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@color/divide_color"/>
+
+        <!-- 用户名 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|left"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="10dp"
+            android:orientation="horizontal">
+
+            <team.circleofcampus.view.FontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:text="用户名："/>
+
+            <team.circleofcampus.view.FontEditText
+                android:id="@+id/alter_user_name_edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dp"
+                android:layout_weight="1"
+                android:theme="@style/NoUnderlineEditText"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textSize="16dp"
+                android:textColor="@color/black"
+                android:hint="3 - 10个字母数字或符号.@"
+                android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@."
+                android:imeOptions="actionNext"/>
+
+        </LinearLayout>
+        <!-- 分割线 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@color/divide_color"/>
+
+        <!-- 性别 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|left"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="10dp"
+            android:orientation="horizontal">
+
+            <team.circleofcampus.view.FontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:text="性  别："/>
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <team.circleofcampus.view.FontRadioButton
+                    android:id="@+id/alter_gender_male_rb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:textSize="16dp"
+                    android:text="男" />
+                <team.circleofcampus.view.FontRadioButton
+                    android:id="@+id/alter_gender_female_rb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:layout_marginLeft="30dp"
+                    android:textSize="16dp"
+                    android:text="女" />
+            </RadioGroup>
+
+        </LinearLayout>
+        <!-- 分割线 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@color/divide_color"/>
+
+        <!-- 学校 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|left"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="10dp"
+            android:orientation="horizontal">
+
+            <team.circleofcampus.view.FontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:text="学  校："/>
+
+            <team.circleofcampus.view.FontEditText
+                android:id="@+id/alter_campus_edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dp"
+                android:layout_weight="1"
+                android:theme="@style/NoUnderlineEditText"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textSize="16dp"
+                android:textColor="@color/black"
+                android:inputType="textEmailAddress"
+                android:imeOptions="actionNext"
+                android:enabled="false"/>
+
+        </LinearLayout>
+        <!-- 分割线 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@color/divide_color"/>
+
+        <!-- 院系 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|left"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="10dp"
+            android:orientation="horizontal">
+
+            <team.circleofcampus.view.FontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:text="院  系："/>
+
+            <team.circleofcampus.view.FontEditText
+                android:id="@+id/alter_faculty_edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dp"
+                android:layout_weight="1"
+                android:theme="@style/NoUnderlineEditText"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textSize="16dp"
+                android:textColor="@color/black"
+                android:inputType="textEmailAddress"
+                android:imeOptions="actionNext"
+                android:enabled="false"/>
+
+        </LinearLayout>
+        <!-- 分割线 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@color/divide_color"/>
+
+        <!-- 保存按钮 -->
+        <team.circleofcampus.view.FontButton
+            android:id="@+id/alter_user_info_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:textColor="@color/white"
+            android:textSize="18dp"
+            android:text="保  存"
+            android:background="@drawable/shape_login_btn"/>
+
+    </LinearLayout>
+
+</LinearLayout>
+

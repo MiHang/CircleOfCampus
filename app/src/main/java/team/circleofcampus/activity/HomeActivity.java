@@ -18,6 +18,9 @@ import android.widget.Toast;
 
 import com.common.model.Msg;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -95,11 +98,6 @@ public class HomeActivity extends AppCompatActivity {
         ButterKnife.bind(this); // 绑定Activity
         headerSelect(0);
 
-
-
-
-
-
         MyBroadcastReceiver myBro = new MyBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("coc.team.home.activity");
@@ -107,8 +105,6 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MyService.class);
         intent.putExtra("send", "jayevip@163.com");
         startService(intent);
-
-
 
         // 校园圈
         CircleFragment circleFragment = new CircleFragment();
@@ -266,7 +262,22 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
             overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
         } else if (selectedPageId == 3) { // 我的页面 - 编辑
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("uId",1);
+                jsonObject.put("email","jayevip@163.com");
+                jsonObject.put("userName","userName");
+                jsonObject.put("gender","male");
+                jsonObject.put("campusName","成都职业技术学院");
+                jsonObject.put("facultyName","软件分院");
 
+                Intent intent = new Intent(HomeActivity.this, AlterUserInfoActivity.class);
+                intent.putExtra("param", jsonObject.toString());
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 
