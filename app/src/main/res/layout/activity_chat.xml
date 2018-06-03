@@ -9,21 +9,25 @@
     android:orientation="vertical">
 
     <include layout="@layout/header" />
+
     <ListView
         android:id="@+id/ChatRecord"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/white"
         android:layout_weight="1"
         android:divider="@null"
         android:dividerHeight="0dp"
         android:listSelector="@android:color/transparent"
         android:scrollbars="none"
+        android:stackFromBottom="true"
         android:transcriptMode="alwaysScroll" />
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:focusable="true"
+        android:background="@color/white"
         android:focusableInTouchMode="true"
         android:orientation="vertical">
 
@@ -37,11 +41,11 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/cut_line_height"
             android:background="@color/cut_line_color" />
-<team.circleofcampus.view.CustomViewPager
-    android:id="@+id/Face_ViewPager"
-    android:layout_width="match_parent"
-    android:visibility="gone"
-    android:layout_height="wrap_content"/>
+
 
     </LinearLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/Face_ViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="220dp" />
 </LinearLayout>

@@ -7,6 +7,6 @@
 
     <include layout="@layout/search_text" />
 
-    <include layout="@layout/view_recycler"/>
+    <include layout="@layout/view_re"/>
 
 </LinearLayout>

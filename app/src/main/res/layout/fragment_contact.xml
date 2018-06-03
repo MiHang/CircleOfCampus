@@ -16,7 +16,7 @@
         android:background="@color/white"
         android:layout_height="wrap_content">
 
-        <include layout="@layout/view_recycler" />
+        <include layout="@layout/view_re" />
 
         <ListView
             android:id="@+id/IndexList"

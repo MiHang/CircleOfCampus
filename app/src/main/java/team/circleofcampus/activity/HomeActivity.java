@@ -26,6 +26,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import team.circleofcampus.BroadcastReceiver.MyBroadcastReceiver;
 import team.circleofcampus.Interface.FragmentSwitchListener;
 import team.circleofcampus.Interface.MessageListener;
 import team.circleofcampus.R;
@@ -71,8 +72,8 @@ public class HomeActivity extends AppCompatActivity {
 
     List<Fragment> data = new ArrayList<>();
     private int selectedPageId = 0;
-    public MyService myService;
-    Intent intent;
+    public MyService myService=new MyService();;
+
     @Override
     public void onBackPressed() {
         if (selectedPageId == 4) {
@@ -86,35 +87,6 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // 开启后台服务
-        ServiceConnection conn = new ServiceConnection() {
-            @Override
-            public void onServiceDisconnected(ComponentName name) {}
-
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                //返回一个MsgService对象
-                myService = ((MyService.MsgBinder)service).getService();
-Toast.makeText(getApplicationContext(), "开启服务", Toast.LENGTH_SHORT).show();
-
-                myService.setMessageListener(new MessageListener() {
-                    @Override
-                    public void sendMessage(byte[] bytes) {
-                        Toast.makeText(getApplicationContext(), "主页接收到消息", Toast.LENGTH_SHORT).show();
-
-
-                    }
-                });
-
-            }
-        };
-
-        bindService( intent , conn , Context.BIND_AUTO_CREATE);
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,14 +94,19 @@ Toast.makeText(getApplicationContext(), "开启服务", Toast.LENGTH_SHORT).show
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this); // 绑定Activity
         headerSelect(0);
-        myService=new MyService();
-        intent = new Intent(this, myService.getClass());
+
+
+
+
+
+
+        MyBroadcastReceiver myBro = new MyBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("coc.team.home.activity");
+        registerReceiver(myBro, intentFilter);
+        Intent intent = new Intent(this, MyService.class);
         intent.putExtra("send", "jayevip@163.com");
         startService(intent);
-
-
-//        startService(intent);
-
 
 
 
@@ -148,7 +125,7 @@ Toast.makeText(getApplicationContext(), "开启服务", Toast.LENGTH_SHORT).show
 
         // 消息
         MessageFragment bFragment = new MessageFragment();
-        bFragment.bind(myService);
+        bFragment.bind(myBro);
         data.add(bFragment);
 
         // 我的发布

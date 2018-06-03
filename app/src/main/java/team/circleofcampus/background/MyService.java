@@ -83,6 +83,11 @@ public class MyService extends Service {
                  */
                 @Override
                 public void onMessage(ByteBuffer bytes) {
+                    Intent intent=new Intent();
+                    intent.putExtra("Msg", bytes.array());
+                    intent.setAction("coc.team.home.activity");
+                    sendBroadcast(intent);
+
                     Log.d(TAG, "接收到"+bytes.toString());
 
                     ByteUtils utils=new ByteUtils();

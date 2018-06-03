@@ -1,7 +1,6 @@
 package team.circleofcampus.activity;
 
 
-import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +11,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -60,7 +61,6 @@ import team.circleofcampus.fragment.LabelFragment;
 import team.circleofcampus.view.CustomViewPager;
 import team.circleofcampus.view.FontTextView;
 
-
 public class ChatActivity extends AppCompatActivity implements View.OnClickListener {
 
 
@@ -95,13 +95,12 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private EditText MsgText;
     private ImageView Face;
     private ImageView More;
-    private CustomViewPager FaceViewPager;
+    private ViewPager FaceViewPager;
     private FontTextView header_left_text;
     private ImageView header_left_image;
     private FontTextView header_title;
     private FontTextView header_right_text;
     private ImageView header_right_image;
-    private CustomViewPager Face_ViewPager;
     MyService myService=new MyService();
 
     @Override
@@ -117,6 +116,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 finish();
             }
         });
+        Intent intent = new Intent( this , myService.getClass());
 
         ServiceConnection conn = new ServiceConnection() {
             @Override
@@ -137,7 +137,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         };
-        Intent intent = new Intent( this , myService.getClass());
+
         bindService( intent , conn , Context.BIND_AUTO_CREATE );
 
 
@@ -150,7 +150,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         a.setPictureClickListener(new PictureClickListener() {
             @Override
             public void PictureDisplay(int res) {
-                if (myClient.getConnection().isOpen()) {//发送图片
+                if (myClient!=null&&myClient.getConnection().isOpen()) {//发送图片
                     Bitmap bitmap = BitmapFactory.decodeResource(getResources(), res);
                     Msg dataMsg = new Msg();
                     dataMsg.setSend(Send);
@@ -172,47 +172,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         fragments.add(a);
-        b.setListener(new LabelFragmentListener() {
-            @Override
-            public void OnReceive(Intent intent) {
-                String type = "";//二进制数据类型
-                String msg = "";
-                byte[] b2 = new byte[0];
-                String s = intent.getStringExtra("MsgType");
-//            JSONObject js = new JSONObject();
-//            String date = sdf.format(new Date());
-//            js.put("account", name);
-//            js.put("MsgType", "byte");
-//
-//            if (s.equals("Img")) {//图片
-//                Bitmap bitmap = intent.getParcelableExtra("bitmap");
-//                b2 = byteUtils.BitmapToBytes(bitmap);
-//                type = "png";
-//            } else if (s.equals("Video")) {//视频
-//                String str = intent.getStringExtra("Video");
-//                b2 = byteUtils.DocToByte(str);
-//                type = "video";
-//            }
-//            msg = js.toString() + "And" + type + "=TYPE";
-//            byte[] b3 = byteUtils.byteMerger(msg.getBytes(), b2);
-//            myClient.send(b3);
-//
-//            js.put("Message", "Send");
-//            js.put("Type", type);
-//            Gson gson = new Gson();
-//            Message message = gson.fromJson(js.toString(), Message.class);
-//            data.add(message);
-//            myAdapter.notifyDataSetChanged();
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
 
-
-            }
-        });
-        fragments.add(b);
+//        fragments.add(b);
         fragmentAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), fragments);
         FaceViewPager.setAdapter(fragmentAdapter);
 
@@ -558,7 +519,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initView() {
-        FaceViewPager = (CustomViewPager) findViewById(R.id.Face_ViewPager);
+
         ChatRecord = (ListView) findViewById(R.id.ChatRecord);
         Video = (ImageView) findViewById(R.id.Video);
         Video.setOnClickListener(this);
@@ -581,8 +542,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         header_right_text.setOnClickListener(this);
         header_right_image = (ImageView) findViewById(R.id.header_right_image);
         header_right_image.setOnClickListener(this);
-        Face_ViewPager = (CustomViewPager) findViewById(R.id.Face_ViewPager);
-        Face_ViewPager.setOnClickListener(this);
+        FaceViewPager = (ViewPager) findViewById(R.id.Face_ViewPager);
     }
 
 

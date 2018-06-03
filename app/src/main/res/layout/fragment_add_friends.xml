@@ -52,7 +52,7 @@
                             android:textSize="@dimen/middle_side"
                             android:visibility="gone" />
 
-                        <include layout="@layout/view_recycler" />
+                        <include layout="@layout/view_re" />
 
                 </LinearLayout>
         </FrameLayout>

@@ -29,13 +29,9 @@
         <activity
             android:name=".activity.HomeActivity"
             android:windowSoftInputMode="adjustPan|stateHidden">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
-        <activity android:name=".activity.DemoActivity" />
+
 
         <service android:name=".background.MyService" />
 
@@ -48,7 +44,11 @@
         <activity android:name=".activity.ForgetPwdActivity"></activity>
         <activity android:name=".activity.ChatActivity"
             android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 
