@@ -1,5 +1,6 @@
 package team.circleofcampus.fragment;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.os.AsyncTask;
@@ -21,6 +22,7 @@ import org.json.JSONObject;
 
 import team.circleofcampus.Interface.FragmentSwitchListener;
 import team.circleofcampus.R;
+import team.circleofcampus.activity.ChatActivity;
 import team.circleofcampus.http.HttpHelper;
 import team.circleofcampus.view.CircleImageView;
 
@@ -75,6 +77,9 @@ public class MineFragment extends Fragment {
         Log_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intentNotifi = new Intent(getActivity(), ChatActivity.class);
+
+                getActivity().startActivity(intentNotifi);
                 Toast.makeText(getContext(), "退出", Toast.LENGTH_SHORT).show();
             }
         });
@@ -150,31 +155,6 @@ public class MineFragment extends Fragment {
         });
     }
 
-    /**
-     * 缩放Bitmap满屏
-     *
-     * @param bitmap
-     * @param screenWidth
-     * @param screenHight
-     * @return
-     */
-    public static Bitmap getBitmap(Bitmap bitmap, int screenWidth,
-                                   int screenHight)
-    {
-        int w = bitmap.getWidth();
-        int h = bitmap.getHeight();
-        Matrix matrix = new Matrix();
-        float scale = (float) screenWidth / w;
-        float scale2 = (float) screenHight / h;
-        // scale = scale < scale2 ? scale : scale2;
-        matrix.postScale(scale, scale);
-        Bitmap bmp = Bitmap.createBitmap(bitmap, 0, 0, w, h, matrix, true);
-        if (bitmap != null && !bitmap.equals(bmp) && !bitmap.isRecycled())
-        {
-            bitmap.recycle();
-            bitmap = null;
-        }
-        return bmp;// Bitmap.createBitmap(bitmap, 0, 0, w, h, matrix, true);
-    }
+
 
 }

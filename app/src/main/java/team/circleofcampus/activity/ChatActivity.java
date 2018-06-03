@@ -2,12 +2,16 @@ package team.circleofcampus.activity;
 
 
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
@@ -36,10 +40,12 @@ import com.common.utils.ByteUtils;
 import com.common.utils.Symbol;
 import com.example.library.Fragment.FaceFragment;
 import com.example.library.Interface.PictureClickListener;
+
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -49,14 +55,19 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import team.circleofcampus.Interface.LabelFragmentListener;
+import team.circleofcampus.Interface.MessageListener;
 import team.circleofcampus.Interface.RecordItemListener;
 import team.circleofcampus.R;
 import team.circleofcampus.adapter.MyFragmentAdapter;
 import team.circleofcampus.adapter.RecordAdapter;
+import team.circleofcampus.background.MyService;
 import team.circleofcampus.fragment.LabelFragment;
+import team.circleofcampus.model.UserMsg;
 import team.circleofcampus.util.HttpUtils;
 import team.circleofcampus.view.CustomViewPager;
+import team.circleofcampus.view.FontTextView;
 
 
 public class ChatActivity extends AppCompatActivity implements View.OnClickListener {
@@ -94,7 +105,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView Face;
     private ImageView More;
     private CustomViewPager FaceViewPager;
-
+    private FontTextView header_left_text;
+    private ImageView header_left_image;
+    private FontTextView header_title;
+    private FontTextView header_right_text;
+    private ImageView header_right_image;
+    private CustomViewPager Face_ViewPager;
+    MyService myService=new MyService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +120,38 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         initView();
         init();
         setAdapter();
-        ConnectServer();
+        header_left_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
+        ServiceConnection conn = new ServiceConnection() {
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                //返回一个MsgService对象
+                myService = ((MyService.MsgBinder)service).getService();
+
+                myClient= myService.getMyClient();
+                myService.setMessageListener(new MessageListener() {
+                    @Override
+                    public void sendMessage(byte[] bytes) {
+                        ReceiveMessage(bytes);
+                    }
+                });
+
+            }
+        };
+        Intent intent = new Intent( this , myService.getClass());
+        bindService( intent , conn , Context.BIND_AUTO_CREATE );
+
+
 
     }
 
@@ -238,6 +286,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 /*判断是否是“发送键”键*/
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    if (myClient!=null){
+
+
                     if (myClient.getConnection().isOpen()) {
                         if (MsgText.getText().toString().length() > 0) {
                             Msg msg = new Msg();
@@ -264,7 +315,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     } else {
                         Toast.makeText(getApplicationContext(), "未连接到服务器", Toast.LENGTH_SHORT).show();
                     }
-
+                    }
                     return true;
                 }
 
@@ -395,70 +446,17 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    /**
-     * 连接服务器
-     */
-    public void ConnectServer() {
-        try {
-            URI uri = new URI("ws://" + HttpUtils.Ip + ":8891");
-            myClient = new WebSocketClient(uri) {
-                @Override
-                public void onOpen(ServerHandshake handshakedata) {
-                    JSONObject js = new JSONObject();
-                    try {
-                        js.put("Account", Send);
-                        js.put("Request", "Login");
-
-                    } catch (JSONException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-
-                    myClient.send(js.toString());
-
-
-                }
-
-                /**
-                 * 接收二进制
-                 */
-                @Override
-                public void onMessage(ByteBuffer bytes) {
-                    ReceiveMessage(bytes);
-                }
-
-                @Override
-                public void onMessage(final String message) {
-
-                }
-
-                @Override
-                public void onClose(int code, String reason, boolean remote) {
-
-                }
-
-                @Override
-                public void onError(Exception ex) {
-
-                }
-            };
-            myClient.connect();
-
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * 接收服务器信息，更新Ui
      *
      * @param bytes
      */
-    public void ReceiveMessage(final ByteBuffer bytes) {
+    public void ReceiveMessage(final byte[] bytes) {
         ChatRecord.post(new Runnable() {
             @Override
             public void run() {
-                Msg msg = utils.toT(bytes.array());
+                Msg msg = utils.toT(bytes);
                 Log.e("tag", "文本" + msg.getText() + "语音" + msg.getAudio() + "图片" + msg.getImg());
                 Message message = new Message();
 
@@ -544,7 +542,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 //                FragmentManage(true);
                 break;
             case R.id.Video:
-               //隐藏表情面板
+                //隐藏表情面板
                 FragmentManage(false);
 
                 if (Video.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.keyboard).getConstantState())) {//打开键盘
@@ -584,6 +582,18 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         More = (ImageView) findViewById(R.id.More);
         More.setOnClickListener(this);
 
+        header_left_text = (FontTextView) findViewById(R.id.header_left_text);
+        header_left_text.setOnClickListener(this);
+        header_left_image = (ImageView) findViewById(R.id.header_left_image);
+        header_left_image.setOnClickListener(this);
+        header_title = (FontTextView) findViewById(R.id.header_title);
+        header_title.setOnClickListener(this);
+        header_right_text = (FontTextView) findViewById(R.id.header_right_text);
+        header_right_text.setOnClickListener(this);
+        header_right_image = (ImageView) findViewById(R.id.header_right_image);
+        header_right_image.setOnClickListener(this);
+        Face_ViewPager = (CustomViewPager) findViewById(R.id.Face_ViewPager);
+        Face_ViewPager.setOnClickListener(this);
     }
 
 

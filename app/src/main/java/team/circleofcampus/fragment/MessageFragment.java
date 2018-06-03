@@ -1,7 +1,13 @@
 package team.circleofcampus.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.common.model.Msg;
+import com.common.utils.ByteUtils;
 import com.common.utils.TimeUtil;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
 import com.yanzhenjie.recyclerview.swipe.OnSwipeMenuItemClickListener;
@@ -24,12 +32,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-
-import team.circleofcampus.BroadcastReceiver.MyBroadcastReceiver;
 import team.circleofcampus.Interface.MessageListener;
 import team.circleofcampus.Interface.OnItemClickListener;
 import team.circleofcampus.R;
+import team.circleofcampus.activity.ChatActivity;
 import team.circleofcampus.adapter.MyMessageAdapter;
+import team.circleofcampus.background.MyService;
 import team.circleofcampus.model.UserMsg;
 
 /**
@@ -43,10 +51,12 @@ public class MessageFragment extends Fragment {
     List<UserMsg> data=new ArrayList<>();
     TimeUtil timeUtil=new TimeUtil();
     Date date;
+    ByteUtils utils=new ByteUtils();
+
     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    MyBroadcastReceiver BroadcastReceiver;
-    public void bind(MyBroadcastReceiver BroadcastReceiver){
-        this.BroadcastReceiver=BroadcastReceiver;
+    MyService myService;
+    public void bind(MyService myService){
+        this.myService=myService;
     }
 
     @Override
@@ -64,44 +74,75 @@ public class MessageFragment extends Fragment {
             view = getActivity().getLayoutInflater().inflate(R.layout.fragment_msg, null);
         initView(view);
 
-        if (BroadcastReceiver!=null){//添加广播回调监听，从而更新消息列表
-            BroadcastReceiver.setMessageListener(new MessageListener() {
-                @Override
-                public void sendMessageListener(UserMsg userMsg) {
-                    boolean isFlag=true;
-                    for(UserMsg msg:data){
-                        if (msg.getAccount().equals(userMsg.getAccount())){
-                            isFlag=false;
+
+
+        ServiceConnection conn = new ServiceConnection() {
+            @Override
+            public void onServiceDisconnected(ComponentName name) {}
+
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                //返回一个MsgService对象
+                myService = ((MyService.MsgBinder)service).getService();
+
+
+                myService.setMessageListener(new MessageListener() {
+                    @Override
+                    public void sendMessage(byte[] bytes) {
+                        Toast.makeText(getContext(), "接收到消息", Toast.LENGTH_SHORT).show();
+                        Msg dataMsg =utils.toT(bytes);
+                        UserMsg userMsg=new UserMsg();
+                        userMsg.setAccount(dataMsg.getSend());
+                        userMsg.setUserName(dataMsg.getUserName());
+                        userMsg.setSex(dataMsg.getSex());
+                        if(dataMsg.getText()!=null){
+                            userMsg.setMsg(dataMsg.getText());
                         }
-                    }
-                    try {
-                        date=sdf.parse(userMsg.getDate());
-                        userMsg.setDate(timeUtil.getTimeFormatText(date));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    if (isFlag){
-                        userMsg.setAmount(1);
-                        data.add(userMsg);
-                    }else{
-                        for (UserMsg u:data){
-                            if (u.getAccount().equals(userMsg.getAccount())){
-                                u.setMsg(userMsg.getMsg());
-                                u.setDate(timeUtil.getTimeFormatText(date));
-                                u.setAmount(u.getAmount()+1);
+                        if(dataMsg.getAudio()!=null){
+                            userMsg.setMsg("语音消息");
+                        }
+                        if(dataMsg.getImg()!=null){
+                            userMsg.setMsg("图片消息");
+                        }
+                        userMsg.setDate(dataMsg.getDate());
+                        boolean isFlag=true;
+                        for(UserMsg msg:data){
+                            if (msg.getAccount().equals(userMsg.getAccount())){
+                                isFlag=false;
                             }
                         }
+                        try {
+                            date=sdf.parse(userMsg.getDate());
+                            userMsg.setDate(timeUtil.getTimeFormatText(date));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        if (isFlag){
+                            userMsg.setAmount(1);
+                            data.add(userMsg);
+                        }else{
+                            for (UserMsg u:data){
+                                if (u.getAccount().equals(userMsg.getAccount())){
+                                    u.setMsg(userMsg.getMsg());
+                                    u.setDate(timeUtil.getTimeFormatText(date));
+                                    u.setAmount(u.getAmount()+1);
+                                }
+                            }
+                        }
+
+
+                        Collections.sort(data);
+                        adapter.notifyDataSetChanged();
+
+                        Toast.makeText(getContext(), "接收到"+userMsg.getAccount()+":"+userMsg.getMsg(), Toast.LENGTH_SHORT).show();
                     }
+                });
 
 
-                    Collections.sort(data);
-                    adapter.notifyDataSetChanged();
-
-                    Toast.makeText(getContext(), "接收到"+userMsg.getAccount()+":"+userMsg.getMsg(), Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
+            }
+        };
+        Intent intent = new Intent( getContext() , myService.getClass());
+        getActivity().bindService( intent , conn , Context.BIND_AUTO_CREATE );
         recycler_view.setLayoutManager(new LinearLayoutManager(getContext()));// 布局管理器。
         recycler_view.setHasFixedSize(true);// 如果Item够简单，高度是确定的，打开FixSize将提高性能。
         recycler_view.setItemAnimator(new DefaultItemAnimator());// 设置Item默认动画，加也行，不加也行。
@@ -134,6 +175,10 @@ public class MessageFragment extends Fragment {
     private OnItemClickListener onItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
+            //打开自定义的Activity
+            Intent intentNotifi = new Intent(getActivity(), ChatActivity.class);
+
+            getActivity().startActivity(intentNotifi);
             Toast.makeText(getContext(), "我是第" + position + "条。", Toast.LENGTH_SHORT).show();
         }
     };

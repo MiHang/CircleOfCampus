@@ -10,15 +10,20 @@ import android.view.View;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.common.model.Msg;
+
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import team.circleofcampus.BroadcastReceiver.MyBroadcastReceiver;
 import team.circleofcampus.Interface.FragmentSwitchListener;
+import team.circleofcampus.Interface.MessageListener;
 import team.circleofcampus.R;
 import team.circleofcampus.adapter.MyFragmentPagerAdapter;
 import team.circleofcampus.background.MyService;
@@ -29,6 +34,7 @@ import team.circleofcampus.fragment.MyPublishFragment;
 import team.circleofcampus.fragment.MineFragment;
 import team.circleofcampus.fragment.QRFragment;
 import team.circleofcampus.fragment.SocietyCircleFragment;
+import team.circleofcampus.model.UserMsg;
 import team.circleofcampus.view.NoScrollViewPager;
 
 
@@ -61,7 +67,7 @@ public class HomeActivity extends AppCompatActivity {
 
     List<Fragment> data = new ArrayList<>();
     private int selectedPageId = 0;
-
+    public MyService myService;
     @Override
     public void onBackPressed() {
         if (selectedPageId == 4) {
@@ -83,13 +89,17 @@ public class HomeActivity extends AppCompatActivity {
         headerSelect(0);
 
         // 开启后台服务
-        MyBroadcastReceiver myBro = new MyBroadcastReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("coc.team.home.activity");
-        registerReceiver(myBro, intentFilter);
-        Intent intent = new Intent(this, MyService.class);
+         myService=new MyService();
+        Intent intent = new Intent(this, myService.getClass());
         intent.putExtra("send", "jayevip@163.com");
         startService(intent);
+        myService.setMessageListener(new MessageListener() {
+            @Override
+            public void sendMessage(byte[] bytes) {
+                Toast.makeText(getApplicationContext(), "主页接收到消息", Toast.LENGTH_SHORT).show();
+
+            }
+        });
 
         // 校园圈
         CircleFragment circleFragment = new CircleFragment();
@@ -106,7 +116,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // 消息
         MessageFragment bFragment = new MessageFragment();
-        bFragment.bind(myBro);
+        bFragment.bind(myService);
         data.add(bFragment);
 
         // 我的发布

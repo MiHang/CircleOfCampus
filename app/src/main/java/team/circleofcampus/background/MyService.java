@@ -19,6 +19,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 
+import team.circleofcampus.Interface.MessageListener;
+import team.circleofcampus.util.HttpUtils;
+
 
 /**
  * Created by 惠普 on 2018-05-15.
@@ -26,21 +29,34 @@ import java.nio.ByteBuffer;
 
 public class MyService extends Service {
     String TAG="service";
-    Binder binder=new Binder();
+    MsgBinder binder=new MsgBinder();
     WebSocketClient myClient;
     String send;
+    MessageListener listener;
+
+    public void setMessageListener(MessageListener listener) {
+        this.listener = listener;
+    }
+
+    public WebSocketClient getMyClient() {
+        return myClient;
+    }
+
+
+
     @Override
     public void onCreate() {
         super.onCreate();
         Log.e(TAG,"---onCreate---");
     }
 
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.e(TAG,"---onStartCommand---");
         send=intent.getStringExtra("send");
         try {
-            URI uri = new URI("ws://172.17.166.197:8891");
+            URI uri = new URI("ws://"+ HttpUtils.Ip+":8891");
             myClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake handshakedata) {
@@ -64,7 +80,8 @@ public class MyService extends Service {
                  */
                 @Override
                 public void onMessage(ByteBuffer bytes) {
-                    Log.d(TAG, "接收到"+bytes.toString());
+                    if (listener!=null){
+                        Log.d(TAG, "接收到"+bytes.toString());
                     Intent intent=new Intent();
                     intent.putExtra("Msg", bytes.array());
                     intent.setAction("coc.team.home.activity");
@@ -73,6 +90,9 @@ public class MyService extends Service {
                     Msg msg =utils.toT(bytes.array());
 
                     Log.d(TAG,"消息"+ msg.getSend()+":"+msg.getText());
+                        listener.sendMessage(bytes.array());
+                    }
+
 
                 }
 
@@ -122,6 +142,14 @@ public class MyService extends Service {
         Log.e(TAG,"---onRebind---");
         super.onRebind(intent);
     }
-
-
-}
+    public class MsgBinder extends Binder {
+        /**
+         * 获取当前Service的实例
+         *
+         * @return
+         */
+        public MyService getService() {
+            return MyService.this;
+        }
+    }
+    }
