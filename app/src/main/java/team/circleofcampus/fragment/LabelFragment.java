@@ -2,7 +2,7 @@ package team.circleofcampus.fragment;
 
 
 /**
- * Created by 惠普 on 2018-03-10.
+ * 聊天底部操作面板 暂未使用
  */
 
 import android.content.Context;

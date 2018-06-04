@@ -24,7 +24,7 @@ import team.circleofcampus.view.FontTextView;
 
 
 /**
- * Created by 惠普 on 2018-05-11.
+ * "我的"界面
  */
 public class UserInfoFragment extends Fragment {
 

@@ -6,21 +6,17 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
-
 import com.common.model.Msg;
 import com.common.utils.ByteUtils;
-
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-
 import team.circleofcampus.Interface.MessageListener;
 import team.circleofcampus.util.HttpUtils;
 
@@ -29,7 +25,8 @@ import team.circleofcampus.util.HttpUtils;
  * Created by 惠普 on 2018-05-15.
  */
 
-public class MyService extends Service {
+public class
+MyService extends Service {
     String TAG="service";
     MsgBinder binder=new MsgBinder();
     WebSocketClient myClient;

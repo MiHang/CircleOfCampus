@@ -53,7 +53,8 @@ public class AddFriendsFragment extends Fragment {
         recycler_view.setLayoutManager(new LinearLayoutManager(getContext()));// 布局管理器。
         recycler_view.setHasFixedSize(true);// 如果Item够简单，高度是确定的，打开FixSize将提高性能。
         recycler_view.setItemAnimator(new DefaultItemAnimator());// 设置Item默认动画，加也行，不加也行。
-//        mSwipeMenuRecyclerView.addItemDecoration(new ListViewDecoration());// 添加分割线。
+
+
 
         mMenuAdapter = new FriendSearchAdapter(getContext(), data);
         mMenuAdapter.setItemListener(new OnItemClickListener() {

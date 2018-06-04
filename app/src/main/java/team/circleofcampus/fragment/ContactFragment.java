@@ -57,7 +57,7 @@ import team.circleofcampus.view.MyEditText;
 
 
 /**
- * Created by 惠普 on 2018-05-11.
+ * 联系人界面
  */
 
 public class ContactFragment extends Fragment implements com.bigkoo.alertview.OnItemClickListener, OnDismissListener {
