@@ -1,5 +1,6 @@
 package team.circleofcampus.activity;
 
+import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
@@ -29,6 +31,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import me.weyye.hipermission.HiPermission;
+import me.weyye.hipermission.PermissionCallback;
+import me.weyye.hipermission.PermissonItem;
 import team.circleofcampus.BroadcastReceiver.MyBroadcastReceiver;
 import team.circleofcampus.Interface.FragmentSwitchListener;
 import team.circleofcampus.Interface.MessageListener;
@@ -95,7 +100,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        ButterKnife.bind(this); // 绑定Activity
+        ButterKnife.bind(this);
         headerSelect(0);
 
         MyBroadcastReceiver myBro = new MyBroadcastReceiver();
@@ -103,7 +108,7 @@ public class HomeActivity extends AppCompatActivity {
         intentFilter.addAction("coc.team.home.activity");
         registerReceiver(myBro, intentFilter);
         Intent intent = new Intent(this, MyService.class);
-        intent.putExtra("send", "jayevip@163.com");
+        intent.putExtra("send", "jaye@163.com");
         startService(intent);
 
         // 校园圈

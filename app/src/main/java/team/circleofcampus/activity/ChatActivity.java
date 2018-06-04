@@ -1,6 +1,7 @@
 package team.circleofcampus.activity;
 
 
+import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -51,6 +52,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import me.weyye.hipermission.HiPermission;
+import me.weyye.hipermission.PermissionCallback;
+import me.weyye.hipermission.PermissonItem;
 import team.circleofcampus.Interface.MessageListener;
 import team.circleofcampus.Interface.RecordItemListener;
 import team.circleofcampus.R;
@@ -108,6 +112,37 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         initView();
+
+        //申请权限
+        List<PermissonItem> permissonItems = new ArrayList<PermissonItem>();
+        permissonItems.add(new PermissonItem(Manifest.permission.CAMERA, "照相机", R.drawable.permission_ic_memory));
+        permissonItems.add(new PermissonItem(Manifest.permission.RECORD_AUDIO, "录音", R.drawable.permission_ic_location));
+        HiPermission.create(this)
+                .permissions(permissonItems)
+                .checkMutiPermission(new PermissionCallback() {
+                    @Override
+                    public void onClose() {
+                        Log.i("tag", "onClose");
+                        Toast.makeText(getApplicationContext(), "用户关闭权限申请", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        Toast.makeText(getApplicationContext(), "用户打开权限申请", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    @Override
+                    public void onDeny(String permisson, int position) {
+                        Log.i("tag", "onDeny");
+                    }
+
+                    @Override
+                    public void onGuarantee(String permisson, int position) {
+                        Log.i("tag", "onGuarantee");
+                    }
+                });
 
         init();
         setAdapter();
