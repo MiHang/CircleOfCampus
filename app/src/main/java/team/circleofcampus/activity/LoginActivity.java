@@ -3,12 +3,21 @@ package team.circleofcampus.activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListPopupWindow;
+import android.widget.Toast;
+
+import com.xiasuhuei321.loadingdialog.view.LoadingDialog;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -18,6 +27,8 @@ import butterknife.OnClick;
 import team.circleofcampus.Interface.OnItemListPopupClickListener;
 import team.circleofcampus.R;
 import team.circleofcampus.adapter.HistoryAccountListPopupAdapter;
+import team.circleofcampus.http.LoginRequest;
+import team.circleofcampus.util.SharedPreferencesUtil;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -25,13 +36,39 @@ public class LoginActivity extends AppCompatActivity {
     protected EditText account;
     @BindView(R.id.login_pwd_edit_text)
     protected EditText password;
-    @BindView(R.id.login_btn)
-    protected Button login;
+
+    private LoadingDialog loadingDialog;
 
     private ListPopupWindow lpw; // 列表弹出框
     private HistoryAccountListPopupAdapter historyAccountListPopupAdapter;
     // 弹出框数据 - 历史登陆账号
     private ArrayList<String> historyAccounts = new ArrayList<String>();
+
+    // handler
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 0x0001) {
+                loadingDialog.close();
+                Toast.makeText(LoginActivity.this, "无法与服务器通信，请检查您的网络连接", Toast.LENGTH_SHORT).show();
+            } else if (msg.what == 0x0002) { // 登陆成功
+                loadingDialog.loadSuccess();
+                SharedPreferencesUtil.setAccount(LoginActivity.this, account.getText().toString().trim());
+                toHome();
+            } else if (msg.what == 0x0003) { // 登陆失败
+                loadingDialog.setFailedText("用户名或密码错误");
+                loadingDialog.loadFailed();
+            } else if (msg.what == 0x0004) { // 未知用户
+                loadingDialog.setFailedText("此用户未注册");
+                loadingDialog.loadFailed();
+            } else if (msg.what == 0x0005) { // 页面跳转
+                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
+                finish();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,15 +133,74 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
+     * 跳转到主页
+     */
+    private void toHome() {
+        new Thread(){
+            @Override
+            public void run() {
+                try {
+                    sleep(3000);
+                    handler.sendEmptyMessage(0x0005);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+    }
+
+    /**
      * 登陆按钮点击事件
      * @param view
      */
     @OnClick(R.id.login_btn)
     public void onClickLoginBtn(View view) {
-        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-        startActivity(intent);
-        overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
-        finish();
+
+        if ("".equals(account.getText().toString().trim())) {
+            Toast.makeText(LoginActivity.this, "用户名不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        } else if ("".equals(password.getText().toString().trim())) {
+            Toast.makeText(LoginActivity.this, "密码不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+
+            // 加载对话框
+            loadingDialog = new LoadingDialog(this);
+            loadingDialog.setLoadingText("正在登陆")
+                    .setSuccessText("登陆成功")
+                    .show();
+
+            // 联网线程
+            new Thread() {
+                @Override
+                public void run() {
+                    String result = LoginRequest.login(account.getText().toString().trim(),
+                            password.getText().toString().trim());
+
+                        if (null != result) {
+                            Log.e("tag", "result = " + result);
+                            try {
+                                JSONObject json = new JSONObject(result);
+                                result = json.getString("result");
+                                int uId = json.getInt("id");
+                                Log.e("tag", "json = " + json.toString());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            if (result.equals("success")) {
+                                handler.sendEmptyMessage(0x0002);
+                            } else if (result.equals("error")) {
+                                handler.sendEmptyMessage(0x0003);
+                            } else if (result.equals("unknown")) {
+                                handler.sendEmptyMessage(0x0004);
+                            }
+                        } else {
+                            handler.sendEmptyMessage(0x0001);
+                        }
+                }
+            }.start();
+
+        }
     }
 
     /**

@@ -15,7 +15,7 @@ import okhttp3.Response;
  */
 public class HttpRequest {
 
-    public static final String URL = "http://192.168.1.188:8080/";
+    public static final String URL = "http://192.168.137.1:8080/";
     private static final MediaType mediatype = MediaType.parse("application/json;charset=utf-8");
 
     /**

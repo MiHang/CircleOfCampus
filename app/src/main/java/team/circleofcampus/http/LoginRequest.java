@@ -9,6 +9,24 @@ import org.json.JSONObject;
 public class LoginRequest {
 
     /**
+     * 用户登陆
+     * @param account - 账号
+     * @param pwd - ID
+     * @return
+     */
+    public static String login(String account, String pwd) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("account", account);
+            json.put("pwd", pwd);
+            return HttpRequest.postRequest(HttpRequest.URL + "coc/login.do", json.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
      * 注册新用户
      * @param username - 用户名
      * @param gender - 性别
