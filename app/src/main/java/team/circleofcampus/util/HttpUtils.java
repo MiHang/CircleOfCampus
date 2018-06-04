@@ -5,5 +5,5 @@ package team.circleofcampus.util;
  */
 
 public class HttpUtils {
-    public final static String Ip="192.168.43.70";
+    public final static String Ip="172.17.170.53";
 }

@@ -16,6 +16,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -50,7 +51,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import team.circleofcampus.Interface.LabelFragmentListener;
 import team.circleofcampus.Interface.MessageListener;
 import team.circleofcampus.Interface.RecordItemListener;
 import team.circleofcampus.R;
@@ -58,7 +58,6 @@ import team.circleofcampus.adapter.MyFragmentPagerAdapter;
 import team.circleofcampus.adapter.RecordAdapter;
 import team.circleofcampus.background.MyService;
 import team.circleofcampus.fragment.LabelFragment;
-import team.circleofcampus.view.CustomViewPager;
 import team.circleofcampus.view.FontTextView;
 
 public class ChatActivity extends AppCompatActivity implements View.OnClickListener {
@@ -67,8 +66,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     List<Message> data = new ArrayList<>();
     RecordAdapter myAdapter;
     AlertDialog alert;
-    static String Send = "demo@163.com";
-    static String Receive = "jaye@163.com";
+    static String Send = "jaye@163.com";
+    static String Receive = "5085";
     Data_Dao dao;
     WebSocketClient myClient;
     float x1 = 0;
@@ -89,6 +88,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     List<Fragment> fragments = new ArrayList<>();
     LabelFragment b = new LabelFragment();
     FaceFragment a;
+
+    MyService myService = new MyService();
+    private FontTextView header_left_text;
+    private ImageView header_left_image;
+    private FontTextView header_title;
+    private FontTextView header_right_text;
+    private ImageView header_right_image;
     private ListView ChatRecord;
     private ImageView Video;
     private Button Talk;
@@ -96,38 +102,30 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView Face;
     private ImageView More;
     private ViewPager FaceViewPager;
-    private FontTextView header_left_text;
-    private ImageView header_left_image;
-    private FontTextView header_title;
-    private FontTextView header_right_text;
-    private ImageView header_right_image;
-    MyService myService=new MyService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         initView();
+
         init();
         setAdapter();
-        header_left_image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-        Intent intent = new Intent( this , myService.getClass());
+        header_title.setText("聊天");
+
+        Intent intent = new Intent(this, myService.getClass());
 
         ServiceConnection conn = new ServiceConnection() {
             @Override
-            public void onServiceDisconnected(ComponentName name) {}
+            public void onServiceDisconnected(ComponentName name) {
+            }
 
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 //返回一个MsgService对象
-                myService = ((MyService.MsgBinder)service).getService();
+                myService = ((MyService.MsgBinder) service).getService();
 
-                myClient= myService.getMyClient();
+                myClient = myService.getMyClient();
                 myService.setMessageListener(new MessageListener() {
                     @Override
                     public void sendMessage(byte[] bytes) {
@@ -138,8 +136,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             }
         };
 
-        bindService( intent , conn , Context.BIND_AUTO_CREATE );
-
+        bindService(intent, conn, Context.BIND_AUTO_CREATE);
 
 
     }
@@ -150,7 +147,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         a.setPictureClickListener(new PictureClickListener() {
             @Override
             public void PictureDisplay(int res) {
-                if (myClient!=null&&myClient.getConnection().isOpen()) {//发送图片
+                if (myClient != null && myClient.getConnection().isOpen()) {//发送图片
                     Bitmap bitmap = BitmapFactory.decodeResource(getResources(), res);
                     Msg dataMsg = new Msg();
                     dataMsg.setSend(Send);
@@ -236,35 +233,35 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 /*判断是否是“发送键”键*/
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
-                    if (myClient!=null){
+                    if (myClient != null) {
 
 
-                    if (myClient.getConnection().isOpen()) {
-                        if (MsgText.getText().toString().length() > 0) {
-                            Msg msg = new Msg();
-                            msg.setSend(Send);
-                            msg.setReceive(Receive);
-                            msg.setText(MsgText.getText().toString());
+                        if (myClient.getConnection().isOpen()) {
+                            if (MsgText.getText().toString().length() > 0) {
+                                Msg msg = new Msg();
+                                msg.setSend(Send);
+                                msg.setReceive(Receive);
+                                msg.setText(MsgText.getText().toString());
 
-                            myClient.send(utils.toByteArray(msg));
+                                myClient.send(utils.toByteArray(msg));
 
-                            Message message = new Message();
-                            message.setMsg(msg);
-                            message.setReceive(0);
+                                Message message = new Message();
+                                message.setMsg(msg);
+                                message.setReceive(0);
 
-                            data.add(message);
-                            dao.setData(message);
-                            Log.e("TAG", dao.getAllMessage().toString());
-                            myAdapter.notifyDataSetChanged();
+                                data.add(message);
+                                dao.setData(message);
+                                Log.e("TAG", dao.getAllMessage().toString());
+                                myAdapter.notifyDataSetChanged();
 
-                            MsgText.setText("");
+                                MsgText.setText("");
+                            } else {
+                                Toast.makeText(ChatActivity.this, "请输入您想要发送的信息", Toast.LENGTH_SHORT).show();
+                            }
+
                         } else {
-                            Toast.makeText(ChatActivity.this, "请输入您想要发送的信息", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "未连接到服务器", Toast.LENGTH_SHORT).show();
                         }
-
-                    } else {
-                        Toast.makeText(getApplicationContext(), "未连接到服务器", Toast.LENGTH_SHORT).show();
-                    }
                     }
                     return true;
                 }
@@ -515,34 +512,33 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(this, "弹力", Toast.LENGTH_SHORT).show();
                 break;
 
+
         }
     }
 
-    private void initView() {
 
+    private void initView() {
+        header_left_text = (FontTextView) findViewById(R.id.header_left_text);
+        header_left_image = (ImageView) findViewById(R.id.header_left_image);
+        header_title = (FontTextView) findViewById(R.id.header_title);
+        header_right_text = (FontTextView) findViewById(R.id.header_right_text);
+        header_right_image = (ImageView) findViewById(R.id.header_right_image);
         ChatRecord = (ListView) findViewById(R.id.ChatRecord);
         Video = (ImageView) findViewById(R.id.Video);
-        Video.setOnClickListener(this);
         Talk = (Button) findViewById(R.id.Talk);
-        Talk.setOnClickListener(this);
         MsgText = (EditText) findViewById(R.id.MsgText);
-        MsgText.setOnClickListener(this);
         Face = (ImageView) findViewById(R.id.Face);
-        Face.setOnClickListener(this);
         More = (ImageView) findViewById(R.id.More);
-        More.setOnClickListener(this);
-
-        header_left_text = (FontTextView) findViewById(R.id.header_left_text);
-        header_left_text.setOnClickListener(this);
-        header_left_image = (ImageView) findViewById(R.id.header_left_image);
-        header_left_image.setOnClickListener(this);
-        header_title = (FontTextView) findViewById(R.id.header_title);
-        header_title.setOnClickListener(this);
-        header_right_text = (FontTextView) findViewById(R.id.header_right_text);
-        header_right_text.setOnClickListener(this);
-        header_right_image = (ImageView) findViewById(R.id.header_right_image);
-        header_right_image.setOnClickListener(this);
         FaceViewPager = (ViewPager) findViewById(R.id.Face_ViewPager);
+
+        Talk.setOnClickListener(this);
+        header_left_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+
+            }
+        });
     }
 
 

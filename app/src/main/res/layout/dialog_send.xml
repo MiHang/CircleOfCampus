@@ -31,7 +31,7 @@
                 android:paddingTop="@dimen/middle_padding"
                 android:text="1" />
 
-            <team.circleofcampus.view.DialogTextView
+            <TextView
                 android:id="@+id/Send_Msg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -47,5 +47,6 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/Face_ViewPager"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="220dp" />
 </LinearLayout>

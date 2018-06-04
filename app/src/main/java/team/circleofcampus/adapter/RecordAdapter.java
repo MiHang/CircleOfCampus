@@ -352,14 +352,14 @@ public class RecordAdapter extends BaseAdapter {
         public View rootView;
         public TextView Time;
         public IconImageView Receive_Icon;
-        public DialogTextView Receive_Msg;
+        public TextView Receive_Msg;
         public TextView Receive_Duration;
         public LinearLayout Receive_Layout;
         public RoundRectImageView Receive_Img;
 
         public LinearLayout Receive_dialog;
         public TextView Send_Duration;
-        public DialogTextView Send_Msg;
+        public TextView Send_Msg;
         public LinearLayout Send_Layout;
         public RoundRectImageView Send_Img;
         public IconImageView Send_Icon;
@@ -369,13 +369,13 @@ public class RecordAdapter extends BaseAdapter {
             this.rootView = rootView;
             this.Time = (TextView) rootView.findViewById(R.id.Time);
             this.Receive_Icon = (IconImageView) rootView.findViewById(R.id.Receive_Icon);
-            this.Receive_Msg = (DialogTextView) rootView.findViewById(R.id.Receive_Msg);
+            this.Receive_Msg = (TextView) rootView.findViewById(R.id.Receive_Msg);
             this.Receive_Duration = (TextView) rootView.findViewById(R.id.Receive_Duration);
             this.Receive_Layout = (LinearLayout) rootView.findViewById(R.id.Receive_Layout);
             this.Receive_Img = (RoundRectImageView) rootView.findViewById(R.id.Receive_Img);
             this.Receive_dialog = (LinearLayout) rootView.findViewById(R.id.Receive_dialog);
             this.Send_Duration = (TextView) rootView.findViewById(R.id.Send_Duration);
-            this.Send_Msg = (DialogTextView) rootView.findViewById(R.id.Send_Msg);
+            this.Send_Msg = (TextView) rootView.findViewById(R.id.Send_Msg);
             this.Send_Layout = (LinearLayout) rootView.findViewById(R.id.Send_Layout);
             this.Send_Img = (RoundRectImageView) rootView.findViewById(R.id.Send_Img);
             this.Send_Icon = (IconImageView) rootView.findViewById(R.id.Send_Icon);
