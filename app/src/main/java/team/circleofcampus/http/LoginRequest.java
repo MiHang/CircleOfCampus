@@ -9,6 +9,42 @@ import org.json.JSONObject;
 public class LoginRequest {
 
     /**
+     * 忘记密码
+     * @param email
+     * @param pwd
+     * @param verificationCode
+     * @return
+     */
+    public static String resetPwd(String email, String pwd, String verificationCode) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("email", email);
+            json.put("pwd", pwd);
+            json.put("verificationCode", verificationCode);
+            return HttpRequest.postRequest(HttpRequest.URL + "coc/resetPassword.do", json.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 获取忘记密码的邮箱验证码
+     * @param email
+     * @return
+     */
+    public static String getForgotPwdVerificationCode(String email) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("email", email);
+            return HttpRequest.postRequest(HttpRequest.URL + "coc/getForgotPwdCode.do", json.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
      * 用户登陆
      * @param account - 账号
      * @param pwd - ID

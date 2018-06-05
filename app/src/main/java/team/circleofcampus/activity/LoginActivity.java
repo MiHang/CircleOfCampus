@@ -54,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
             } else if (msg.what == 0x0002) { // 登陆成功
                 loadingDialog.loadSuccess();
                 SharedPreferencesUtil.setAccount(LoginActivity.this, account.getText().toString().trim());
+                SharedPreferencesUtil.setUID(LoginActivity.this, msg.arg1);
                 toHome();
             } else if (msg.what == 0x0003) { // 登陆失败
                 loadingDialog.setFailedText("用户名或密码错误");
@@ -176,23 +177,24 @@ public class LoginActivity extends AppCompatActivity {
                 public void run() {
                     String result = LoginRequest.login(account.getText().toString().trim(),
                             password.getText().toString().trim());
-
                         if (null != result) {
-                            Log.e("tag", "result = " + result);
                             try {
                                 JSONObject json = new JSONObject(result);
                                 result = json.getString("result");
                                 int uId = json.getInt("id");
-                                Log.e("tag", "json = " + json.toString());
+
+                                if (result.equals("success")) {
+                                    Message msg = new Message();
+                                    msg.what = 0x0002;
+                                    msg.arg1 = json.getInt("id");
+                                    handler.sendEmptyMessage(0x0002);
+                                } else if (result.equals("error")) {
+                                    handler.sendEmptyMessage(0x0003);
+                                } else if (result.equals("unknown")) {
+                                    handler.sendEmptyMessage(0x0004);
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
-                            }
-                            if (result.equals("success")) {
-                                handler.sendEmptyMessage(0x0002);
-                            } else if (result.equals("error")) {
-                                handler.sendEmptyMessage(0x0003);
-                            } else if (result.equals("unknown")) {
-                                handler.sendEmptyMessage(0x0004);
                             }
                         } else {
                             handler.sendEmptyMessage(0x0001);

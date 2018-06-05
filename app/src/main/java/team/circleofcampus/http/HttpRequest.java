@@ -1,5 +1,7 @@
 package team.circleofcampus.http;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -39,6 +41,7 @@ public class HttpRequest {
             if (response.isSuccessful()) {
                 return response.body().string();
             } else {
+                Log.e("coc error", "request failed, error code = " + response.code());
                 throw new Exception("request failed, error code = " + response.code());
             }
         } catch (IOException e) {

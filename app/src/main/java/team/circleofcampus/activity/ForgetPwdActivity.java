@@ -8,11 +8,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.xiasuhuei321.loadingdialog.view.LoadingDialog;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import team.circleofcampus.R;
+import team.circleofcampus.http.LoginRequest;
+import team.circleofcampus.util.EmailUtil;
 
 public class ForgetPwdActivity extends AppCompatActivity {
 
@@ -28,11 +36,11 @@ public class ForgetPwdActivity extends AppCompatActivity {
     protected EditText newPwdEdit;
     @BindView(R.id.forget_confirm_pwd_edit_text)
     protected EditText confirmPwdEdit;
-    @BindView(R.id.forget_reset_pwd_btn)
-    protected Button resetPwdBtn;
 
     private boolean isGetVerificationCode = false; // 是否获取了验证码
     private int countDown = 60; // 倒计时60秒
+
+    private LoadingDialog loadingDialog;
 
     // handler
     private Handler handler = new Handler(){
@@ -48,6 +56,37 @@ public class ForgetPwdActivity extends AppCompatActivity {
                 countDown = 60;
                 verificationCodeBtn.setBackgroundResource(R.drawable.shape_email_code_btn);
                 verificationCodeBtn.setText("获取验证码");
+            } else if (0x0003 == msg.what) {
+                Toast.makeText(ForgetPwdActivity.this, "无法与服务器通信，请检查您的网络连接", Toast.LENGTH_SHORT).show();
+            } else if (0x0004 == msg.what) {
+                Toast.makeText(ForgetPwdActivity.this, "验证码已发送，请注意查收", Toast.LENGTH_SHORT).show();
+            } else if (0x0005 == msg.what) {
+                Toast.makeText(ForgetPwdActivity.this, "验证码发送失败，请检查邮箱是否正确", Toast.LENGTH_SHORT).show();
+                isGetVerificationCode = false;
+            } else if (0x0006 == msg.what) { // 密码重置成功
+                loadingDialog.loadSuccess();
+                new Thread() {
+                    @Override
+                    public void run() {
+                        try {
+                            sleep(3000);
+                            handler.sendEmptyMessage(0x0010);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }.start();
+            } else if (0x0007 == msg.what) { // 密码重置失败
+                loadingDialog.setFailedText("密码重置失败");
+                loadingDialog.loadFailed();
+            } else if (0x0008 == msg.what) { // 验证码超时
+                loadingDialog.setFailedText("验证码超时");
+                loadingDialog.loadFailed();
+            } else if (0x0009 == msg.what) { // 验证码错误
+                loadingDialog.setFailedText("验证码错误");
+                loadingDialog.loadFailed();
+            } else if (0x0010 == msg.what) { // 页面返回 - 返回登陆页面
+                onBackPressed();
             }
         }
     };
@@ -67,13 +106,100 @@ public class ForgetPwdActivity extends AppCompatActivity {
     }
 
     /**
+     * 重置密码按钮点击事件监听
+     */
+    @OnClick(R.id.forget_reset_pwd_btn)
+    public void onClickResetPwdBtn() {
+        if ("".equals(emailEdit.getText().toString().trim())) {
+            Toast.makeText(ForgetPwdActivity.this, "邮箱不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        } else if ("".equals(verificationCode.getText().toString().trim())) {
+            Toast.makeText(ForgetPwdActivity.this, "验证码不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        } else if ("".equals(newPwdEdit.getText().toString().trim())) {
+            Toast.makeText(ForgetPwdActivity.this, "密码不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (!newPwdEdit.getText().toString().trim().equals(confirmPwdEdit.getText().toString().trim())) {
+            Toast.makeText(ForgetPwdActivity.this, "两次输入的密码不一致", Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+            // 加载对话框
+            loadingDialog = new LoadingDialog(this);
+            loadingDialog.setLoadingText("重置密码中")
+                    .setSuccessText("密码重置成功")
+                    .show();
+
+            // 联网线程
+            new Thread() {
+                @Override
+                public void run() {
+                    String result = LoginRequest.resetPwd(
+                            emailEdit.getText().toString().trim(),
+                            newPwdEdit.getText().toString().trim(),
+                            verificationCode.getText().toString().trim());
+                    if (null != result) {
+                        try {
+                            JSONObject json = new JSONObject(result);
+                            result = json.getString("result");
+                            if ("success".equals(result)) { // 重置密码成功
+                                handler.sendEmptyMessage(0x0006);
+                            } else if ("error".equals(result)) { // 重置密码失败
+                                handler.sendEmptyMessage(0x0007);
+                            } else if ("timeout".equals(result)) { // 验证码超时
+                                handler.sendEmptyMessage(0x0008);
+                            } else { // 验证码错误
+                                handler.sendEmptyMessage(0x0009);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        handler.sendEmptyMessage(0x0003);
+                    }
+                }
+            }.start();
+        }
+    }
+
+    /**
      * 获取验证码按钮点击事件
      */
     @OnClick(R.id.forget_verification_code_btn)
     public void onClickVerificationCodeBtn() {
+
+        if ("".equals(emailEdit.getText().toString().trim())) {
+            Toast.makeText(ForgetPwdActivity.this, "请先填写邮箱地址", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (!EmailUtil.isValidEmail(emailEdit.getText().toString().trim())) {
+            Toast.makeText(ForgetPwdActivity.this, "邮箱地址格式不正确！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (!isGetVerificationCode) {
             isGetVerificationCode = true;
             verificationCodeBtn.setBackgroundResource(R.drawable.shape_code_unable_btn);
+            // 联网线程
+            new Thread() {
+                @Override
+                public void run() {
+                    String result = LoginRequest.getForgotPwdVerificationCode(emailEdit.getText().toString().trim());
+                    if (result != null) {
+                        try {
+                            JSONObject json = new JSONObject(result);
+                            result = json.getString("result");
+                            if ("success".equals(result)) {
+                                handler.sendEmptyMessage(0x0004);
+                            } else {
+                                handler.sendEmptyMessage(0x0005);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        handler.sendEmptyMessage(0x0003);
+                    }
+                }
+            }.start();
             // 计时线程
             new Thread() {
                 @Override
