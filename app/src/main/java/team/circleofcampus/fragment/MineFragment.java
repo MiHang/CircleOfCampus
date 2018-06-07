@@ -1,6 +1,7 @@
 package team.circleofcampus.fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.os.AsyncTask;
@@ -23,7 +24,9 @@ import org.json.JSONObject;
 import team.circleofcampus.Interface.FragmentSwitchListener;
 import team.circleofcampus.R;
 import team.circleofcampus.activity.ChatActivity;
+import team.circleofcampus.activity.LoginActivity;
 import team.circleofcampus.http.HttpHelper;
+import team.circleofcampus.util.SharedPreferencesUtil;
 import team.circleofcampus.view.CircleImageView;
 
 /**
@@ -77,10 +80,16 @@ public class MineFragment extends Fragment {
         Log_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intentNotifi = new Intent(getActivity(), ChatActivity.class);
 
-                getActivity().startActivity(intentNotifi);
-                Toast.makeText(getContext(), "退出", Toast.LENGTH_SHORT).show();
+                // 清空保存的登陆相关信息
+                SharedPreferencesUtil.setUID(getContext(), 0);
+                SharedPreferencesUtil.setAccount(getContext(), "");
+                SharedPreferencesUtil.setLoginTime(getContext(), 0);
+
+                // 跳转到登陆页面
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                getActivity().startActivity(intent);
+                getActivity().finish();
             }
         });
         AsyncTask.execute(new Runnable() {
