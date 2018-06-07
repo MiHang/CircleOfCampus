@@ -11,6 +11,31 @@ import java.util.ArrayList;
 public class SharedPreferencesUtil {
 
     /**
+     * 设置登陆时间
+     * @param context
+     * @param loginTime
+     */
+    public static void setLoginTime (Context context, long loginTime) {
+        //实例化SharedPreferences对象
+        SharedPreferences preferences = context.getSharedPreferences("share", Context.MODE_PRIVATE);
+
+        //实例化SharedPreferences.Editor对象
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putLong("login_time", loginTime);//保存数据
+        editor.commit();//提交当前数据
+    }
+
+    /**
+     * 获取登陆时间
+     * @param context
+     * @return
+     */
+    public static long getLoginTime (Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("share", Context.MODE_PRIVATE);
+        return preferences.getLong("login_time", 0);
+    }
+
+    /**
      * 设置用户账号
      * @param context
      * @param account
