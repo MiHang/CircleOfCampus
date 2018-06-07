@@ -147,7 +147,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // 我的二维码
         QRFragment qrFragment = new QRFragment();
-        qrFragment.setAccount("assaas");
+        qrFragment.setAccount("校园圈");
         data.add(qrFragment);
 
         // 更多校园官方公告
