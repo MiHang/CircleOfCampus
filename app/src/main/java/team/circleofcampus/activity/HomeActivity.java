@@ -48,6 +48,7 @@ import team.circleofcampus.fragment.MineFragment;
 import team.circleofcampus.fragment.QRFragment;
 import team.circleofcampus.fragment.SocietyCircleFragment;
 import team.circleofcampus.model.UserMsg;
+import team.circleofcampus.util.SharedPreferencesUtil;
 import team.circleofcampus.view.NoScrollViewPager;
 
 
@@ -77,11 +78,11 @@ public class HomeActivity extends AppCompatActivity {
     protected ImageView headerLeftImage;
     @BindView(R.id.header_title)
     protected TextView title;
-
+    MyBroadcastReceiver broadcastReceiver;
     List<Fragment> data = new ArrayList<>();
     private int selectedPageId = 0;
-    public MyService myService=new MyService();;
-
+    SharedPreferencesUtil sharedPreferencesUtil;
+    String account;
     @Override
     public void onBackPressed() {
         if (selectedPageId == 4) {
@@ -103,13 +104,6 @@ public class HomeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         headerSelect(0);
 
-        MyBroadcastReceiver myBro = new MyBroadcastReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("coc.team.home.activity");
-        registerReceiver(myBro, intentFilter);
-        Intent intent = new Intent(this, MyService.class);
-        intent.putExtra("send", "jaye@163.com");
-        startService(intent);
 
         // 校园圈
         CircleFragment circleFragment = new CircleFragment();
@@ -124,11 +118,22 @@ public class HomeActivity extends AppCompatActivity {
         });
         data.add(circleFragment);
 
+        account=sharedPreferencesUtil.getAccount(this);
+        if (account!=null){
+            broadcastReceiver = new MyBroadcastReceiver();
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction("coc.team.home.activity");
+            registerReceiver(broadcastReceiver, intentFilter);
+            Intent intent = new Intent(this, MyService.class);
+            intent.putExtra("send", account);
+            startService(intent);
+
+        }
+
         // 消息
         MessageFragment bFragment = new MessageFragment();
-        bFragment.bind(myBro);
+        bFragment.bind(broadcastReceiver);
         data.add(bFragment);
-
         // 我的发布
         data.add(new MyPublishFragment());
 
@@ -170,6 +175,14 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onPageScrollStateChanged(int state) {}
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (broadcastReceiver!=null){
+            unregisterReceiver(broadcastReceiver);
+        }
     }
 
     /**
@@ -263,9 +276,12 @@ public class HomeActivity extends AppCompatActivity {
     @OnClick(R.id.header_right_text)
     protected void onClickRightText(final View view) {
         if (selectedPageId == 1) { // 当前页面为消息页
-            Intent intent = new Intent(HomeActivity.this, ContactActivity.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
+            if (account!=null){
+                Intent intent = new Intent(HomeActivity.this, ContactActivity.class);
+                startActivity(intent);
+            }else{
+                Toast.makeText(this, "请登录", Toast.LENGTH_SHORT).show();
+            }
         } else if (selectedPageId == 3) { // 我的页面 - 编辑
             try {
                 JSONObject jsonObject = new JSONObject();
