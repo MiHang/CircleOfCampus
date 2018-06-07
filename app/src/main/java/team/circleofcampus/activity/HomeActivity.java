@@ -104,6 +104,8 @@ public class HomeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         headerSelect(0);
 
+        // 记录本次登陆时间
+        SharedPreferencesUtil.setLoginTime(HomeActivity.this, System.currentTimeMillis());
 
         // 校园圈
         CircleFragment circleFragment = new CircleFragment();

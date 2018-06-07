@@ -55,7 +55,6 @@ public class LoginActivity extends AppCompatActivity {
                 loadingDialog.loadSuccess();
                 SharedPreferencesUtil.setAccount(LoginActivity.this, account.getText().toString().trim());
                 SharedPreferencesUtil.setUID(LoginActivity.this, msg.arg1);
-                SharedPreferencesUtil.setLoginTime(LoginActivity.this, System.currentTimeMillis());
                 toHome();
             } else if (msg.what == 0x0003) { // 登陆失败
                 loadingDialog.setFailedText("用户名或密码错误");
@@ -187,8 +186,8 @@ public class LoginActivity extends AppCompatActivity {
                                 if (result.equals("success")) {
                                     Message msg = new Message();
                                     msg.what = 0x0002;
-                                    msg.arg1 = json.getInt("id");
-                                    handler.sendEmptyMessage(0x0002);
+                                    msg.arg1 = uId;
+                                    handler.sendMessage(msg);
                                 } else if (result.equals("error")) {
                                     handler.sendEmptyMessage(0x0003);
                                 } else if (result.equals("unknown")) {

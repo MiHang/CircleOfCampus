@@ -109,7 +109,7 @@ public class RegisterActivity extends AppCompatActivity {
                 Toast.makeText(RegisterActivity.this, "此用户名已被占用", Toast.LENGTH_SHORT).show();
             } else if (0x0009 == msg.what) { // 更新学校下拉框
                 campusSpinnerAdapter.notifyDataSetChanged();
-                getFacultyItems(campusItems.get(0).getItemId());
+                //getFacultyItems(campusItems.get(0).getItemId());
             } else if (0x0010 == msg.what) { // 更新院系下拉框
                 facultySpinnerAdapter.notifyDataSetChanged();
             } else if (0x0011 == msg.what) { // 注册成功
