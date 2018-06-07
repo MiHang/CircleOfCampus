@@ -18,6 +18,9 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.xiasuhuei321.loadingdialog.view.LoadingDialog;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,7 +40,6 @@ public class MineFragment extends Fragment {
     private View view;
     private CircleImageView Icon;
     private Button Log_out;
-    int icon = R.drawable.icon;
     private ImageView icon_bg;
     HttpHelper helper;
     private TextView account;
@@ -50,12 +52,13 @@ public class MineFragment extends Fragment {
     private RadioGroup genderRadioGroup;
     private RadioButton maleRb;
     private RadioButton femaleRb;
+    String Account;
+    int res;
+    LoadingDialog dialog;
 
     FragmentSwitchListener switchListener;
+    SharedPreferencesUtil sharedPreferencesUtil;
 
-    public FragmentSwitchListener getSwitchListener() {
-        return switchListener;
-    }
 
     public void setSwitchListener(FragmentSwitchListener switchListener) {
         this.switchListener = switchListener;
@@ -75,8 +78,68 @@ public class MineFragment extends Fragment {
 
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_mine, null);
         initView(view);
+        helper=new HttpHelper(getContext());
+        sharedPreferencesUtil=new SharedPreferencesUtil();
+        Account=sharedPreferencesUtil.getAccount(getContext());
+        if (Account!=null){
+            dialog = new LoadingDialog(getContext());
+            dialog.setLoadingText("加载中")
+                    .setSuccessText("加载成功")//显示加载成功时的文字
+                    .setFailedText("加载失败")
+                    .closeSuccessAnim()
+                    .setShowTime(1000)
+                    .setInterceptBack(false)
+                    .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
+                    .show();
 
-        helper = new HttpHelper(getContext());
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    final String s = helper.getUserInfoByAccount(Account);
+                    account.post(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            try {
+                                JSONObject jsonObject = new JSONObject(s);
+
+                                if (jsonObject.getString("result").equals("success")) {
+
+                                    if (jsonObject.has("gender")) {
+                                        if (jsonObject.getString("gender").equals("male")) {
+                                            sex.setText("男");
+                                            res=R.drawable.man;
+                                        } else {
+                                            sex.setText("女");
+                                            res=R.drawable.woman;
+                                        }
+                                    }
+                                    Glide.with(getContext())
+                                            .load(helper.getPath()+"/res/img/"+Account)
+                                            .crossFade()
+                                            .error(res)
+                                            .into(Icon);
+                                    account.setText(jsonObject.getString("email"));
+                                    userName.setText(jsonObject.getString("userName"));
+                                    department.setText(jsonObject.getString("facultyName"));
+                                    college.setText(jsonObject.getString("campusName"));
+                                    dialog.loadSuccess();
+                                } else {
+                                    dialog.loadFailed();
+                                    Toast.makeText(getContext(), "查询失败", Toast.LENGTH_LONG).show();
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+
+                        }
+
+                    });
+                }
+            });
+        }
         Log_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,44 +153,6 @@ public class MineFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 getActivity().startActivity(intent);
                 getActivity().finish();
-            }
-        });
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                final String s = helper.getUserInfoByAccount("jaye@163.com");
-                account.post(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        try {
-                            JSONObject jsonObject = new JSONObject(s);
-
-                            if (jsonObject.getString("result").equals("success")) {
-                                account.setText(jsonObject.getString("email"));
-                                userName.setText(jsonObject.getString("userName"));
-                                department.setText(jsonObject.getString("facultyName"));
-                                college.setText(jsonObject.getString("campusName"));
-
-                                if (jsonObject.has("gender")) {
-                                    if (jsonObject.getString("gender").equals("male")) {
-                                        sex.setText("男");
-                                    } else {
-                                        sex.setText("女");
-                                    }
-                                }
-                            } else {
-                                Toast.makeText(getContext(), "查询失败", Toast.LENGTH_LONG).show();
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-
-                    }
-
-                });
             }
         });
     }
@@ -156,9 +181,14 @@ public class MineFragment extends Fragment {
         QR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (switchListener!=null){
-                    switchListener.displayThisFragment(true);
+                if (Account!=null){
+                    if (switchListener!=null){
+                        switchListener.displayThisFragment(true);
+                    }
+                }else{
+                    Toast.makeText(getContext(),"您暂未登录",Toast.LENGTH_LONG).show();
                 }
+
             }
 
         });

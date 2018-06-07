@@ -41,7 +41,7 @@
                 android:clickable="true"
                 app:civ_border_width="@dimen/icon_border_width"
                 app:civ_border_color="@color/icon_border_color"
-                android:src="@drawable/icon" />
+                android:src="@drawable/man" />
         </RelativeLayout>
 
         <!-- 基本信息 -->
@@ -58,7 +58,7 @@
                 android:layout_marginBottom="@dimen/min_padding"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="起个名字吧"
+                android:text="校园圈"
                 android:textColor="@color/black"
                 android:padding="10dp"
                 android:textSize="20dp"
@@ -84,7 +84,6 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center|left"
-                    android:text="暂无数据"
                     android:textSize="@dimen/user_info_textSize" />
             </LinearLayout>
             <View
@@ -110,7 +109,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="暂无数据"
                     android:gravity="center|left"
                     android:textSize="@dimen/user_info_textSize" />
 
@@ -165,7 +163,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="暂无数据"
                     android:gravity="center|left"
                     android:textSize="@dimen/user_info_textSize" />
             </LinearLayout>
@@ -192,7 +189,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="暂无数据"
                     android:gravity="center|left"
                     android:textSize="@dimen/user_info_textSize" />
             </LinearLayout>

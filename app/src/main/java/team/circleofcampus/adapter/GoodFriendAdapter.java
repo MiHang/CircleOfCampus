@@ -80,7 +80,7 @@ public class GoodFriendAdapter extends SwipeMenuAdapter<GoodFriendAdapter.ViewHo
         Glide.with(context)
                 .load(http.getPath()+"/res/img/"+data.get(position).getAccount())
                 .crossFade()
-               .error(res)
+                .error(res)
                 .into(holder.UserIcon);
 
     }

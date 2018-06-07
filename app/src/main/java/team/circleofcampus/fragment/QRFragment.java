@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.common.utils.QRCodeUtils;
 
 import team.circleofcampus.R;
+import team.circleofcampus.util.SharedPreferencesUtil;
 
 /**
  * 我的发布页面，未审核fragment
@@ -38,15 +39,15 @@ public class QRFragment extends Fragment {
         super.onCreate(savedInstanceState);
         view = getActivity().getLayoutInflater().inflate(R.layout.qr_dialog, null);
         initView(view);
+      
+        Bitmap bitmap=new QRCodeUtils(getContext()).createQRCodeWithLogo6(account, 800, R.drawable.icon);
+        qr_img.setImageBitmap(bitmap);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (account!=null){
-            Bitmap bitmap=new QRCodeUtils(getContext()).createQRCodeWithLogo6(account, 800, R.drawable.icon);
-            qr_img.setImageBitmap(bitmap);
-        }
+
         return view;
     }
 

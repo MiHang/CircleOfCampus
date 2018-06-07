@@ -53,6 +53,7 @@ import team.circleofcampus.adapter.MyIndexAdapter;
 import team.circleofcampus.http.HttpHelper;
 import team.circleofcampus.model.Contact;
 import team.circleofcampus.model.Letter;
+import team.circleofcampus.util.SharedPreferencesUtil;
 import team.circleofcampus.view.MyEditText;
 
 
@@ -81,6 +82,8 @@ public class ContactFragment extends Fragment implements com.bigkoo.alertview.On
     List<Contact> list = new ArrayList<Contact>();
     private AlertView mAlertViewExt;//窗口拓展例子
     GoodFriendItemDecoration itemDecoration ;
+    SharedPreferencesUtil sharedPreferencesUtil;
+    String Account;
 
     public void setListener(MoreFragmentListener listener) {
         this.listener = listener;
@@ -112,27 +115,33 @@ public class ContactFragment extends Fragment implements com.bigkoo.alertview.On
 
 
         helper = new HttpHelper(getContext());
-        dialog = new LoadingDialog(getContext());
-        dialog.setLoadingText("加载中")
-                .setSuccessText("加载成功")//显示加载成功时的文字
-                .setFailedText("加载失败")
-                .closeSuccessAnim()
-                .setShowTime(1000)
-                .setInterceptBack(false)
-                .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
-                .show();
 
-        setData();
+        Account=sharedPreferencesUtil.getAccount(getContext());
+        if (Account!=null){
+            dialog = new LoadingDialog(getContext());
+            dialog.setLoadingText("加载中")
+                    .setSuccessText("加载成功")//显示加载成功时的文字
+                    .setFailedText("加载失败")
+                    .closeSuccessAnim()
+                    .setShowTime(1000)
+                    .setInterceptBack(false)
+                    .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
+                    .show();
+            setData(Account);
+
+        }else{
+            getActivity().finish();
+        }
 
 
         return view;
     }
-public void setData(){
+public void setData(final String id){
     AsyncTask.execute(new Runnable() {
         @Override
         public void run() {
 
-            final String s = helper.queryFriendInfo("jaye@163.com");
+            final String s = helper.queryFriendInfo(id);
             rv.post(new Runnable() {
                 @Override
                 public void run() {
