@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -56,10 +57,15 @@ public class CampusCircleListViewAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-
+        ImageView cover;
         TextView title;
-        public ViewHolder(View itemView) {
+        TextView activityTime;
+        TextView venue;
+        public ViewHolder (View itemView) {
+            cover = (ImageView) itemView.findViewById(R.id.item_circle_image);
             title = (TextView) itemView.findViewById(R.id.item_circle_title);
+            activityTime = (TextView) itemView.findViewById(R.id.item_circle_activity_time);
+            venue = (TextView) itemView.findViewById(R.id.item_circle_venue);
         }
     }
 }
