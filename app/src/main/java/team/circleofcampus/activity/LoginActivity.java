@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.xiasuhuei321.loadingdialog.view.LoadingDialog;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,8 +54,24 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "无法与服务器通信，请检查您的网络连接", Toast.LENGTH_SHORT).show();
             } else if (msg.what == 0x0002) { // 登陆成功
                 loadingDialog.loadSuccess();
-                SharedPreferencesUtil.setAccount(LoginActivity.this, account.getText().toString().trim());
+                String accountStr = account.getText().toString().trim();
+                SharedPreferencesUtil.setAccount(LoginActivity.this, accountStr);
                 SharedPreferencesUtil.setUID(LoginActivity.this, msg.arg1);
+
+                // 将登陆记录保存到shara.xml中
+                try {
+                    String record = SharedPreferencesUtil.getLandingRecord(LoginActivity.this);
+                    JSONArray jsonTempArr = new JSONArray(record);
+                    JSONArray jsonArr = new JSONArray();
+                    jsonArr.put(accountStr);
+                    for (int i = 0; i < jsonTempArr.length(); i ++) {
+                        jsonArr.put(jsonTempArr.getString(i));
+                    }
+                    SharedPreferencesUtil.setLandingRecord(LoginActivity.this, jsonArr.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                 toHome();
             } else if (msg.what == 0x0003) { // 登陆失败
                 loadingDialog.setFailedText("用户名或密码错误");
@@ -86,8 +103,15 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         // 历史登陆账号
-        historyAccounts.add("jayevip@163.com");
-        historyAccounts.add("jaye");
+        try {
+            String record = SharedPreferencesUtil.getLandingRecord(LoginActivity.this);
+            JSONArray jsonArr = new JSONArray(record);
+            for (int i = 0; i < jsonArr.length(); i ++) {
+                historyAccounts.add(jsonArr.getString(i));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         // 列表弹出框
         historyAccountListPopupAdapter = new HistoryAccountListPopupAdapter(

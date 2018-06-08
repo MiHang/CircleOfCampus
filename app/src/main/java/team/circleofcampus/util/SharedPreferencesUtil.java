@@ -11,6 +11,32 @@ import java.util.ArrayList;
 public class SharedPreferencesUtil {
 
     /**
+     * 设置登陆账号记录
+     * @param context
+     * @param records
+     */
+    public static void setLandingRecord (Context context, String records) {
+        //实例化SharedPreferences对象
+        SharedPreferences preferences = context.getSharedPreferences("share", Context.MODE_PRIVATE);
+
+        //实例化SharedPreferences.Editor对象
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("records", records);//保存数据
+        editor.commit();//提交当前数据
+    }
+
+    /**
+     * 获取登陆时间
+     * @param context
+     * @return
+     */
+    public static String getLandingRecord (Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("share", Context.MODE_PRIVATE);
+        return preferences.getString("records", "[]");
+    }
+
+
+    /**
      * 设置登陆时间
      * @param context
      * @param loginTime
