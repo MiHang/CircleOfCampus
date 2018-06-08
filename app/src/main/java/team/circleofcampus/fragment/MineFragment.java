@@ -78,6 +78,7 @@ public class MineFragment extends Fragment {
 
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_mine, null);
         initView(view);
+
         helper=new HttpHelper(getContext());
         sharedPreferencesUtil=new SharedPreferencesUtil();
         Account=sharedPreferencesUtil.getAccount(getContext());

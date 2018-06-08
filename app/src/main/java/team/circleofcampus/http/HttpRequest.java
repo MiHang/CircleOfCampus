@@ -16,8 +16,8 @@ import okhttp3.Response;
  * Created by Jaye Li on 2018/6/2.
  */
 public class HttpRequest {
-
-    public static final String URL = "http://www.jayeli.top:8080/";
+    public static final String IP = "192.168.1.157";
+    public static final String URL = "http://"+IP+":8080/";
     private static final MediaType mediatype = MediaType.parse("application/json;charset=utf-8");
 
     /**

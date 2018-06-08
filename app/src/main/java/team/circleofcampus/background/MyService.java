@@ -18,7 +18,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import team.circleofcampus.Interface.MessageListener;
-import team.circleofcampus.util.HttpUtils;
+import team.circleofcampus.http.HttpRequest;
 
 
 /**
@@ -56,7 +56,7 @@ MyService extends Service {
         Log.e(TAG,"---onStartCommand---");
         send=intent.getStringExtra("send");
         try {
-            URI uri = new URI("ws://"+ HttpUtils.Ip+":8891");
+            URI uri = new URI("ws://"+ HttpRequest.IP+":8891");
             myClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake handshakedata) {

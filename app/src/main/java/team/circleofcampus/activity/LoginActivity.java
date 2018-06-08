@@ -208,8 +208,8 @@ public class LoginActivity extends AppCompatActivity {
 
             // 加载对话框
             loadingDialog = new LoadingDialog(this);
-            loadingDialog.setLoadingText("正在登陆")
-                    .setSuccessText("登陆成功")
+            loadingDialog.setLoadingText("正在登录")
+                    .setSuccessText("登录成功")
                     .setInterceptBack(false)
                     .show();
 

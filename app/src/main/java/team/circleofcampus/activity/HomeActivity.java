@@ -1,42 +1,27 @@
 package team.circleofcampus.activity;
 
-import android.Manifest;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.common.model.Msg;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import me.weyye.hipermission.HiPermission;
-import me.weyye.hipermission.PermissionCallback;
-import me.weyye.hipermission.PermissonItem;
 import team.circleofcampus.BroadcastReceiver.MyBroadcastReceiver;
 import team.circleofcampus.Interface.FragmentSwitchListener;
-import team.circleofcampus.Interface.MessageListener;
 import team.circleofcampus.R;
 import team.circleofcampus.adapter.MyFragmentPagerAdapter;
 import team.circleofcampus.background.MyService;
@@ -47,9 +32,8 @@ import team.circleofcampus.fragment.MyPublishFragment;
 import team.circleofcampus.fragment.MineFragment;
 import team.circleofcampus.fragment.QRFragment;
 import team.circleofcampus.fragment.SocietyCircleFragment;
-import team.circleofcampus.model.UserMsg;
 import team.circleofcampus.util.SharedPreferencesUtil;
-import team.circleofcampus.view.NoScrollViewPager;
+import team.circleofcampus.view.NoPreloadViewPager;
 
 
 /**
@@ -59,7 +43,7 @@ public class HomeActivity extends AppCompatActivity {
 
     MyFragmentPagerAdapter adapter;
     @BindView(R.id.HomeViewPager)
-    protected NoScrollViewPager HomeViewPager;
+    protected NoPreloadViewPager HomeViewPager;
     @BindView(R.id.message)
     protected ImageView message;
     @BindView(R.id.circle)
@@ -166,17 +150,25 @@ public class HomeActivity extends AppCompatActivity {
 
         adapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), data);
         HomeViewPager.setAdapter(adapter);
-        HomeViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+        HomeViewPager.setOnPageChangeListener(new NoPreloadViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
             @Override
             public void onPageSelected(int position) {
                 selectedPageId = position;
                 headerSelect(position);
             }
+
             @Override
-            public void onPageScrollStateChanged(int state) {}
+            public void onPageScrollStateChanged(int state) {
+
+            }
         });
+
     }
 
     @Override

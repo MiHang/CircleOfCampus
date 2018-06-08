@@ -15,7 +15,7 @@ import team.circleofcampus.fragment.AddFriendsFragment;
 import team.circleofcampus.fragment.ContactFragment;
 import team.circleofcampus.fragment.UserInfoFragment;
 import team.circleofcampus.view.FontTextView;
-import team.circleofcampus.view.NoScrollViewPager;
+import team.circleofcampus.view.NoPreloadViewPager;
 
 /**
  * 好友列表
@@ -29,7 +29,7 @@ public class ContactActivity extends AppCompatActivity {
     public FontTextView header_title;
     public FontTextView header_right_text;
     public ImageView header_right_image;
-    public NoScrollViewPager MyViewPager;
+    public NoPreloadViewPager MyViewPager;
     UserInfoFragment userInfoFragment=new UserInfoFragment();
     public  ContactFragment contactFragment=new ContactFragment();
 
@@ -97,7 +97,7 @@ public class ContactActivity extends AppCompatActivity {
         header_title = (FontTextView) findViewById(R.id.header_title);
         header_right_text = (FontTextView) findViewById(R.id.header_right_text);
         header_right_image = (ImageView) findViewById(R.id.header_right_image);
-        MyViewPager = (NoScrollViewPager) findViewById(R.id.MyViewPager);
+        MyViewPager = (NoPreloadViewPager) findViewById(R.id.MyViewPager);
     }
 }
 
