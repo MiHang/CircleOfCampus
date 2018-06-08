@@ -264,7 +264,6 @@ public class HttpHelper {
         return "";
     }
 
-
     /**
      * 通过账号获取好友信息
      * @param account

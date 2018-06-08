@@ -123,7 +123,7 @@ public class ContactFragment extends Fragment implements com.bigkoo.alertview.On
                     .setSuccessText("加载成功")//显示加载成功时的文字
                     .setFailedText("加载失败")
                     .closeSuccessAnim()
-                    .setShowTime(1000)
+                    .setShowTime(500)
                     .setInterceptBack(false)
                     .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
                     .show();
@@ -148,9 +148,18 @@ public void setData(final String id){
 
                     try {
                         JSONObject jsonObject = new JSONObject(s);
+                        int index=0;
                         if (!s.equals("")) {
+
                             num.setText("共" + jsonObject.getString("result") + "位联系人");
                             JSONArray jsonArray = new JSONArray(jsonObject.getString("Info"));
+                            index= Integer.parseInt(jsonObject.getString("result"));
+                            if (index ==0){
+                                num.setText("暂无联系人");
+                                dialog.loadFailed();
+                                return;
+                            }
+
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject js = new JSONObject(jsonArray.get(i).toString());
                                 Contact contact = new Contact();

@@ -209,10 +209,14 @@ public class LoginActivity extends AppCompatActivity {
             // 加载对话框
             loadingDialog = new LoadingDialog(this);
             loadingDialog.setLoadingText("正在登录")
-                    .setSuccessText("登录成功")
+                    .setSuccessText("登录成功")//显示加载成功时的文字
+                    .setFailedText("登录失败")
+                    .closeSuccessAnim()
+                    .closeFailedAnim()
+                    .setShowTime(1000)
                     .setInterceptBack(false)
+                    .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
                     .show();
-
             // 联网线程
             new Thread() {
                 @Override

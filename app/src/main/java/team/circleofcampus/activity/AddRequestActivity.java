@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import org.json.JSONObject;
 
 import team.circleofcampus.R;
 import team.circleofcampus.http.HttpHelper;
+import team.circleofcampus.util.SharedPreferencesUtil;
 import team.circleofcampus.view.FontTextView;
 
 public class AddRequestActivity extends AppCompatActivity implements OnItemClickListener, OnDismissListener {
@@ -44,7 +46,9 @@ public class AddRequestActivity extends AppCompatActivity implements OnItemClick
     EditText edit;
     private AlertView mAlertViewExt;//窗口拓展例子
     private FontTextView NickName;
-
+    SharedPreferencesUtil sharedPreferencesUtil;
+    String user;
+    boolean isFlag=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,14 +59,15 @@ public class AddRequestActivity extends AppCompatActivity implements OnItemClick
         if (friend == null) {
             finish();
         }
-
-        helper = new HttpHelper(this);
+         user=sharedPreferencesUtil.getAccount(this);
+         helper = new HttpHelper(this);
 
             //查询两人是否好友
             AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
-                    final String s = helper.QueryIsFriend("jaye@163.com", friend);
+                    final String s = helper.QueryIsFriend(user, friend);
+
                     account.post(new Runnable() {
                         @Override
                         public void run() {
@@ -70,6 +75,7 @@ public class AddRequestActivity extends AppCompatActivity implements OnItemClick
                             try {
                                 JSONObject jsonObject = new JSONObject(s);
                                 if (!s.equals("")) {
+
                                     if (jsonObject.getString("result").equals("no")) {//不是好友
                                         send_btn.setText("添加好友");
                                         NickName.setVisibility(View.GONE);
@@ -88,6 +94,7 @@ public class AddRequestActivity extends AppCompatActivity implements OnItemClick
                         }
 
                     });
+
                 }
             });
 
@@ -207,6 +214,7 @@ public class AddRequestActivity extends AppCompatActivity implements OnItemClick
                                 try {
                                     JSONObject jsonObject = new JSONObject(s);
                                     if (!s.equals("")) {
+                                        isFlag=true;
                                         if (jsonObject.getInt("deal") == 0) {
                                             Toast.makeText(getApplicationContext(), "请勿重复提交好友申请", Toast.LENGTH_LONG).show();
                                         } else {
@@ -230,8 +238,16 @@ public class AddRequestActivity extends AppCompatActivity implements OnItemClick
                         });
                     }
                 });
-//                Toast.makeText(this, "申请原因:"+name, Toast.LENGTH_SHORT).show();
 
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!isFlag){
+                            dialog.dismiss();
+                        }
+
+                    }
+                },5000);
 
             }
         }
