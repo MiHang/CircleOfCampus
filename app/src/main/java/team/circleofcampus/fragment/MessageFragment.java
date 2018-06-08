@@ -67,7 +67,7 @@ public class MessageFragment extends Fragment {
             super.onCreate(savedInstanceState);
 
             view = getActivity().getLayoutInflater().inflate(R.layout.fragment_msg, null);
-        initView(view);
+           initView(view);
 
 
 
@@ -125,6 +125,14 @@ public class MessageFragment extends Fragment {
         adapter = new MyMessageAdapter(getContext(),data);
         adapter.setOnItemClickListener(onItemClickListener);
         recycler_view.setAdapter(adapter);
+        adapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent intent=new Intent(getActivity(), ChatActivity.class);
+                intent.putExtra("receive",data.get(position).getAccount());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

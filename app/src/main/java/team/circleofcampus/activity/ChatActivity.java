@@ -62,6 +62,7 @@ import team.circleofcampus.adapter.MyFragmentPagerAdapter;
 import team.circleofcampus.adapter.RecordAdapter;
 import team.circleofcampus.background.MyService;
 import team.circleofcampus.fragment.LabelFragment;
+import team.circleofcampus.util.SharedPreferencesUtil;
 import team.circleofcampus.view.FontTextView;
 
 public class ChatActivity extends AppCompatActivity implements View.OnClickListener {
@@ -70,8 +71,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     List<Message> data = new ArrayList<>();
     RecordAdapter myAdapter;
     AlertDialog alert;
-    static String Send = "jaye@163.com";
-    static String Receive = "5085";
+    String send;
+    String receive;
+    SharedPreferencesUtil sharedPreferencesUtil;
     Data_Dao dao;
     WebSocketClient myClient;
     float x1 = 0;
@@ -112,7 +114,12 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         initView();
-
+        Intent intent=getIntent();
+        receive=intent.getStringExtra("receive");
+        if(receive==null||receive.equals("")){
+            finish();
+        }
+        send=sharedPreferencesUtil.getAccount(this);
         //申请权限
         List<PermissonItem> permissonItems = new ArrayList<PermissonItem>();
         permissonItems.add(new PermissonItem(Manifest.permission.CAMERA, "照相机", R.drawable.permission_ic_memory));
@@ -148,7 +155,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         setAdapter();
         header_title.setText("聊天");
 
-        Intent intent = new Intent(this, myService.getClass());
+        Intent intent2 = new Intent(this, myService.getClass());
 
         ServiceConnection conn = new ServiceConnection() {
             @Override
@@ -171,7 +178,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             }
         };
 
-        bindService(intent, conn, Context.BIND_AUTO_CREATE);
+        bindService(intent2, conn, Context.BIND_AUTO_CREATE);
 
 
     }
@@ -185,8 +192,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 if (myClient != null && myClient.getConnection().isOpen()) {//发送图片
                     Bitmap bitmap = BitmapFactory.decodeResource(getResources(), res);
                     Msg dataMsg = new Msg();
-                    dataMsg.setSend(Send);
-                    dataMsg.setReceive(Receive);
+                    dataMsg.setSend(send);
+                    dataMsg.setReceive(receive);
                     dataMsg.setImg(utils.BitmapToBytes(bitmap));
                     myClient.send(utils.toByteArray(dataMsg));
 
@@ -274,8 +281,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                         if (myClient.getConnection().isOpen()) {
                             if (MsgText.getText().toString().length() > 0) {
                                 Msg msg = new Msg();
-                                msg.setSend(Send);
-                                msg.setReceive(Receive);
+                                msg.setSend(send);
+                                msg.setReceive(receive);
                                 msg.setText(MsgText.getText().toString());
 
                                 myClient.send(utils.toByteArray(msg));
@@ -306,7 +313,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         });
 
 
-        data = dao.getMessage(Receive, Send);
+        data = dao.getMessage(receive, send);
         for (Message m : data) {
             Log.e("tag", m.toString());
         }
@@ -380,8 +387,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                         try {
                             byte[] audio = utils.DocToByte(file.getPath());//录音文件转字节流
                             Msg msg = new Msg();
-                            msg.setSend(Send);
-                            msg.setReceive(Receive);
+                            msg.setSend(send);
+                            msg.setReceive(receive);
 
                             msg.setAudio(audio);
                             msg.setAudioPath(audioName);
@@ -442,8 +449,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 Log.e("tag", "文本" + msg.getText() + "语音" + msg.getAudio() + "图片" + msg.getImg());
                 Message message = new Message();
 
-                if (msg.getReceive().equals(Send)) {
-                    msg.setSend(Receive);
+                if (msg.getReceive().equals(send)) {
+                    msg.setSend(receive);
                 }
 
                 message.setMsg(msg);

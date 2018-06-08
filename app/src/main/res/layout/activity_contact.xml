@@ -9,7 +9,7 @@
 
     <include layout="@layout/header" />
 
-    <team.circleofcampus.view.NoPreloadViewPager
+    <team.circleofcampus.view.NoSlideViewPager
         android:id="@+id/MyViewPager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

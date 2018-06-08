@@ -44,7 +44,7 @@ public class AddRequestActivity extends AppCompatActivity implements OnItemClick
     private Button send_btn;
     HttpHelper helper;
     EditText edit;
-    private AlertView mAlertViewExt;//窗口拓展例子
+    private AlertView mAlertViewExt;
     private FontTextView NickName;
     SharedPreferencesUtil sharedPreferencesUtil;
     String user;

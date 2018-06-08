@@ -1,5 +1,6 @@
 package team.circleofcampus.fragment;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +19,7 @@ import org.json.JSONObject;
 
 import team.circleofcampus.Interface.MoreFragmentListener;
 import team.circleofcampus.R;
+import team.circleofcampus.activity.ChatActivity;
 import team.circleofcampus.activity.ContactActivity;
 import team.circleofcampus.http.HttpHelper;
 import team.circleofcampus.view.FontTextView;
@@ -73,6 +75,14 @@ public class UserInfoFragment extends Fragment {
                     }
                 }, 200);
                 activity.MyViewPager.setCurrentItem(position,true);
+                send_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent=new Intent(getActivity(), ChatActivity.class);
+                        intent.putExtra("receive",account.getText());
+                        startActivity(intent);
+                    }
+                });
 
             }
         });
