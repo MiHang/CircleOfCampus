@@ -206,7 +206,7 @@ public class AddRequestActivity extends AppCompatActivity implements OnItemClick
                 AsyncTask.execute(new Runnable() {
                     @Override
                     public void run() {
-                        final String s = helper.requestAddFriend("jaye@163.com", "demo@163.com", name);
+                        final String s = helper.requestAddFriend(user, account.getText().toString(), name);
                         account.post(new Runnable() {
                             @Override
                             public void run() {
