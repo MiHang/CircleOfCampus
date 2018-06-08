@@ -103,6 +103,7 @@ public class RegisterActivity extends AppCompatActivity {
                 Toast.makeText(RegisterActivity.this, "验证码发送失败，请检查邮箱是否正确", Toast.LENGTH_SHORT).show();
                 isGetVerificationCode = false;
             } else if (0x0006 == msg.what) {
+                loadingDialog.close();
                 Toast.makeText(RegisterActivity.this, "无法与服务器通信，请检查您的网络连接", Toast.LENGTH_SHORT).show();
             } else if (0x0007 == msg.what) {
                 userNameEdit.requestFocus();
@@ -143,6 +144,7 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        loadingDialog.close();
         finish();
     }
 
@@ -296,6 +298,7 @@ public class RegisterActivity extends AppCompatActivity {
         loadingDialog = new LoadingDialog(this);
         loadingDialog.setLoadingText("正在注册")
                 .setSuccessText("注册成功")
+                .setInterceptBack(false)
                 .show();
 
         new Thread() {

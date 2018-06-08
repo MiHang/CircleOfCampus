@@ -57,6 +57,7 @@ public class ForgetPwdActivity extends AppCompatActivity {
                 verificationCodeBtn.setBackgroundResource(R.drawable.shape_email_code_btn);
                 verificationCodeBtn.setText("获取验证码");
             } else if (0x0003 == msg.what) {
+                loadingDialog.close();
                 Toast.makeText(ForgetPwdActivity.this, "无法与服务器通信，请检查您的网络连接", Toast.LENGTH_SHORT).show();
             } else if (0x0004 == msg.what) {
                 Toast.makeText(ForgetPwdActivity.this, "验证码已发送，请注意查收", Toast.LENGTH_SHORT).show();
@@ -77,7 +78,7 @@ public class ForgetPwdActivity extends AppCompatActivity {
                     }
                 }.start();
             } else if (0x0007 == msg.what) { // 密码重置失败
-                loadingDialog.setFailedText("密码重置失败");
+                loadingDialog.setFailedText("密码重置失败, 请检查邮箱是否输入正确");
                 loadingDialog.loadFailed();
             } else if (0x0008 == msg.what) { // 验证码超时
                 loadingDialog.setFailedText("验证码超时");
@@ -94,6 +95,7 @@ public class ForgetPwdActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        loadingDialog.close();
         finish();
     }
 
@@ -127,6 +129,7 @@ public class ForgetPwdActivity extends AppCompatActivity {
             loadingDialog = new LoadingDialog(this);
             loadingDialog.setLoadingText("重置密码中")
                     .setSuccessText("密码重置成功")
+                    .setInterceptBack(false)
                     .show();
 
             // 联网线程

@@ -65,7 +65,9 @@ public class LoginActivity extends AppCompatActivity {
                     JSONArray jsonArr = new JSONArray();
                     jsonArr.put(accountStr);
                     for (int i = 0; i < jsonTempArr.length(); i ++) {
-                        jsonArr.put(jsonTempArr.getString(i));
+                        if (!accountStr.equals(jsonTempArr.getString(i))) {
+                            jsonArr.put(jsonTempArr.getString(i));
+                        }
                     }
                     SharedPreferencesUtil.setLandingRecord(LoginActivity.this, jsonArr.toString());
                 } catch (JSONException e) {
@@ -80,6 +82,7 @@ public class LoginActivity extends AppCompatActivity {
                 loadingDialog.setFailedText("此用户未注册");
                 loadingDialog.loadFailed();
             } else if (msg.what == 0x0005) { // 页面跳转
+                loadingDialog.close();
                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
@@ -129,6 +132,20 @@ public class LoginActivity extends AppCompatActivity {
                     // 将光标移动到末尾
                     account.setSelection(account.getText().length());
                 } else if (itemId == R.id.item_history_account_remove) {
+                    try {
+                        String accountStr = historyAccounts.get(position);
+                        String record = SharedPreferencesUtil.getLandingRecord(LoginActivity.this);
+                        JSONArray jsonTempArr = new JSONArray(record);
+                        JSONArray jsonArray = new JSONArray();
+                        for (int i = 0; i < jsonTempArr.length(); i ++) {
+                            if (!accountStr.equals(jsonTempArr.getString(i))) {
+                                jsonArray.put(jsonTempArr.getString(1));
+                            }
+                        }
+                        SharedPreferencesUtil.setLandingRecord(LoginActivity.this, jsonArray.toString());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     historyAccounts.remove(position);
                     historyAccountListPopupAdapter.notifyDataSetChanged();
                 }
@@ -193,6 +210,7 @@ public class LoginActivity extends AppCompatActivity {
             loadingDialog = new LoadingDialog(this);
             loadingDialog.setLoadingText("正在登陆")
                     .setSuccessText("登陆成功")
+                    .setInterceptBack(false)
                     .show();
 
             // 联网线程
@@ -205,12 +223,11 @@ public class LoginActivity extends AppCompatActivity {
                             try {
                                 JSONObject json = new JSONObject(result);
                                 result = json.getString("result");
-                                int uId = json.getInt("id");
 
                                 if (result.equals("success")) {
                                     Message msg = new Message();
                                     msg.what = 0x0002;
-                                    msg.arg1 = uId;
+                                    msg.arg1 = json.getInt("id");
                                     handler.sendMessage(msg);
                                 } else if (result.equals("error")) {
                                     handler.sendEmptyMessage(0x0003);
