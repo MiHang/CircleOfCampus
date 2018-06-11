@@ -10,7 +10,7 @@
     <!-- 设置边框宽度 -->
     <stroke
         android:width="@dimen/divide_line_height"
-        android:color="#EAEAEA" />
+        android:color="@color/black" />
 
     <!-- 设置边框宽度 -->
     <stroke

@@ -23,9 +23,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
+            android:visibility="gone"
             android:background="@drawable/button_selector"
             android:text="按住说话"
-            android:visibility="gone" />
+            />
 
         <EditText
             android:id="@+id/MsgText"

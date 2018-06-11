@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -119,6 +120,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         if(receive==null||receive.equals("")){
             finish();
         }
+
         send=sharedPreferencesUtil.getAccount(this);
         //申请权限
         List<PermissonItem> permissonItems = new ArrayList<PermissonItem>();
@@ -541,7 +543,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     Talk.setVisibility(View.GONE);
                     InputMethodManager m = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     m.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-
+                    Toast.makeText(getApplicationContext(), "文字", Toast.LENGTH_SHORT).show();
                 } else {
                     Video.setImageResource(R.drawable.keyboard);
                     Talk.setVisibility(View.VISIBLE);
@@ -572,6 +574,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         Face = (ImageView) findViewById(R.id.Face);
         More = (ImageView) findViewById(R.id.More);
         FaceViewPager = (ViewPager) findViewById(R.id.Face_ViewPager);
+        Face.setOnClickListener(this);
+        More.setOnClickListener(this);
+        MsgText.setOnClickListener(this);
+        Video.setOnClickListener(this);
 
         Talk.setOnClickListener(this);
         header_left_image.setOnClickListener(new View.OnClickListener() {

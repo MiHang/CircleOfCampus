@@ -49,7 +49,7 @@
                 android:drawableTop="@drawable/audio_point"
                 android:gravity="center|bottom"
                 android:maxLines="1"
-                android:paddingTop="@dimen/middle_padding"
+                android:paddingTop="@dimen/normal_padding"
                 android:text="1" />
         </LinearLayout>
 
