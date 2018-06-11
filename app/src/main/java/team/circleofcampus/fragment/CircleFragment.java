@@ -1,5 +1,6 @@
 package team.circleofcampus.fragment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -7,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
@@ -21,6 +23,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import team.circleofcampus.Interface.FragmentSwitchListener;
 import team.circleofcampus.R;
+import team.circleofcampus.activity.DetailCircleActivity;
+import team.circleofcampus.activity.ForgetPwdActivity;
+import team.circleofcampus.activity.LoginActivity;
 import team.circleofcampus.adapter.CampusCircleListViewAdapter;
 import team.circleofcampus.util.DensityUtil;
 import team.circleofcampus.view.MyListView;
@@ -106,10 +111,26 @@ public class CircleFragment extends Fragment {
         // 校园官方公告列表
         campusCircleListView.setAdapter(new CampusCircleListViewAdapter(getContext(), items));
         campusCircleListView.setListViewHeightBasedOnChildren();
+        campusCircleListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getContext(), DetailCircleActivity.class);
+                getActivity().startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
+            }
+        });
 
         // 社团公告列表
         societyCircleListView.setAdapter(new CampusCircleListViewAdapter(getContext(), items));
         societyCircleListView.setListViewHeightBasedOnChildren();
+        societyCircleListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getContext(), DetailCircleActivity.class);
+                getActivity().startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
+            }
+        });
     }
 
     @Override

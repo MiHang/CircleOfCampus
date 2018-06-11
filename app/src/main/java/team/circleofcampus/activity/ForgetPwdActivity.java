@@ -95,7 +95,9 @@ public class ForgetPwdActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        loadingDialog.close();
+        if (loadingDialog != null) {
+            loadingDialog.close();
+        }
         finish();
     }
 

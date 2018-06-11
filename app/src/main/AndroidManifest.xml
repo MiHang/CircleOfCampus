@@ -21,9 +21,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity" >
-
-        </activity>
+        <activity android:name=".activity.MainActivity"></activity>
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,9 +32,7 @@
         <activity android:name=".activity.RegisterActivity" />
         <activity
             android:name=".activity.HomeActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden">
-
-        </activity>
+            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
 
         <service android:name=".background.MyService" />
 
@@ -49,6 +45,7 @@
             android:name=".activity.ChatActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".activity.AlterUserInfoActivity" />
+        <activity android:name=".activity.DetailCircleActivity"></activity>
     </application>
 
 </manifest>
