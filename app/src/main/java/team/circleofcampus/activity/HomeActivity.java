@@ -138,7 +138,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // 我的二维码
         QRFragment qrFragment = new QRFragment();
-        qrFragment.setAccount("校园圈");
+        qrFragment.setAccount(account);
         data.add(qrFragment);
 
         // 更多校园官方公告

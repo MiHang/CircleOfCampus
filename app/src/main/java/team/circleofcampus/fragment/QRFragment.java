@@ -19,7 +19,7 @@ import team.circleofcampus.util.SharedPreferencesUtil;
 public class QRFragment extends Fragment {
 
     private View view;
-    String account;
+    String account="校园圈";
     private ImageView qr_img;
 
     public void setAccount(String account) {
@@ -40,7 +40,7 @@ public class QRFragment extends Fragment {
         view = getActivity().getLayoutInflater().inflate(R.layout.qr_dialog, null);
         initView(view);
       
-        Bitmap bitmap=new QRCodeUtils(getContext()).createQRCodeWithLogo6(account, 800, R.drawable.icon);
+        Bitmap bitmap=new QRCodeUtils(getContext()).createQRCodeWithLogo6(account, 1200, R.drawable.icon);
         qr_img.setImageBitmap(bitmap);
     }
 
