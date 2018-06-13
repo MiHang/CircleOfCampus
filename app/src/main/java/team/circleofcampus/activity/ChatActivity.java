@@ -41,6 +41,7 @@ import com.common.utils.ByteUtils;
 import com.common.utils.Symbol;
 import com.example.library.Fragment.FaceFragment;
 import com.example.library.Interface.PictureClickListener;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import org.java_websocket.client.WebSocketClient;
 
@@ -111,6 +112,11 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        tintManager.setStatusBarTintEnabled(true);
+        tintManager.setNavigationBarTintEnabled(true);
+        tintManager.setTintResource(R.drawable.bg);
+
         initView();
         Intent intent=getIntent();
         receive=intent.getStringExtra("receive");

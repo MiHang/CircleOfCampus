@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.bigkoo.alertview.AlertView;
 import com.bigkoo.alertview.OnDismissListener;
 import com.bigkoo.alertview.OnItemClickListener;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,6 +54,10 @@ public class AddRequestActivity extends AppCompatActivity implements OnItemClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_rquest);
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        tintManager.setStatusBarTintEnabled(true);
+        tintManager.setNavigationBarTintEnabled(true);
+        tintManager.setTintResource(R.drawable.bg);
         initView();
         Intent intent = getIntent();
         final String friend = intent.getStringExtra("user2");
@@ -80,8 +85,6 @@ public class AddRequestActivity extends AppCompatActivity implements OnItemClick
                                         send_btn.setText("添加好友");
                                         NickName.setVisibility(View.GONE);
                                         Toast.makeText(AddRequestActivity.this, "不是好友", Toast.LENGTH_SHORT).show();
-                                    }else{
-                                        Toast.makeText(AddRequestActivity.this, "是好友", Toast.LENGTH_SHORT).show();
                                     }
                                 }
 
