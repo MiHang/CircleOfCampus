@@ -26,7 +26,7 @@
                 android:layout_height="@dimen/icon"
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/middle_padding"
-                android:src="@drawable/icon" />
+                android:src="@drawable/man" />
 
             <team.circleofcampus.view.MyLinearLayout
                 android:layout_width="match_parent"

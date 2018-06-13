@@ -14,7 +14,7 @@
         android:layout_height="@dimen/contact_icon"
         android:layout_margin="@dimen/min_padding"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/icon" />
+        android:src="@drawable/man" />
 
     <team.circleofcampus.view.FontTextView
         android:id="@+id/UserName"

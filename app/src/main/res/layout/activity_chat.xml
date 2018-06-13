@@ -1,11 +1,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <include layout="@layout/header" />
@@ -14,8 +14,8 @@
         android:id="@+id/ChatRecord"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
         android:layout_weight="1"
+        android:background="@color/white"
         android:divider="@null"
         android:dividerHeight="0dp"
         android:listSelector="@android:color/transparent"
@@ -26,27 +26,31 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:focusable="true"
         android:background="@color/white"
+        android:focusable="true"
         android:focusableInTouchMode="true"
         android:orientation="vertical">
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/cut_line_height"
+            android:layout_height="@dimen/chat_divider_height"
             android:background="@color/cut_line_color" />
 
         <include layout="@layout/input_item" />
+
         <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/cut_line_height"
+            android:layout_height="@dimen/chat_divider_height"
             android:background="@color/cut_line_color" />
 
 
     </LinearLayout>
+
     <android.support.v4.view.ViewPager
         android:id="@+id/Face_ViewPager"
         android:layout_width="match_parent"
-        android:visibility="gone"
-        android:layout_height="220dp" />
+        android:layout_height="220dp"
+        android:background="@color/white"
+        android:visibility="gone" />
+
 </LinearLayout>

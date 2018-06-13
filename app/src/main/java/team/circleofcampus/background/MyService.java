@@ -25,8 +25,7 @@ import team.circleofcampus.http.HttpRequest;
  * Created by 惠普 on 2018-05-15.
  */
 
-public class
-MyService extends Service {
+public class MyService extends Service {
     String TAG="service";
     MsgBinder binder=new MsgBinder();
     WebSocketClient myClient;
@@ -41,7 +40,6 @@ MyService extends Service {
     public WebSocketClient getMyClient() {
         return myClient;
     }
-
 
 
     @Override

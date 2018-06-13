@@ -61,6 +61,8 @@ import team.circleofcampus.adapter.MyFragmentPagerAdapter;
 import team.circleofcampus.adapter.RecordAdapter;
 import team.circleofcampus.background.MyService;
 import team.circleofcampus.util.SharedPreferencesUtil;
+import team.circleofcampus.view.FontButton;
+import team.circleofcampus.view.FontEditText;
 import team.circleofcampus.view.FontTextView;
 
 public class ChatActivity extends AppCompatActivity implements View.OnClickListener {
@@ -100,8 +102,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView header_right_image;
     private ListView ChatRecord;
     private ImageView Video;
-    private Button Talk;
-    private EditText MsgText;
+    private FontButton Talk;
+    private FontEditText MsgText;
     private ImageView Face;
     private ViewPager FaceViewPager;
 
@@ -317,19 +319,14 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public boolean onTouch(View view, MotionEvent event) {
 
+                if (!myClient.getConnection().isOpen()) {
+                    Toast.makeText(getApplicationContext(), "未连接到服务器", Toast.LENGTH_SHORT).show();
+                   return false;
+                }
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (myClient.getConnection().isOpen()) {
-//                    AlertDialog.Builder dialog = new AlertDialog.Builder(ChatActivity.this);
-//                    View v = LayoutInflater.from(ChatActivity.this).inflate(R.layout.dialog, null);
-//                    dialog.setView(v);
-//                    alert = dialog.create();
-//                    WindowManager.LayoutParams layoutParams = alert.getWindow().getAttributes();
-//                    layoutParams.alpha = 0.5f;
-//                    alert.getWindow().setAttributes(layoutParams);
-//                    alert.show();
+
                         MsgText.setText("松开结束");
                         isDown = true;
-
 
                         //录制音频
                         audioName = sdf.format(new Date());
@@ -364,11 +361,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                    } else {
-                        Toast.makeText(getApplicationContext(), "未连接到服务器", Toast.LENGTH_SHORT).show();
-                    }
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
-//                    alert.cancel();//关闭弹窗
+
                     MsgText.setText("按下说话");
                     isDown = false;
                     RECORD_ON = false;
@@ -464,14 +458,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    // RotateAnimation
-    private RotateAnimation setRotateAnimation(int fromDegrees, int toDegrees, int Duration) {
-        RotateAnimation animation = new RotateAnimation(fromDegrees, toDegrees, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        animation.setDuration(Duration);
-        animation.setFillAfter(true);
-        return animation;
-    }
-
     /**
      * 事件分发机制
      * 点击软键盘区域以外自动关闭软键盘,
@@ -554,8 +540,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         header_right_image = (ImageView) findViewById(R.id.header_right_image);
         ChatRecord = (ListView) findViewById(R.id.ChatRecord);
         Video = (ImageView) findViewById(R.id.Video);
-        Talk = (Button) findViewById(R.id.Talk);
-        MsgText = (EditText) findViewById(R.id.MsgText);
+        Talk = (FontButton) findViewById(R.id.Talk);
+        MsgText = (FontEditText) findViewById(R.id.MsgText);
         Face = (ImageView) findViewById(R.id.Face);
 
         FaceViewPager = (ViewPager) findViewById(R.id.Face_ViewPager);

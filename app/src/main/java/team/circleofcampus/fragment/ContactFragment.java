@@ -54,6 +54,7 @@ import team.circleofcampus.http.HttpHelper;
 import team.circleofcampus.model.Contact;
 import team.circleofcampus.model.Letter;
 import team.circleofcampus.util.SharedPreferencesUtil;
+import team.circleofcampus.view.FontTextView;
 import team.circleofcampus.view.MyEditText;
 
 
@@ -76,7 +77,7 @@ public class ContactFragment extends Fragment implements com.bigkoo.alertview.On
     GoodFriendAdapter adapter;
     MoreFragmentListener listener;
     HttpHelper helper;
-    private TextView num;
+    private FontTextView num;
     LoadingDialog dialog;
     EditText edit;
     List<Contact> list = new ArrayList<Contact>();
@@ -112,8 +113,6 @@ public class ContactFragment extends Fragment implements com.bigkoo.alertview.On
 
         myAdapter = new MyIndexAdapter(getContext(), d);
         IndexList.setAdapter(myAdapter);
-
-
         helper = new HttpHelper(getContext());
 
         Account=sharedPreferencesUtil.getAccount(getContext());
@@ -323,12 +322,20 @@ public void setData(final String id){
         Search = (MyEditText) view.findViewById(R.id.Search);
         rv = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
         IndexList = (ListView) view.findViewById(R.id.IndexList);
-        num = (TextView) view.findViewById(R.id.num);
+        num = (FontTextView) view.findViewById(R.id.num);
 
     }
 
     Closeable closeable;
+    String friend;
 
+    public String getFriend() {
+        return friend;
+    }
+
+    public void setFriend(String friend) {
+        this.friend = friend;
+    }
 
     public void setCloseable(Closeable closeable) {
         this.closeable = closeable;
@@ -349,8 +356,7 @@ public void setData(final String id){
         public void onItemClick(Closeable closeable, int adapterPosition, int menuPosition, int direction) {
             mAlertViewExt.show();
             setCloseable(closeable);
-//            closeable.smoothCloseMenu();// 关闭被点击的菜单。
-
+            setFriend(data.get(adapterPosition).getAccount());
 
         }
     };
@@ -413,7 +419,7 @@ public void setData(final String id){
                 AsyncTask.execute(new Runnable() {
                     @Override
                     public void run() {
-                        final String s = helper.updateFriendNote("jaye@163.com","5085",note);
+                        final String s = helper.updateFriendNote(Account,getFriend(),note);
                         edit.post(new Runnable() {
                             @Override
                             public void run() {
