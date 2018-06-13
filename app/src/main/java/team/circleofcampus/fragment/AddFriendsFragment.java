@@ -30,6 +30,7 @@ import team.circleofcampus.activity.AddRequestActivity;
 import team.circleofcampus.adapter.FriendSearchAdapter;
 import team.circleofcampus.http.HttpHelper;
 import team.circleofcampus.model.Contact;
+import team.circleofcampus.util.SharedPreferencesUtil;
 
 /**
  * Created by 惠普 on 2018-05-11.
@@ -43,7 +44,8 @@ public class AddFriendsFragment extends Fragment {
     FriendSearchAdapter mMenuAdapter;
     List<Contact> data = new ArrayList<>();
     HttpHelper helper;
-
+    SharedPreferencesUtil sharedPreferencesUtil;
+    String Account;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -54,6 +56,8 @@ public class AddFriendsFragment extends Fragment {
         recycler_view.setHasFixedSize(true);// 如果Item够简单，高度是确定的，打开FixSize将提高性能。
         recycler_view.setItemAnimator(new DefaultItemAnimator());// 设置Item默认动画，加也行，不加也行。
 
+        sharedPreferencesUtil=new SharedPreferencesUtil();
+        Account= sharedPreferencesUtil.getAccount(getActivity());
 
 
         mMenuAdapter = new FriendSearchAdapter(getContext(), data);
@@ -61,6 +65,11 @@ public class AddFriendsFragment extends Fragment {
             @Override
             public void onItemClick(int position) {
                 Intent intent = new Intent(getActivity(), AddRequestActivity.class);
+                if (Account.equals( data.get(position).getAccount())){
+                    intent.putExtra("isOther","no");
+                }else{
+                    intent.putExtra("isOther","yes");
+                }
                 intent.putExtra("user2", data.get(position).getAccount());
                 startActivity(intent);
 //                Toast.makeText(getContext(), "" + position, Toast.LENGTH_SHORT).show();
@@ -92,6 +101,7 @@ public class AddFriendsFragment extends Fragment {
                     result.setText("");
                     data.clear();
                     QR_btn.setVisibility(View.GONE);
+
                     new Thread(new Runnable() {
                         @Override
                         public void run() {

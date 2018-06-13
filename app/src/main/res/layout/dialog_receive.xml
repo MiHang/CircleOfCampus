@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/Receive_dialog"
     android:layout_width="wrap_content"
+    android:visibility="gone"
     android:layout_height="wrap_content">
 
     <team.circleofcampus.view.IconImageView
@@ -48,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawableTop="@drawable/audio_point"
-                android:gravity="center|bottom"
+                android:gravity="bottom|center"
                 android:maxLines="1"
                 android:paddingTop="@dimen/normal_padding"
                 android:text="1" />

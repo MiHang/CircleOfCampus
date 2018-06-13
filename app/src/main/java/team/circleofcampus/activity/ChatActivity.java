@@ -51,10 +51,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import me.weyye.hipermission.HiPermission;
-import me.weyye.hipermission.PermissionCallback;
-import me.weyye.hipermission.PermissonItem;
 import team.circleofcampus.Interface.MessageListener;
 import team.circleofcampus.Interface.RecordItemListener;
 import team.circleofcampus.R;
@@ -71,9 +67,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
     List<Message> data = new ArrayList<>();
     RecordAdapter myAdapter;
-    AlertDialog alert;
     String send;
     String receive;
+    String nickName;
     SharedPreferencesUtil sharedPreferencesUtil;
     Data_Dao dao;
     WebSocketClient myClient;
@@ -120,45 +116,16 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         initView();
         Intent intent=getIntent();
         receive=intent.getStringExtra("receive");
+        nickName=intent.getStringExtra("nickName");
         if(receive==null||receive.equals("")){
             finish();
         }
 
         send=sharedPreferencesUtil.getAccount(this);
-        //申请权限
-        List<PermissonItem> permissonItems = new ArrayList<PermissonItem>();
-        permissonItems.add(new PermissonItem(Manifest.permission.CAMERA, "照相机", R.drawable.permission_ic_memory));
-        permissonItems.add(new PermissonItem(Manifest.permission.RECORD_AUDIO, "录音", R.drawable.permission_ic_location));
-        HiPermission.create(this)
-                .permissions(permissonItems)
-                .checkMutiPermission(new PermissionCallback() {
-                    @Override
-                    public void onClose() {
-                        Log.i("tag", "onClose");
-                        Toast.makeText(getApplicationContext(), "用户关闭权限申请", Toast.LENGTH_SHORT).show();
-
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        Toast.makeText(getApplicationContext(), "用户打开权限申请", Toast.LENGTH_SHORT).show();
-
-                    }
-
-                    @Override
-                    public void onDeny(String permisson, int position) {
-                        Log.i("tag", "onDeny");
-                    }
-
-                    @Override
-                    public void onGuarantee(String permisson, int position) {
-                        Log.i("tag", "onGuarantee");
-                    }
-                });
 
         init();
         setAdapter();
-        header_title.setText("聊天");
+        header_title.setText(nickName);
 
         Intent intent2 = new Intent(this, myService.getClass());
 
@@ -529,9 +496,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
 
                 break;
-            case R.id.Talk:
-                Toast.makeText(this, "弹力", Toast.LENGTH_SHORT).show();
-                break;
+
 
 
         }
@@ -555,7 +520,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         MsgText.setOnClickListener(this);
         Video.setOnClickListener(this);
 
-        Talk.setOnClickListener(this);
+
         header_left_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -60,6 +60,7 @@ public class AddRequestActivity extends AppCompatActivity implements OnItemClick
         tintManager.setTintResource(R.drawable.bg);
         initView();
         Intent intent = getIntent();
+        String isOther=intent.getStringExtra("isOther");
         final String friend = intent.getStringExtra("user2");
         if (friend == null) {
             finish();
@@ -67,39 +68,47 @@ public class AddRequestActivity extends AppCompatActivity implements OnItemClick
          user=sharedPreferencesUtil.getAccount(this);
          helper = new HttpHelper(this);
 
-            //查询两人是否好友
-            AsyncTask.execute(new Runnable() {
-                @Override
-                public void run() {
-                    final String s = helper.QueryIsFriend(user, friend);
+         if (isOther.equals("yes")){
+             //查询两人是否好友
+             AsyncTask.execute(new Runnable() {
+                 @Override
+                 public void run() {
+                     final String s = helper.QueryIsFriend(user, friend);
 
-                    account.post(new Runnable() {
-                        @Override
-                        public void run() {
+                     account.post(new Runnable() {
+                         @Override
+                         public void run() {
 
-                            try {
-                                JSONObject jsonObject = new JSONObject(s);
-                                if (!s.equals("")) {
+                             try {
+                                 JSONObject jsonObject = new JSONObject(s);
+                                 if (!s.equals("")) {
 
-                                    if (jsonObject.getString("result").equals("no")) {//不是好友
-                                        send_btn.setText("添加好友");
-                                        NickName.setVisibility(View.GONE);
-                                        Toast.makeText(AddRequestActivity.this, "不是好友", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                                     if (jsonObject.getString("result").equals("no")) {//不是好友
+                                         send_btn.setText("添加好友");
+                                         NickName.setVisibility(View.GONE);
+                                         Toast.makeText(AddRequestActivity.this, "不是好友", Toast.LENGTH_SHORT).show();
+                                     }
+                                 }
 
 
-                        }
+                             } catch (JSONException e) {
+                                 e.printStackTrace();
+                             }
 
-                    });
 
-                }
-            });
+                         }
+
+                     });
+
+                 }
+             });
+         }else{
+             send_btn.setVisibility(View.GONE);
+             NickName.setVisibility(View.GONE);
+             header_title.setText("我的资料");
+
+         }
+
 
 
 

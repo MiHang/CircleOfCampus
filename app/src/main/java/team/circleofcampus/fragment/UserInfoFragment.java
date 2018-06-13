@@ -40,13 +40,13 @@ public class UserInfoFragment extends Fragment {
     private FontTextView department;
     private Button send_btn;
     private View view;
+    String name;
 
     @Override
     public void onDestroyView() {
         super .onDestroyView();
         if (null != view) {
             ((ViewGroup) view.getParent()).removeView(view);
-            Toast.makeText(getContext(), "结束", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -79,7 +79,9 @@ public class UserInfoFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         Intent intent=new Intent(getActivity(), ChatActivity.class);
+
                         intent.putExtra("receive",account.getText());
+                        intent.putExtra("nickName",name);
                         startActivity(intent);
                     }
                 });
@@ -119,8 +121,10 @@ public class UserInfoFragment extends Fragment {
                                 UserName.setText("昵称:" + jsonObject.getString("userName"));
                                 if (jsonObject.getString("userName").equals(str[1])){//未设置备注
                                     NickName.setText("备注:无");
+                                    name=jsonObject.getString("userName");
                                 }else{
-                                    NickName.setText(str[1]);
+                                    name=str[1];
+                                    NickName.setText("备注:"+str[1]);
                                 }
                                 department.setText(jsonObject.getString("facultyName"));
                                 college.setText(jsonObject.getString("campusName"));

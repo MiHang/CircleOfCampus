@@ -45,7 +45,7 @@ import team.circleofcampus.view.IconImageView;
 import team.circleofcampus.view.RoundRectImageView;
 
 /**
- * Created by 惠普 on 2018-05-23.
+ * 聊天列表适配器
  */
 
 public class RecordAdapter extends BaseAdapter {
@@ -91,7 +91,7 @@ public class RecordAdapter extends BaseAdapter {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+
     @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
         final ViewHolder vh;
