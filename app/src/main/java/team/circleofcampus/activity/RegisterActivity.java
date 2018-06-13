@@ -144,7 +144,9 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        loadingDialog.close();
+        if (loadingDialog != null) {
+            loadingDialog.close();
+        }
         finish();
     }
 

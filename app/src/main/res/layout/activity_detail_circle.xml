@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:background="@drawable/bg"
+    android:orientation="vertical">
+
+    <!-- 标题栏 -->
+    <include layout="@layout/header"/>
+
+    <team.circleofcampus.view.ReboundLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <!-- 公告推送方信息 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <!-- icon -->
+                    <team.circleofcampus.view.CircleImageView
+                        android:id="@+id/detail_circle_icon"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/ico_cdp"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:paddingLeft="10dp"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <!-- title -->
+                        <team.circleofcampus.view.FontTextView
+                            android:id="@+id/detail_circle_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="成都职业技术学院"
+                            android:textColor="@color/black"
+                            android:textSize="14dp"/>
+
+                        <!-- publish time-->
+                        <team.circleofcampus.view.FontTextView
+                            android:id="@+id/detail_circle_publish_time"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="12dp"
+                            android:text="2018-06-12 13:55"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- 分割线 -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/dividerColor"/>
+
+                <team.circleofcampus.view.FontTextView
+                    android:id="@+id/detail_circle_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:textSize="17dp"
+                    android:text="六小龄童章老师成职开讲 银领礼宾完美服务好开心"/>
+
+                <team.circleofcampus.view.FontTextView
+                    android:id="@+id/detail_circle_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:textSize="14dp"
+                    android:textColor="#3e3e3e"
+                    android:lineSpacingMultiplier="1.5"
+                    android:text="    2018年5月25日下午，“孙悟空”——六小龄童章金莱老师走进成职院，拉开了“成职讲坛”——“苦练七十二变，笑对八十一难”讲座的大幕。财经分院银领礼宾队在指导老师向多佳、杨静的带领下，选派出万瑶、陶曼琳、陈瑶、唐梦婷、章嘉文、唐超峰等六位队员参加了此次讲座的礼宾服务，完美展现了小橙汁的礼仪风采。
+                    \n    现在我还清楚记得，在指导老师向多佳通知我们参加章老师讲座的礼宾服务时，大家的欢呼与沸腾。《西游记》是我们这代人所拥有的共同的回忆。唐僧师徒四人历经艰难困苦，一路西行，坚毅不拔的实现理想的故事情景，给我们的童年留下了的强烈记忆。其中，由六小龄童章金莱老师所扮演的身手超凡、善于变化、不畏艰险的孙悟空，更成为我们心中的顶天立地的大英雄。
+                    \n    为做好此次讲座的服务工作，银领礼宾队队员下午早早地就整装集合，做好了各项准备工作。之后大家各就各位，恭候在成都职业技术学院软件大楼学术报告厅和报告厅楼前。
+                    \n    下午六点五十分，章老师在学院领导的陪同下来到软件大楼。在银领礼宾队队员的引领下、在师生们的欢呼声中，章老师来到台上，向大家分享“孙悟空——苦练七十二变，笑对八十一难”的励志人生。章老师的讲座，仿佛让我们回到了当初守在电视前看着师徒四人挑着担，牵着马，迎来日出，送走晚霞，踏平坎坷，笑面人生“八十一难”的场景。整场讲座中，掌声不断，同学们从精彩的讲座中感受传统文化的无穷魅力。"
+                    />
+
+                <!-- 图片 -->
+                <ImageView
+                    android:id="@+id/detail_circle_image_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"/>
+            </LinearLayout>
+
+        </ScrollView>
+    </team.circleofcampus.view.ReboundLayout>
+
+</LinearLayout>
