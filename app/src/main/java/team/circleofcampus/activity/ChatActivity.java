@@ -17,7 +17,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -42,6 +41,7 @@ import com.common.utils.ByteUtils;
 import com.common.utils.Symbol;
 import com.example.library.Fragment.FaceFragment;
 import com.example.library.Interface.PictureClickListener;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import org.java_websocket.client.WebSocketClient;
 
@@ -61,8 +61,9 @@ import team.circleofcampus.R;
 import team.circleofcampus.adapter.MyFragmentPagerAdapter;
 import team.circleofcampus.adapter.RecordAdapter;
 import team.circleofcampus.background.MyService;
-import team.circleofcampus.fragment.LabelFragment;
 import team.circleofcampus.util.SharedPreferencesUtil;
+import team.circleofcampus.view.FontButton;
+import team.circleofcampus.view.FontEditText;
 import team.circleofcampus.view.FontTextView;
 
 public class ChatActivity extends AppCompatActivity implements View.OnClickListener {
@@ -92,8 +93,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
     MyFragmentPagerAdapter fragmentAdapter;
     List<Fragment> fragments = new ArrayList<>();
-    LabelFragment b = new LabelFragment();
-    FaceFragment a;
+    FaceFragment faceFragment;
 
     MyService myService = new MyService();
     private FontTextView header_left_text;
@@ -103,22 +103,27 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView header_right_image;
     private ListView ChatRecord;
     private ImageView Video;
-    private Button Talk;
-    private EditText MsgText;
+    private FontButton Talk;
+    private FontEditText MsgText;
     private ImageView Face;
-    private ImageView More;
     private ViewPager FaceViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        tintManager.setStatusBarTintEnabled(true);
+        tintManager.setNavigationBarTintEnabled(true);
+        tintManager.setTintResource(R.drawable.bg);
+
         initView();
         Intent intent=getIntent();
         receive=intent.getStringExtra("receive");
         if(receive==null||receive.equals("")){
             finish();
         }
+
         send=sharedPreferencesUtil.getAccount(this);
         //申请权限
         List<PermissonItem> permissonItems = new ArrayList<PermissonItem>();
@@ -184,9 +189,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void setAdapter() {
-        a = new FaceFragment();
-        a.bind(MsgText, null);
-        a.setPictureClickListener(new PictureClickListener() {
+        faceFragment = new FaceFragment();
+        faceFragment.bind(MsgText, null);
+        faceFragment.setPictureClickListener(new PictureClickListener() {
             @Override
             public void PictureDisplay(int res) {
                 if (myClient != null && myClient.getConnection().isOpen()) {//发送图片
@@ -210,9 +215,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
-        fragments.add(a);
+        fragments.add(faceFragment);
 
-//        fragments.add(b);
         fragmentAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), fragments);
         FaceViewPager.setAdapter(fragmentAdapter);
 
@@ -276,8 +280,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 /*判断是否是“发送键”键*/
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
                     if (myClient != null) {
-
-
                         if (myClient.getConnection().isOpen()) {
                             if (MsgText.getText().toString().length() > 0) {
                                 Msg msg = new Msg();
@@ -323,19 +325,14 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public boolean onTouch(View view, MotionEvent event) {
 
+                if (!myClient.getConnection().isOpen()) {
+                    Toast.makeText(getApplicationContext(), "未连接到服务器", Toast.LENGTH_SHORT).show();
+                   return false;
+                }
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (myClient.getConnection().isOpen()) {
-//                    AlertDialog.Builder dialog = new AlertDialog.Builder(ChatActivity.this);
-//                    View v = LayoutInflater.from(ChatActivity.this).inflate(R.layout.dialog, null);
-//                    dialog.setView(v);
-//                    alert = dialog.create();
-//                    WindowManager.LayoutParams layoutParams = alert.getWindow().getAttributes();
-//                    layoutParams.alpha = 0.5f;
-//                    alert.getWindow().setAttributes(layoutParams);
-//                    alert.show();
+
                         MsgText.setText("松开结束");
                         isDown = true;
-
 
                         //录制音频
                         audioName = sdf.format(new Date());
@@ -370,11 +367,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                    } else {
-                        Toast.makeText(getApplicationContext(), "未连接到服务器", Toast.LENGTH_SHORT).show();
-                    }
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
-//                    alert.cancel();//关闭弹窗
+
                     MsgText.setText("按下说话");
                     isDown = false;
                     RECORD_ON = false;
@@ -470,14 +464,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    // RotateAnimation
-    private RotateAnimation setRotateAnimation(int fromDegrees, int toDegrees, int Duration) {
-        RotateAnimation animation = new RotateAnimation(fromDegrees, toDegrees, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        animation.setDuration(Duration);
-        animation.setFillAfter(true);
-        return animation;
-    }
-
     /**
      * 事件分发机制
      * 点击软键盘区域以外自动关闭软键盘,
@@ -520,15 +506,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 FragmentManage(false);
                 break;
             case R.id.Face:
-
                 FragmentManage(true);
                 FaceViewPager.setCurrentItem(0, false);
-
-                break;
-            case R.id.More:
-                Toast.makeText(this, "暂未开放", Toast.LENGTH_SHORT).show();
-//                FaceViewPager.setCurrentItem(1, false);
-//                FragmentManage(true);
                 break;
             case R.id.Video:
                 //隐藏表情面板
@@ -541,7 +520,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     Talk.setVisibility(View.GONE);
                     InputMethodManager m = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     m.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-
+                    Toast.makeText(getApplicationContext(), "文字", Toast.LENGTH_SHORT).show();
                 } else {
                     Video.setImageResource(R.drawable.keyboard);
                     Talk.setVisibility(View.VISIBLE);
@@ -567,11 +546,14 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         header_right_image = (ImageView) findViewById(R.id.header_right_image);
         ChatRecord = (ListView) findViewById(R.id.ChatRecord);
         Video = (ImageView) findViewById(R.id.Video);
-        Talk = (Button) findViewById(R.id.Talk);
-        MsgText = (EditText) findViewById(R.id.MsgText);
+        Talk = (FontButton) findViewById(R.id.Talk);
+        MsgText = (FontEditText) findViewById(R.id.MsgText);
         Face = (ImageView) findViewById(R.id.Face);
-        More = (ImageView) findViewById(R.id.More);
+
         FaceViewPager = (ViewPager) findViewById(R.id.Face_ViewPager);
+        Face.setOnClickListener(this);
+        MsgText.setOnClickListener(this);
+        Video.setOnClickListener(this);
 
         Talk.setOnClickListener(this);
         header_left_image.setOnClickListener(new View.OnClickListener() {

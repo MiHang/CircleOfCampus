@@ -75,11 +75,9 @@ public class GoodFriendAdapter extends SwipeMenuAdapter<GoodFriendAdapter.ViewHo
         if (data.get(position).getSex()==null||data.get(position).getSex().equals("male")) {
             res=R.drawable.man;
 
-        }
-        Toast.makeText(context, ""+data.get(position).getSex(), Toast.LENGTH_SHORT).show();
+        };
         Glide.with(context)
                 .load(http.getPath()+"/res/img/"+data.get(position).getAccount())
-                .crossFade()
                 .error(res)
                 .into(holder.UserIcon);
 

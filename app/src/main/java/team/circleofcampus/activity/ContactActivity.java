@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.readystatesoftware.systembartint.SystemBarTintManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +41,10 @@ public class ContactActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact);
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        tintManager.setStatusBarTintEnabled(true);
+        tintManager.setNavigationBarTintEnabled(true);
+        tintManager.setTintResource(R.drawable.bg);
         initView();
         header_title.setText("好友列表");
         header_right_text.setText("添加好友");

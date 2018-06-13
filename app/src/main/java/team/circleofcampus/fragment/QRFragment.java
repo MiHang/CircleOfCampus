@@ -40,7 +40,7 @@ public class QRFragment extends Fragment {
         view = getActivity().getLayoutInflater().inflate(R.layout.qr_dialog, null);
         initView(view);
       
-        Bitmap bitmap=new QRCodeUtils(getContext()).createQRCodeWithLogo6(account, 1200, R.drawable.icon);
+        Bitmap bitmap=new QRCodeUtils(getContext()).createQRCodeWithLogo6(account, 500, R.drawable.logo);
         qr_img.setImageBitmap(bitmap);
     }
 

@@ -4,11 +4,12 @@
 
     <!-- 填充的颜色 -->
 
+    <solid android:color="@color/white" />
 
     <!-- 设置边框宽度 -->
     <stroke
         android:width="@dimen/edittext_line"
-        android:color="@color/dividerColor" />
+        android:color="@color/black" />
 
     <!-- 四个角的弧度 -->
     <corners android:radius="@dimen/edittext_radius" />

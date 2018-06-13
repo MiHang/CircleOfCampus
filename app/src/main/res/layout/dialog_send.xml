@@ -28,7 +28,7 @@
                 android:drawableTop="@drawable/audio_point"
                 android:gravity="center|bottom"
                 android:maxLines="1"
-                android:paddingTop="@dimen/middle_padding"
+                android:paddingTop="@dimen/normal_padding"
                 android:text="1" />
 
             <TextView
@@ -58,7 +58,7 @@
                 android:visibility="gone"
                 android:maxHeight="@dimen/maxImg"
                 android:maxWidth="@dimen/maxImg"
-                android:src="@drawable/nav_bg5" />
+                android:src="@drawable/bg" />
 
     </LinearLayout>
 
@@ -66,6 +66,7 @@
         android:id="@+id/Send_Icon"
         android:layout_width="@dimen/Icon"
         android:scaleType="centerCrop"
+        android:layout_margin="@dimen/min_padding"
         android:layout_height="@dimen/Icon"
         android:clickable="true" />
 
