@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -18,7 +17,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -62,7 +60,6 @@ import team.circleofcampus.R;
 import team.circleofcampus.adapter.MyFragmentPagerAdapter;
 import team.circleofcampus.adapter.RecordAdapter;
 import team.circleofcampus.background.MyService;
-import team.circleofcampus.fragment.LabelFragment;
 import team.circleofcampus.util.SharedPreferencesUtil;
 import team.circleofcampus.view.FontTextView;
 
@@ -93,8 +90,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
     MyFragmentPagerAdapter fragmentAdapter;
     List<Fragment> fragments = new ArrayList<>();
-    LabelFragment b = new LabelFragment();
-    FaceFragment a;
+    FaceFragment faceFragment;
 
     MyService myService = new MyService();
     private FontTextView header_left_text;
@@ -107,7 +103,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private Button Talk;
     private EditText MsgText;
     private ImageView Face;
-    private ImageView More;
     private ViewPager FaceViewPager;
 
     @Override
@@ -186,9 +181,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void setAdapter() {
-        a = new FaceFragment();
-        a.bind(MsgText, null);
-        a.setPictureClickListener(new PictureClickListener() {
+        faceFragment = new FaceFragment();
+        faceFragment.bind(MsgText, null);
+        faceFragment.setPictureClickListener(new PictureClickListener() {
             @Override
             public void PictureDisplay(int res) {
                 if (myClient != null && myClient.getConnection().isOpen()) {//发送图片
@@ -212,9 +207,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
-        fragments.add(a);
+        fragments.add(faceFragment);
 
-//        fragments.add(b);
         fragmentAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), fragments);
         FaceViewPager.setAdapter(fragmentAdapter);
 
@@ -278,8 +272,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 /*判断是否是“发送键”键*/
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
                     if (myClient != null) {
-
-
                         if (myClient.getConnection().isOpen()) {
                             if (MsgText.getText().toString().length() > 0) {
                                 Msg msg = new Msg();
@@ -522,15 +514,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 FragmentManage(false);
                 break;
             case R.id.Face:
-
                 FragmentManage(true);
                 FaceViewPager.setCurrentItem(0, false);
-
-                break;
-            case R.id.More:
-                Toast.makeText(this, "暂未开放", Toast.LENGTH_SHORT).show();
-//                FaceViewPager.setCurrentItem(1, false);
-//                FragmentManage(true);
                 break;
             case R.id.Video:
                 //隐藏表情面板
@@ -572,10 +557,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         Talk = (Button) findViewById(R.id.Talk);
         MsgText = (EditText) findViewById(R.id.MsgText);
         Face = (ImageView) findViewById(R.id.Face);
-        More = (ImageView) findViewById(R.id.More);
+
         FaceViewPager = (ViewPager) findViewById(R.id.Face_ViewPager);
         Face.setOnClickListener(this);
-        More.setOnClickListener(this);
         MsgText.setOnClickListener(this);
         Video.setOnClickListener(this);
 

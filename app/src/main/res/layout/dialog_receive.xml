@@ -8,6 +8,7 @@
     <team.circleofcampus.view.IconImageView
         android:id="@+id/Receive_Icon"
         android:layout_width="@dimen/Icon"
+        android:layout_margin="@dimen/min_padding"
         android:layout_height="@dimen/Icon"
         android:scaleType="centerCrop"
         android:padding="1dp"
@@ -65,7 +66,7 @@
                 android:maxHeight="@dimen/maxImg"
                 android:maxWidth="@dimen/maxImg"
                 android:visibility="gone"
-                android:src="@drawable/nav_bg5"
+                android:src="@drawable/bg"
                 />
 
     </LinearLayout>
