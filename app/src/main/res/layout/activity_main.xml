@@ -1,26 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_login"
-    android:clipToPadding="true"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
-    <team.circleofcampus.view.FontTextView
+    <!--ViewPager-->
+    <android.support.v4.view.ViewPager
+        android:id="@+id/guide_view_pager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
-        android:gravity="center"
-        android:text="COC"
-        android:textColor="#ffffff"
-        android:textSize="66dp"/>
+        android:layout_height="match_parent">
+    </android.support.v4.view.ViewPager>
 
-    <!-- 背景 线性图 -->
-    <ImageView
+    <!-- 页面标识 -->
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_alignParentBottom="true"
-        android:src="@drawable/bg_line_login"/>
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/item_guide_flag_root"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="35dp"
+            android:gravity="center">
+        </LinearLayout>
+    </RelativeLayout>
 
-</RelativeLayout>
+</FrameLayout>

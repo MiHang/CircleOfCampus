@@ -111,4 +111,29 @@ public class SharedPreferencesUtil {
         return preferences.getInt("uId",0);
     }
 
+    /**
+     * 设置程序是否是第一次运行
+     * @param context
+     * @param isFirstRun
+     */
+    public static void setFirstRun (Context context, boolean isFirstRun) {
+        //实例化SharedPreferences对象
+        SharedPreferences preferences = context.getSharedPreferences("share", Context.MODE_PRIVATE);
+
+        //实例化SharedPreferences.Editor对象
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("isFirstRun", isFirstRun);//保存数据
+        editor.commit();//提交当前数据
+    }
+
+    /**
+     * 获取程序是否是第一次运行
+     * @param context
+     * @return
+     */
+    public static boolean isFirstRun (Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("share", Context.MODE_PRIVATE);
+        return preferences.getBoolean("isFirstRun", true);
+    }
+
 }

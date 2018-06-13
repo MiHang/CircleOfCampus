@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/item_guide_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/guide_3"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true">
+    </ImageView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="110dp"
+            android:gravity="center">
+            <team.circleofcampus.view.FontButton
+                android:id="@+id/item_guide_last_btn"
+                android:layout_width="120dp"
+                android:layout_height="36dp"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:textSize="16dp"
+                android:text="立即体验"
+                android:background="@drawable/shape_guide_btn"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+</FrameLayout>
