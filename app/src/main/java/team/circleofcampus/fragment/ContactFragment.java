@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import com.bigkoo.alertview.AlertView;
 import com.bigkoo.alertview.OnDismissListener;
-import com.common.utils.LanguageUtils;
 import com.xiasuhuei321.loadingdialog.view.LoadingDialog;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
 import com.yanzhenjie.recyclerview.swipe.OnSwipeMenuItemClickListener;
@@ -30,29 +29,24 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import team.circleofcampus.Interface.MoreFragmentListener;
 import team.circleofcampus.Interface.OnItemClickListener;
 import team.circleofcampus.R;
-import team.circleofcampus.activity.AddRequestActivity;
-import team.circleofcampus.activity.ContactActivity;
-import team.circleofcampus.activity.MainActivity;
 import team.circleofcampus.adapter.GoodFriendAdapter;
 import team.circleofcampus.adapter.GoodFriendItemDecoration;
 import team.circleofcampus.adapter.MyIndexAdapter;
 import team.circleofcampus.http.HttpHelper;
 import team.circleofcampus.model.Contact;
 import team.circleofcampus.model.Letter;
+import team.circleofcampus.util.LanguageUtils;
 import team.circleofcampus.util.SharedPreferencesUtil;
 import team.circleofcampus.view.FontTextView;
 import team.circleofcampus.view.MyEditText;
@@ -65,7 +59,7 @@ import team.circleofcampus.view.MyEditText;
 public class ContactFragment extends Fragment implements com.bigkoo.alertview.OnItemClickListener, OnDismissListener {
 
 
-    private MyEditText Search;
+
     private SwipeMenuRecyclerView rv;
     private ListView IndexList;
     final List<Contact> data = new ArrayList<Contact>();
@@ -319,7 +313,6 @@ public void setData(final String id){
 }
 
     private void initView(View view) {
-        Search = (MyEditText) view.findViewById(R.id.Search);
         rv = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
         IndexList = (ListView) view.findViewById(R.id.IndexList);
         num = (FontTextView) view.findViewById(R.id.num);

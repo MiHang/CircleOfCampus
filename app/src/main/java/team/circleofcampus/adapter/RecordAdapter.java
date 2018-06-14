@@ -172,7 +172,6 @@ public class RecordAdapter extends BaseAdapter {
                     vh.Send_dialog.setVisibility(View.GONE);
 
 
-
                     if (msg.getMsg().getText() != null) {//接收文本消息
                         vh.Receive_Duration.setVisibility(View.GONE);
                         vh.Receive_Msg.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
@@ -180,8 +179,10 @@ public class RecordAdapter extends BaseAdapter {
                             vh.Receive_Msg.setText(msg.getMsg().getText());
                         }
 
-                    } else if (msg.getMsg().getAudio() != null) {//接收语音消息
+                    }else  if (msg.getMsg().getAudioPath()!= null) {//接收语音消息
                         vh.Receive_Msg.setText("");
+                        vh.Receive_Msg.setVisibility(View.GONE);
+                        vh.Receive_Msg.setVisibility(View.VISIBLE);
                         if (msg.getNew() == Symbol.NewMode) {
                             vh.Receive_Duration.setVisibility(View.VISIBLE);
                         } else {
@@ -191,7 +192,7 @@ public class RecordAdapter extends BaseAdapter {
                         vh.Receive_Msg.setCompoundDrawablesWithIntrinsicBounds(R.drawable.receive_audio, 0, 0, 0);
                         vh.Receive_Duration.setText(msg.getMsg().getDuration());
 
-                    } else if (msg.getMsg().getImg() != null) {
+                    }  else if (msg.getMsg().getImg() != null) {
                         vh.Receive_Img.setImageBitmap(bp);
                         vh.Receive_Layout.setVisibility(View.GONE);
                         vh.Receive_Img.setVisibility(View.VISIBLE);
@@ -212,19 +213,20 @@ public class RecordAdapter extends BaseAdapter {
                             vh.Send_Msg.setText(msg.getMsg().getText());
                         }
 
-                    }
-                    if (msg.getMsg().getAudio() != null) {//发送语音消息
+                    }else
+                    if (msg.getMsg().getAudioPath() != null) {//发送语音消息
                         vh.Send_Msg.setText("");
+                        vh.Send_Layout.setVisibility(View.VISIBLE);
+                        vh.Send_Img.setVisibility(View.GONE);
                         if (msg.getNew() == Symbol.NewMode) {
                             vh.Send_Duration.setVisibility(View.VISIBLE);
                         } else {
                             vh.Send_Duration.setVisibility(View.GONE);
                         }
-
                         vh.Send_Msg.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.send_audio, 0);
                         vh.Send_Duration.setText(msg.getMsg().getDuration());
 
-                    }
+                    }else
                     if (msg.getMsg().getImg() != null) {
                         vh.Send_Img.setImageBitmap(bp);
                         vh.Send_Layout.setVisibility(View.GONE);

@@ -17,16 +17,16 @@ import android.widget.Toast;
 
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import team.circleofcampus.Interface.OnItemClickListener;
 import team.circleofcampus.R;
 import team.circleofcampus.activity.AddRequestActivity;
+import team.circleofcampus.activity.MainActivity;
 import team.circleofcampus.adapter.FriendSearchAdapter;
 import team.circleofcampus.http.HttpHelper;
 import team.circleofcampus.model.Contact;
@@ -72,7 +72,6 @@ public class AddFriendsFragment extends Fragment {
                 }
                 intent.putExtra("user2", data.get(position).getAccount());
                 startActivity(intent);
-//                Toast.makeText(getContext(), "" + position, Toast.LENGTH_SHORT).show();
             }
         });
         recycler_view.setAdapter(mMenuAdapter);
@@ -156,6 +155,12 @@ public class AddFriendsFragment extends Fragment {
         });
 
         result = (TextView) view.findViewById(R.id.result);
+        QR_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
 
