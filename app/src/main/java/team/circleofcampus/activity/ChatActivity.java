@@ -210,16 +210,19 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                         sm.PlayAudio(0, file);//播放
                         msg.setNew(0);
                         myAdapter.notifyDataSetChanged();
+                        ChatRecord.smoothScrollToPosition(position);
 
-                        Toast.makeText(getApplicationContext(), "地址" + msg.getMsg().getAudioPath(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "语音" + msg.getMsg().getAudioPath(), Toast.LENGTH_SHORT).show();
                     }
-                } else {
+                } else {//发送
                     if (msg.getMsg().getAudio() != null) {
                         Toast.makeText(getApplicationContext(), "发送" + msg.getMsg().getAudioPath(), Toast.LENGTH_SHORT).show();
                         File file = new File(getFilesDir(), msg.getMsg().getAudioPath());
                         sm.PlayAudio(0, file);
                         data.get(position).setNew(0);
                         myAdapter.notifyDataSetChanged();
+                        ChatRecord.smoothScrollToPosition(position);
+
                     }
                 }
             }
@@ -330,7 +333,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                         });
 
                         try {
-                            sm.startAudio(audioName);
+                            sm.startAudio(audioName,"录音时间太短");
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -413,6 +416,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 if (msg.getReceive().equals(send)) {
                     msg.setSend(receive);
                 }
+
 
                 message.setMsg(msg);
                 if (msg.getAudio() != null) {   //处理语音信息
