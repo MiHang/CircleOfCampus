@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clipToPadding="true"
+    android:background="@drawable/bg"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <!-- header -->
+    <include layout="@layout/header"/>
+
+    <team.circleofcampus.view.ReboundLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <!-- title -->
+                <team.circleofcampus.view.FontEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:hint="公告标题"
+                    android:inputType="text"
+                    android:imeOptions="actionNext"
+                    android:textColor="@color/black"
+                    android:textSize="16dp"
+                    android:theme="@style/NoUnderlineEditText"/>
+                <!-- 分割线 -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/dividerColor"/>
+
+                <!-- 活动时间 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <team.circleofcampus.view.FontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:textSize="14dp"
+                        android:text="活动时间："/>
+
+                    <team.circleofcampus.view.FontEditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:layout_weight="1"
+                        android:maxLines="1"
+                        android:inputType="text"
+                        android:imeOptions="actionNext"
+                        android:textColor="@color/black"
+                        android:textSize="14dp"
+                        android:theme="@style/NoUnderlineEditText"/>
+
+                </LinearLayout>
+                <!-- 分割线 -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/dividerColor"/>
+
+                <!-- 活动地点 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <team.circleofcampus.view.FontTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:textSize="14dp"
+                        android:text="活动地点："/>
+
+                    <team.circleofcampus.view.FontEditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:layout_weight="1"
+                        android:maxLines="1"
+                        android:inputType="text"
+                        android:imeOptions="actionNext"
+                        android:textColor="@color/black"
+                        android:textSize="14dp"
+                        android:theme="@style/NoUnderlineEditText"/>
+
+                </LinearLayout>
+                <!-- 分割线 -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/dividerColor"/>
+
+                <!-- content -->
+                <team.circleofcampus.view.FontEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="200dp"
+                    android:layout_marginTop="20dp"
+                    android:padding="10dp"
+                    android:gravity="top|left"
+                    android:hint="公告正文..."
+                    android:inputType="textMultiLine"
+                    android:singleLine="false"
+                    android:scrollHorizontally="false"
+                    android:imeOptions="actionDone"
+                    android:lineSpacingMultiplier="1.5"
+                    android:textColor="#3e3e3e"
+                    android:textSize="14dp"
+                    android:theme="@style/NoUnderlineEditText"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- add img-->
+                    <ImageView
+                        android:id="@+id/publish_add_image_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/icon_add_img"/>
+
+                    <ImageView
+                        android:id="@+id/publish_display_image_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:scaleType="centerInside"/>
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+    </team.circleofcampus.view.ReboundLayout>
+
+</LinearLayout>

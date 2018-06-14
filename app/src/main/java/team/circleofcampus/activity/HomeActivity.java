@@ -270,6 +270,18 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /**
+     * 标题栏左侧文字点击事件
+     */
+    @OnClick(R.id.header_left_text)
+    public void onClickLeftText() {
+        if (selectedPageId == 0) { // 首页
+            Intent intent = new Intent(HomeActivity.this, PublishActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
+        }
+    }
+
+    /**
      * 标题栏右侧文字点击事件
      * @param view
      */
@@ -279,6 +291,7 @@ public class HomeActivity extends AppCompatActivity {
             if (account!=null){
                 Intent intent = new Intent(HomeActivity.this, ContactActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
             }else{
                 Toast.makeText(this, "请登录", Toast.LENGTH_SHORT).show();
             }
