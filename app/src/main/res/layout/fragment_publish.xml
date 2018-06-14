@@ -6,26 +6,61 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/my_publish_tab_layout"
+    <!-- 未授权页面 -->
+    <LinearLayout
+        android:id="@+id/unauthorized_root"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        app:tabTextAppearance="@style/TabLayoutTextStyle"
-        app:tabSelectedTextColor="#ff7300"
-        app:tabTextColor="#8a8a8a"
-        app:tabIndicatorColor="#fc5c57">
-    </android.support.design.widget.TabLayout>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <team.circleofcampus.view.FontTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_marginTop="160dp"
+            android:gravity="center"
+            android:textSize="18dp"
+            android:text="您还未获取权限"/>
+        <team.circleofcampus.view.FontButton
+            android:id="@+id/unauthorized_applay_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
+            android:text="申 请 权 限"
+            android:textColor="@color/white"
+            android:textSize="18dp"
+            android:background="@drawable/shape_login_btn"/>
+    </LinearLayout>
 
-    <!-- 分割线 -->
-    <TextView
+    <!-- 已授权页面 -->
+    <LinearLayout
+        android:id="@+id/authorized_root"
         android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="#bebcbc"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/my_publish_view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </android.support.v4.view.ViewPager>
+        <android.support.design.widget.TabLayout
+            android:id="@+id/my_publish_tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:tabTextAppearance="@style/TabLayoutTextStyle"
+            app:tabSelectedTextColor="#ff7300"
+            app:tabTextColor="#8a8a8a"
+            app:tabIndicatorColor="#fc5c57">
+        </android.support.design.widget.TabLayout>
+
+        <!-- 分割线 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#bebcbc"/>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/my_publish_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v4.view.ViewPager>
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -6,9 +6,11 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,6 +18,9 @@ import android.widget.Toast;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import team.circleofcampus.R;
 import team.circleofcampus.adapter.MyFragmentPagerAdapter;
 import team.circleofcampus.util.DensityUtil;
@@ -27,8 +32,16 @@ import team.circleofcampus.util.FontUtil;
 public class MyPublishFragment extends Fragment {
 
     private View view;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
+
+    @BindView(R.id.unauthorized_root)
+    protected LinearLayout unauthorizedRoot;
+    @BindView(R.id.authorized_root)
+    protected LinearLayout authorizedRoot;
+
+    @BindView(R.id.my_publish_tab_layout)
+    protected TabLayout tabLayout;
+    @BindView(R.id.my_publish_view_pager)
+    protected ViewPager viewPager;
     private MyFragmentPagerAdapter myPublishFragmentAdapter;
 
     private ArrayList<Fragment> fragments = new ArrayList<Fragment>();
@@ -44,9 +57,29 @@ public class MyPublishFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_publish, null);
-        initView(view);
+        ButterKnife.bind(this, view);
+
+        // 此用户是否以被授权发布社团公告
+        boolean isAuthorized = true;
+        if (isAuthorized) {
+            unauthorizedRoot.setVisibility(View.GONE);
+            authorizedRoot.setVisibility(View.VISIBLE);
+            initView();
+        } else {
+            unauthorizedRoot.setVisibility(View.VISIBLE);
+            authorizedRoot.setVisibility(View.GONE);
+        }
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return view;
+    }
+
+    private void initView() {
 
         // 添加导航栏列表数据
         tabLayout.addTab(tabLayout.newTab());
@@ -79,19 +112,12 @@ public class MyPublishFragment extends Fragment {
         linearLayout.setDividerPadding(DensityUtil.dpToPx(getContext(), 10f));
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return view;
-    }
-
     /**
-     * 初始化控件
-     * @param view
+     * 未授权时点击权限申请按钮
      */
-    private void initView(View view) {
-        tabLayout = (TabLayout) view.findViewById(R.id.my_publish_tab_layout);
-        viewPager = (ViewPager) view.findViewById(R.id.my_publish_view_pager);
+    @OnClick(R.id.unauthorized_applay_btn)
+    public void onClickApplayBtn() {
+        Log.e("tag", "申请权限");
     }
 
     /**
