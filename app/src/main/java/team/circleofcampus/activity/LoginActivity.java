@@ -51,7 +51,9 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == 0x0001) {
-                loadingDialog.close();
+                if (loadingDialog != null) {
+                    loadingDialog.close();
+                }
                 Toast.makeText(LoginActivity.this, "无法与服务器通信，请检查您的网络连接", Toast.LENGTH_SHORT).show();
             } else if (msg.what == 0x0002) { // 登陆成功
                 loadingDialog.loadSuccess();

@@ -103,7 +103,9 @@ public class RegisterActivity extends AppCompatActivity {
                 Toast.makeText(RegisterActivity.this, "验证码发送失败，请检查邮箱是否正确", Toast.LENGTH_SHORT).show();
                 isGetVerificationCode = false;
             } else if (0x0006 == msg.what) {
-                loadingDialog.close();
+                if (loadingDialog != null) {
+                    loadingDialog.close();
+                }
                 Toast.makeText(RegisterActivity.this, "无法与服务器通信，请检查您的网络连接", Toast.LENGTH_SHORT).show();
             } else if (0x0007 == msg.what) {
                 userNameEdit.requestFocus();

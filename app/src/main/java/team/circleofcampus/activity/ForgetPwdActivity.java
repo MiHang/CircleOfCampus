@@ -57,7 +57,9 @@ public class ForgetPwdActivity extends AppCompatActivity {
                 verificationCodeBtn.setBackgroundResource(R.drawable.shape_email_code_btn);
                 verificationCodeBtn.setText("获取验证码");
             } else if (0x0003 == msg.what) {
-                loadingDialog.close();
+                if (loadingDialog != null) {
+                    loadingDialog.close();
+                }
                 Toast.makeText(ForgetPwdActivity.this, "无法与服务器通信，请检查您的网络连接", Toast.LENGTH_SHORT).show();
             } else if (0x0004 == msg.what) {
                 Toast.makeText(ForgetPwdActivity.this, "验证码已发送，请注意查收", Toast.LENGTH_SHORT).show();
