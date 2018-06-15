@@ -23,6 +23,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -51,6 +52,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import team.circleofcampus.Interface.MessageListener;
 import team.circleofcampus.Interface.RecordItemListener;
 import team.circleofcampus.R;
@@ -114,14 +116,14 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         tintManager.setTintResource(R.drawable.bg);
 
         initView();
-        Intent intent=getIntent();
-        receive=intent.getStringExtra("receive");
-        nickName=intent.getStringExtra("nickName");
-        if(receive==null||receive.equals("")){
+        Intent intent = getIntent();
+        receive = intent.getStringExtra("receive");
+        nickName = intent.getStringExtra("nickName");
+        if (receive == null || receive.equals("")) {
             finish();
         }
 
-        send=sharedPreferencesUtil.getAccount(this);
+        send = sharedPreferencesUtil.getAccount(this);
 
         init();
         setAdapter();
@@ -199,9 +201,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void ClickDialog(View v, int position) {
                 Message msg = data.get(position);
-                if (msg.getMsg().getText() != null) {
-                    Toast.makeText(getApplicationContext(), "文本" + msg.getMsg().getText(), Toast.LENGTH_SHORT).show();
-                }
+//                if (msg.getMsg().getText() != null) {
+//                    Toast.makeText(getApplicationContext(), "文本" + msg.getMsg().getText(), Toast.LENGTH_SHORT).show();
+//                }
 
                 if (msg.getReceive() == Symbol.Receive_Mode) {//接收
 
@@ -211,18 +213,17 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                         msg.setNew(0);
                         myAdapter.notifyDataSetChanged();
                         ChatRecord.smoothScrollToPosition(position);
-                        Message message=dao.queryMessageById(position);
+                        Message message = dao.queryMessageById(position);
                         message.setNew(0);
                         dao.update(msg);
 
-                        Toast.makeText(getApplicationContext(), "语音" + msg.getMsg().getAudioPath(), Toast.LENGTH_SHORT).show();
                     }
                 } else {//发送
                     if (msg.getMsg().getAudio() != null) {
                         File file = new File(getFilesDir(), msg.getMsg().getAudioPath());
                         sm.PlayAudio(0, file);
                         data.get(position).setNew(0);
-                        Message message=dao.queryMessageById(position);
+                        Message message = dao.queryMessageById(position);
                         message.setNew(0);
                         dao.update(msg);
                         myAdapter.notifyDataSetChanged();
@@ -270,7 +271,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
                                 data.add(message);
                                 dao.setData(message);
-                                Log.e("TAG", dao.getAllMessage().toString());
+
                                 myAdapter.notifyDataSetChanged();
 
                                 MsgText.setText("");
@@ -302,62 +303,61 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
                 if (!myClient.getConnection().isOpen()) {
                     Toast.makeText(getApplicationContext(), "未连接到服务器", Toast.LENGTH_SHORT).show();
-                   return false;
+                    return false;
                 }
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
-                        MsgText.setText("松开结束");
-                        isDown = true;
+                    Talk.setText("松开结束");
+                    isDown = true;
 
-                        //录制音频
-                        audioName = sdf.format(new Date());
-                        RECORD_ON = true;
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
+                    //录制音频
+                    audioName = sdf.format(new Date());
+                    RECORD_ON = true;
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
 
-                                new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        duration = 0;
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    duration = 0;
 
+                                    while (RECORD_ON) {
+                                        try {
+                                            Thread.sleep(1000);
+                                            duration += 1000;
 
-                                        while (RECORD_ON) {
-                                            try {
-                                                Thread.sleep(1000);
-                                                duration += 1000;
-
-                                            } catch (InterruptedException e) {
-                                                e.printStackTrace();
-                                            }
-
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
                                         }
-                                    }
-                                }).start();
-                            }
-                        });
 
-                        try {
-                            sm.startAudio(audioName,"录音时间太短");
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                                    }
+                                }
+                            }).start();
                         }
+                    });
+
+                    try {
+                        sm.startAudio(audioName, "录音时间太短");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                    MsgText.setText("按下说话");
+                    Talk.setText("按下说话");
                     isDown = false;
                     RECORD_ON = false;
 
                     sm.stop();
                     if (sm.isOkAudio(duration, audioName)) {
                         File file = new File(getFilesDir(), audioName);
-                        Log.d("", file.getPath());
 
                         try {
                             byte[] audio = utils.DocToByte(file.getPath());//录音文件转字节流
                             Msg msg = new Msg();
                             msg.setSend(send);
                             msg.setReceive(receive);
+
 
                             msg.setAudio(audio);
                             msg.setAudioPath(audioName);
@@ -392,18 +392,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    /**
-     * 表情面板管理
-     */
-    public void FragmentManage(boolean isVisible) {
-        if (isVisible) {
-            FaceViewPager.setVisibility(View.VISIBLE);
-        } else {
-            FaceViewPager.setVisibility(View.GONE);
-        }
-
-    }
-
 
     /**
      * 接收服务器信息，更新Ui
@@ -421,7 +409,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 if (msg.getReceive().equals(send)) {
                     msg.setSend(receive);
                 }
-
 
                 message.setMsg(msg);
                 if (msg.getAudio() != null) {   //处理语音信息
@@ -479,33 +466,52 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.MsgText:
-                FragmentManage(false);
+                //隐藏表情面板
+                if (FaceViewPager.getVisibility() == View.VISIBLE) {
+                    Animation animBottomOut = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bottom_out);
+                    animBottomOut.setDuration(200);
+                    FaceViewPager.setVisibility(View.GONE);
+                    FaceViewPager.startAnimation(animBottomOut);
+                }
                 break;
             case R.id.Face:
-                FragmentManage(true);
-                FaceViewPager.setCurrentItem(0, false);
+                Animation animation;
+
+                if (FaceViewPager.getVisibility() == View.VISIBLE) {//隐藏表情面板
+                    animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bottom_out);
+                    animation.setDuration(100);
+                    FaceViewPager.setVisibility(View.GONE);
+                    FaceViewPager.startAnimation(animation);
+                } else {//显示表情面板
+                    animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bottom_in);
+                    animation.setDuration(100);
+                    FaceViewPager.setVisibility(View.VISIBLE);
+                    FaceViewPager.startAnimation(animation);
+
+                }
+
                 break;
             case R.id.Video:
                 //隐藏表情面板
-                FragmentManage(false);
-
-                if (Video.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.keyboard).getConstantState())) {//打开键盘
+                if (FaceViewPager.getVisibility() == View.VISIBLE) {
+                    Animation animBottomOut = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bottom_out);
+                    animBottomOut.setDuration(200);
+                    FaceViewPager.setVisibility(View.GONE);
+                    FaceViewPager.startAnimation(animBottomOut);
+                }
+                if (MsgText.getVisibility() == View.VISIBLE) {
+                    Video.setImageResource(R.drawable.keyboard);
+                    Talk.setVisibility(View.VISIBLE);
+                    MsgText.setVisibility(View.GONE);
+                } else {//打开键盘
                     Video.setImageResource(R.drawable.video);
                     MsgText.setVisibility(View.VISIBLE);
                     MsgText.setSelection(MsgText.getText().length());
                     Talk.setVisibility(View.GONE);
                     InputMethodManager m = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     m.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-                    Toast.makeText(getApplicationContext(), "文字", Toast.LENGTH_SHORT).show();
-                } else {
-                    Video.setImageResource(R.drawable.keyboard);
-                    Talk.setVisibility(View.VISIBLE);
-                    MsgText.setVisibility(View.GONE);
                 }
-
-
                 break;
-
 
 
         }

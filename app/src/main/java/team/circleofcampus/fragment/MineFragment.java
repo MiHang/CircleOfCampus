@@ -111,16 +111,16 @@ public class MineFragment extends Fragment {
                                             sex.setText("女");
                                             res=R.drawable.woman;
                                         }
-
-                                    Glide.with(getContext())
-                                            .load(helper.getPath()+"/res/img/"+Account)
-                                            .error(res)
-                                            .into(Icon);
                                     account.setText(jsonObject.getString("email"));
                                     userName.setText(jsonObject.getString("userName"));
                                     department.setText(jsonObject.getString("facultyName"));
                                     college.setText(jsonObject.getString("campusName"));
                                     dialog.loadSuccess();
+                                    Glide.with(getContext())
+                                            .load(helper.getPath()+"/res/img/"+Account)
+                                            .placeholder(res)
+                                            .error(res)
+                                            .into(Icon);
                                 } else {
                                     dialog.loadFailed();
                                     Toast.makeText(getContext(), "查询失败", Toast.LENGTH_LONG).show();

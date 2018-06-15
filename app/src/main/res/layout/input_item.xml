@@ -23,9 +23,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
+            android:layout_weight="1"
             android:background="@drawable/button_selector"
-            android:text="按住说话"
-            android:visibility="gone" />
+            android:textColor="@color/EditText_color"
+            android:visibility="gone"
+            android:text="按住说话" />
 
         <team.circleofcampus.view.FontEditText
             android:id="@+id/MsgText"

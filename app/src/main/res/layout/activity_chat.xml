@@ -18,7 +18,6 @@
         android:dividerHeight="0dp"
         android:listSelector="@android:color/transparent"
         android:scrollbars="none"
-        android:stackFromBottom="true"
         android:transcriptMode="alwaysScroll" />
 
     <LinearLayout
