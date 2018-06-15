@@ -211,15 +211,20 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                         msg.setNew(0);
                         myAdapter.notifyDataSetChanged();
                         ChatRecord.smoothScrollToPosition(position);
+                        Message message=dao.queryMessageById(position);
+                        message.setNew(0);
+                        dao.update(msg);
 
                         Toast.makeText(getApplicationContext(), "语音" + msg.getMsg().getAudioPath(), Toast.LENGTH_SHORT).show();
                     }
                 } else {//发送
                     if (msg.getMsg().getAudio() != null) {
-                        Toast.makeText(getApplicationContext(), "发送" + msg.getMsg().getAudioPath(), Toast.LENGTH_SHORT).show();
                         File file = new File(getFilesDir(), msg.getMsg().getAudioPath());
                         sm.PlayAudio(0, file);
                         data.get(position).setNew(0);
+                        Message message=dao.queryMessageById(position);
+                        message.setNew(0);
+                        dao.update(msg);
                         myAdapter.notifyDataSetChanged();
                         ChatRecord.smoothScrollToPosition(position);
 
