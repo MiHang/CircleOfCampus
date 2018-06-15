@@ -22,7 +22,7 @@
             android:layout_marginTop="@dimen/max_padding"
             android:orientation="horizontal">
 
-            <TextView
+            <team.circleofcampus.view.FontTextView
                 android:id="@+id/Send_Duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
                 android:paddingTop="@dimen/normal_padding"
                 android:text="1" />
 
-            <TextView
+            <team.circleofcampus.view.DialogTextView
                 android:id="@+id/Send_Msg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

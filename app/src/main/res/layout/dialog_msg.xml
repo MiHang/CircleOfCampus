@@ -8,7 +8,7 @@
     android:layout_marginTop="@dimen/middle_padding"
     android:orientation="vertical">
 
-    <TextView
+    <team.circleofcampus.view.FontTextView
         android:id="@+id/Time"
         android:gravity="center"
         android:layout_width="match_parent"
