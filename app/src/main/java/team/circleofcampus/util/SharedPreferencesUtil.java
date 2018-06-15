@@ -11,6 +11,31 @@ import java.util.ArrayList;
 public class SharedPreferencesUtil {
 
     /**
+     * 设置用户是否拥有发布社团圈的权限
+     * @param context
+     * @param isAuthorized
+     */
+    public static void setAuthorized (Context context, boolean isAuthorized) {
+        //实例化SharedPreferences对象
+        SharedPreferences preferences = context.getSharedPreferences("share", Context.MODE_PRIVATE);
+
+        //实例化SharedPreferences.Editor对象
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("isAuthorized", isAuthorized);//保存数据
+        editor.commit();//提交当前数据
+    }
+
+    /**
+     * 获取用户是否拥有发布社团圈的权限
+     * @param context
+     * @return
+     */
+    public static boolean isAuthorized (Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("share", Context.MODE_PRIVATE);
+        return preferences.getBoolean("isAuthorized", false);
+    }
+
+    /**
      * 设置登陆账号记录
      * @param context
      * @param records

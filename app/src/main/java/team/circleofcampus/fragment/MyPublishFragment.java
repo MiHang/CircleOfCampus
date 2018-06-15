@@ -3,6 +3,8 @@ package team.circleofcampus.fragment;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -16,6 +18,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
@@ -27,8 +32,11 @@ import team.circleofcampus.activity.ApplySocietyAuthorityActivity;
 import team.circleofcampus.activity.LoginActivity;
 import team.circleofcampus.activity.RegisterActivity;
 import team.circleofcampus.adapter.MyFragmentPagerAdapter;
+import team.circleofcampus.http.LoginRequest;
+import team.circleofcampus.http.SocietyAuthorityRequest;
 import team.circleofcampus.util.DensityUtil;
 import team.circleofcampus.util.FontUtil;
+import team.circleofcampus.util.SharedPreferencesUtil;
 
 /**
  * 我发布的页面, 此fragment的写法是Fragment防止自动清理 (ViewPager滑动时，滑出屏幕后被清理)
@@ -52,6 +60,34 @@ public class MyPublishFragment extends Fragment {
 
     private boolean isSkipAuthority = false; // 是否已跳转到权限申请页面
 
+    /**
+     * 用户ID
+     */
+    private int userId = 0;
+    private boolean isAuthority = false;
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0x0001 : {
+                    Toast.makeText(getContext(), "无法与服务器通信，请检查您的网络连接", Toast.LENGTH_SHORT).show();
+                } break;
+                case 0x0002 : { // 已授权
+                    SharedPreferencesUtil.setAuthorized(getContext(), true);
+                    unauthorizedRoot.setVisibility(View.GONE);
+                    authorizedRoot.setVisibility(View.VISIBLE);
+                    initView();
+                } break;
+                case 0x0003 : { // 未授权
+                    SharedPreferencesUtil.setAuthorized(getContext(), false);
+                    unauthorizedRoot.setVisibility(View.VISIBLE);
+                    authorizedRoot.setVisibility(View.GONE);
+                } break;
+            }
+        }
+    };
+
     @Override
     public void onDestroyView() {
         super .onDestroyView();
@@ -66,6 +102,7 @@ public class MyPublishFragment extends Fragment {
         if (isSkipAuthority) {
             Log.e("tag", "onResume()....., 从权限申请页面返回");
             isSkipAuthority = false;
+            loadingSocietyAuthority();
         }
     }
 
@@ -75,22 +112,28 @@ public class MyPublishFragment extends Fragment {
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_publish, null);
         ButterKnife.bind(this, view);
 
-        // 此用户是否以被授权发布社团公告
-        boolean isAuthorized = false;
-        if (isAuthorized) {
-            unauthorizedRoot.setVisibility(View.GONE);
-            authorizedRoot.setVisibility(View.VISIBLE);
-            initView();
-        } else {
-            unauthorizedRoot.setVisibility(View.VISIBLE);
-            authorizedRoot.setVisibility(View.GONE);
-        }
+        // 获取用户ID
+        userId = SharedPreferencesUtil.getUID(getContext());
 
+        // 社团圈发布权限管理
+        isAuthority = SharedPreferencesUtil.isAuthorized(getContext());
+        if (isAuthority) {
+            handler.sendEmptyMessage(0x0002);
+        } else {
+            handler.sendEmptyMessage(0x0003);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (isAuthority != SharedPreferencesUtil.isAuthorized(getContext())) {
+            if (SharedPreferencesUtil.isAuthorized(getContext())) {
+                handler.sendEmptyMessage(0x0002);
+            } else {
+                handler.sendEmptyMessage(0x0003);
+            }
+        }
         return view;
     }
 
@@ -125,6 +168,34 @@ public class MyPublishFragment extends Fragment {
         linearLayout.setDividerDrawable(ContextCompat.getDrawable(getContext(),
                 R.drawable.shape_tab_layout_divider));
         linearLayout.setDividerPadding(DensityUtil.dpToPx(getContext(), 10f));
+    }
+
+    /**
+     * 加载网络数据 - 社团发布权限
+     */
+    private void loadingSocietyAuthority() {
+        // 联网线程
+        new Thread(){
+            @Override
+            public void run() {
+                String result = SocietyAuthorityRequest.hasSocietyAuthority(userId);
+                if (null != result) {
+                    try {
+                        JSONObject json = new JSONObject(result);
+                        result = json.getString("result");
+                        if ("authority".equals(result)) { // 已授权
+                            handler.sendEmptyMessage(0x0002);
+                        } else if ("unauthority".equals(result)) { // 未授权
+                            handler.sendEmptyMessage(0x0003);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    handler.sendEmptyMessage(0x0001);
+                }
+            }
+        }.start();
     }
 
     /**

@@ -3,6 +3,8 @@ package team.circleofcampus.activity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -34,6 +36,7 @@ import team.circleofcampus.fragment.MyPublishFragment;
 import team.circleofcampus.fragment.MineFragment;
 import team.circleofcampus.fragment.QRFragment;
 import team.circleofcampus.fragment.SocietyCircleFragment;
+import team.circleofcampus.http.SocietyAuthorityRequest;
 import team.circleofcampus.util.SharedPreferencesUtil;
 import team.circleofcampus.view.NoPreloadViewPager;
 
@@ -69,6 +72,30 @@ public class HomeActivity extends AppCompatActivity {
     private int selectedPageId = 0;
     SharedPreferencesUtil sharedPreferencesUtil;
     String account;
+
+    /**
+     * 用户ID
+     */
+    private int userId = 0;
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0x0001 : {
+                    Toast.makeText(HomeActivity.this, "无法与服务器通信，请检查您的网络连接", Toast.LENGTH_SHORT).show();
+                } break;
+                case 0x0002 : { // 社团权限信息
+                    if ((boolean)msg.obj) { // 已授权
+                        SharedPreferencesUtil.setAuthorized(HomeActivity.this, true);
+                    } else { // 未授权
+                        SharedPreferencesUtil.setAuthorized(HomeActivity.this, false);
+                    }
+                } break;
+            }
+        }
+    };
+
     @Override
     public void onBackPressed() {
         if (selectedPageId == 4) {
@@ -82,7 +109,6 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,8 +120,14 @@ public class HomeActivity extends AppCompatActivity {
         tintManager.setTintResource(R.drawable.bg);
         headerSelect(0);
 
+        // 获取用户ID
+        userId = SharedPreferencesUtil.getUID(HomeActivity.this);
+
         // 记录本次登陆时间
         SharedPreferencesUtil.setLoginTime(HomeActivity.this, System.currentTimeMillis());
+
+        // 加载网络数据 - 社团发布权限
+        loadingSocietyAuthority();
 
         // 校园圈
         CircleFragment circleFragment = new CircleFragment();
@@ -183,6 +215,38 @@ public class HomeActivity extends AppCompatActivity {
         if (broadcastReceiver!=null){
             unregisterReceiver(broadcastReceiver);
         }
+    }
+
+    /**
+     * 加载网络数据 - 社团发布权限
+     */
+    private void loadingSocietyAuthority() {
+        // 联网线程
+        new Thread(){
+            @Override
+            public void run() {
+                String result = SocietyAuthorityRequest.hasSocietyAuthority(userId);
+                if (null != result) {
+                    try {
+                        JSONObject json = new JSONObject(result);
+                        result = json.getString("result");
+
+                        Message msg = new Message();
+                        if ("authority".equals(result)) { // 已授权
+                            msg.obj = true;
+                        } else if ("unauthority".equals(result)) { // 未授权
+                            msg.obj = false;
+                        }
+                        msg.what = 0x0002;
+                        handler.sendMessage(msg);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    handler.sendEmptyMessage(0x0001);
+                }
+            }
+        }.start();
     }
 
     /**

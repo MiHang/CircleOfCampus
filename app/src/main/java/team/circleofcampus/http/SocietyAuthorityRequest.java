@@ -10,6 +10,22 @@ import org.json.JSONObject;
 public class SocietyAuthorityRequest {
 
     /**
+     * 获取用户是否有社团圈发布权限
+     * @param uId
+     * @return
+     */
+    public static String hasSocietyAuthority(int uId) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("uId", uId);
+            return HttpRequest.postRequest(HttpRequest.URL + "coc/hasSocietyCircleAuthority.do", json.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
      * 提交权限申请请求
      * @param uId - 用户ID
      * @param sId - 社团ID
