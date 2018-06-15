@@ -72,7 +72,7 @@ public class ForgetPwdActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         try {
-                            sleep(3000);
+                            sleep(2000);
                             handler.sendEmptyMessage(0x0010);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -134,6 +134,7 @@ public class ForgetPwdActivity extends AppCompatActivity {
             loadingDialog.setLoadingText("重置密码中")
                     .setSuccessText("密码重置成功")
                     .setInterceptBack(false)
+                    .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
                     .show();
 
             // 联网线程

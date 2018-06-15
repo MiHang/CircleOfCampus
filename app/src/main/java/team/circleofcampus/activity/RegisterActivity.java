@@ -114,7 +114,7 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             try {
-                                sleep(3000);
+                                sleep(2000);
                                 handler.sendEmptyMessage(0x0014);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
@@ -295,6 +295,7 @@ public class RegisterActivity extends AppCompatActivity {
         loadingDialog.setLoadingText("正在注册")
                 .setSuccessText("注册成功")
                 .setInterceptBack(false)
+                .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
                 .show();
 
         new Thread() {

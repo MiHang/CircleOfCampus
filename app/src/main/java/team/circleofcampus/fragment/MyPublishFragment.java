@@ -50,11 +50,22 @@ public class MyPublishFragment extends Fragment {
 
     private ArrayList<Fragment> fragments = new ArrayList<Fragment>();
 
+    private boolean isSkipAuthority = false; // 是否已跳转到权限申请页面
+
     @Override
     public void onDestroyView() {
         super .onDestroyView();
         if (null != view) {
             ((ViewGroup) view.getParent()).removeView(view);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (isSkipAuthority) {
+            Log.e("tag", "onResume()....., 从权限申请页面返回");
+            isSkipAuthority = false;
         }
     }
 
@@ -121,6 +132,7 @@ public class MyPublishFragment extends Fragment {
      */
     @OnClick(R.id.unauthorized_applay_btn)
     public void onClickApplayBtn() {
+        isSkipAuthority = true;
         Intent intent = new Intent(getContext(), ApplySocietyAuthorityActivity.class);
         getActivity().startActivity(intent);
         getActivity().overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
