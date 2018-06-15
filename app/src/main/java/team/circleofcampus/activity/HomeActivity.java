@@ -339,9 +339,13 @@ public class HomeActivity extends AppCompatActivity {
     @OnClick(R.id.header_left_text)
     public void onClickLeftText() {
         if (selectedPageId == 0) { // 首页
-            Intent intent = new Intent(HomeActivity.this, PublishActivity.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
+            if(SharedPreferencesUtil.isAuthorized(HomeActivity.this)) { // 已授权发布社团圈信息
+                Intent intent = new Intent(HomeActivity.this, PublishActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
+            } else {
+                Toast.makeText(HomeActivity.this, "您还没有发布社团信息的权限，请先申请授权",Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
