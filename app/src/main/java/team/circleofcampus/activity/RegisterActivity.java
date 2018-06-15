@@ -1,12 +1,9 @@
 package team.circleofcampus.activity;
 
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -22,20 +19,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 import team.circleofcampus.R;
-import team.circleofcampus.adapter.RegisterSpinnerAdapter;
-import team.circleofcampus.http.HttpRequest;
+import team.circleofcampus.adapter.MySpinnerAdapter;
 import team.circleofcampus.http.LoginRequest;
-import team.circleofcampus.model.RegisterSpinnerItem;
+import team.circleofcampus.model.SpinnerItem;
 import team.circleofcampus.util.EmailUtil;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -66,12 +58,12 @@ public class RegisterActivity extends AppCompatActivity {
     protected Button registerBtn;
 
     // 校园下拉菜单部分
-    private RegisterSpinnerAdapter campusSpinnerAdapter;
-    private ArrayList<RegisterSpinnerItem> campusItems = new ArrayList<RegisterSpinnerItem>();
+    private MySpinnerAdapter campusSpinnerAdapter;
+    private ArrayList<SpinnerItem> campusItems = new ArrayList<SpinnerItem>();
 
     // 院系下拉菜单部分
-    private RegisterSpinnerAdapter facultySpinnerAdapter;
-    private ArrayList<RegisterSpinnerItem> facultyItems = new ArrayList<RegisterSpinnerItem>();
+    private MySpinnerAdapter facultySpinnerAdapter;
+    private ArrayList<SpinnerItem> facultyItems = new ArrayList<SpinnerItem>();
 
     private boolean isGetVerificationCode = false; // 是否获取了验证码
     private int countDown = 60; // 倒计时60秒
@@ -163,7 +155,7 @@ public class RegisterActivity extends AppCompatActivity {
         maleRB.setChecked(true);
 
         // 校园下拉菜单部分
-        campusSpinnerAdapter = new RegisterSpinnerAdapter(RegisterActivity.this, campusItems);
+        campusSpinnerAdapter = new MySpinnerAdapter(RegisterActivity.this, campusItems);
         campusSpinner.setAdapter(campusSpinnerAdapter);
         // 学校下拉列表Item选择改变时的监听事件
         campusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -180,7 +172,7 @@ public class RegisterActivity extends AppCompatActivity {
         getCampuses();
 
         // 院系下拉菜单部分
-        facultySpinnerAdapter = new RegisterSpinnerAdapter(RegisterActivity.this, facultyItems);
+        facultySpinnerAdapter = new MySpinnerAdapter(RegisterActivity.this, facultyItems);
         facultySpinner.setAdapter(facultySpinnerAdapter);
 
         // 用户名输入框焦点监听
@@ -217,7 +209,7 @@ public class RegisterActivity extends AppCompatActivity {
                         campusItems.clear();
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject json = new JSONObject(jsonArray.get(i).toString());
-                            campusItems.add(new RegisterSpinnerItem(json.getInt("campusId"),
+                            campusItems.add(new SpinnerItem(json.getInt("campusId"),
                                     json.getString("campusName")));
                         }
                         handler.sendEmptyMessage(0x0009);
@@ -251,7 +243,7 @@ public class RegisterActivity extends AppCompatActivity {
                         facultyItems.clear();
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject json = new JSONObject(jsonArray.get(i).toString());
-                            facultyItems.add(new RegisterSpinnerItem(json.getInt("facultyId"),
+                            facultyItems.add(new SpinnerItem(json.getInt("facultyId"),
                                     json.getString("facultyName")));
                         }
                         handler.sendEmptyMessage(0x0010);

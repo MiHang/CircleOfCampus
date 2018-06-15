@@ -5,11 +5,11 @@ import java.io.Serializable;
 /**
  * Created by Jaye Li on 2018/6/2.
  */
-public class RegisterSpinnerItem implements Serializable {
+public class SpinnerItem implements Serializable {
     private int itemId;
     private String itemName;
 
-    public RegisterSpinnerItem(int itemId, String itemName) {
+    public SpinnerItem(int itemId, String itemName) {
         this.itemId = itemId;
         this.itemName = itemName;
     }

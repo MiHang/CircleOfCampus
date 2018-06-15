@@ -1,5 +1,6 @@
 package team.circleofcampus.fragment;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -22,6 +23,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import team.circleofcampus.R;
+import team.circleofcampus.activity.ApplySocietyAuthorityActivity;
+import team.circleofcampus.activity.LoginActivity;
+import team.circleofcampus.activity.RegisterActivity;
 import team.circleofcampus.adapter.MyFragmentPagerAdapter;
 import team.circleofcampus.util.DensityUtil;
 import team.circleofcampus.util.FontUtil;
@@ -61,7 +65,7 @@ public class MyPublishFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         // 此用户是否以被授权发布社团公告
-        boolean isAuthorized = true;
+        boolean isAuthorized = false;
         if (isAuthorized) {
             unauthorizedRoot.setVisibility(View.GONE);
             authorizedRoot.setVisibility(View.VISIBLE);
@@ -117,7 +121,9 @@ public class MyPublishFragment extends Fragment {
      */
     @OnClick(R.id.unauthorized_applay_btn)
     public void onClickApplayBtn() {
-        Log.e("tag", "申请权限");
+        Intent intent = new Intent(getContext(), ApplySocietyAuthorityActivity.class);
+        getActivity().startActivity(intent);
+        getActivity().overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
     }
 
     /**

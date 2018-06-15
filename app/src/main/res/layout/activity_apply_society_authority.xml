@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="true"
+    android:background="@drawable/bg"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <!-- 标题栏 -->
+    <include layout="@layout/header"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:orientation="vertical">
+
+        <!-- 申请的社团 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="10dp"
+            android:padding="10dp">
+            <team.circleofcampus.view.FontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16dp"
+                android:text="申请的社团："/>
+            <Spinner
+                android:id="@+id/apply_authority_society_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+            </Spinner>
+        </LinearLayout>
+        <!-- 分割线 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/dividerColor"/>
+
+        <!-- 申请理由 -->
+        <team.circleofcampus.view.FontEditText
+            android:id="@+id/apply_authority_reason_edit"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:theme="@style/NoUnderlineEditText"
+            android:gravity="top|left"
+            android:inputType="textMultiLine"
+            android:imeOptions="actionDone"
+            android:singleLine="false"
+            android:scrollHorizontally="false"
+            android:padding="10dp"
+            android:hint="申请理由（最多输入40个字符）..."
+            android:textColor="@color/black"
+            android:textSize="14dp"
+            android:lineSpacingMultiplier="1.5"/>
+        <!-- 分割线 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/dividerColor"/>
+
+        <!-- 提交申请 -->
+        <team.circleofcampus.view.FontButton
+            android:id="@+id/apply_authority_submit_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
+            android:layout_marginTop="30dp"
+            android:text="提 交 申 请"
+            android:textColor="@color/white"
+            android:textSize="18dp"
+            android:background="@drawable/shape_login_btn"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

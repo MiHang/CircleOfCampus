@@ -10,17 +10,17 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import team.circleofcampus.R;
-import team.circleofcampus.model.RegisterSpinnerItem;
+import team.circleofcampus.model.SpinnerItem;
 
 /**
  * 注册页面选择学校和院系Spinner item 适配器
  */
-public class RegisterSpinnerAdapter extends BaseAdapter {
+public class MySpinnerAdapter extends BaseAdapter {
 
     private LayoutInflater inflater;
-    private ArrayList<RegisterSpinnerItem> items;
+    private ArrayList<SpinnerItem> items;
 
-    public RegisterSpinnerAdapter (Context context, ArrayList<RegisterSpinnerItem> items) {
+    public MySpinnerAdapter(Context context, ArrayList<SpinnerItem> items) {
         this.inflater = LayoutInflater.from(context);
         this.items = items;
     }
