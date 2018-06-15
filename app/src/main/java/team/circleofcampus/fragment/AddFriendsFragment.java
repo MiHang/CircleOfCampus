@@ -127,7 +127,7 @@ public class AddFriendsFragment extends Fragment {
                                         new Handler().postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
-                                                Toast.makeText(getContext(), "数量" + data.size(), Toast.LENGTH_SHORT).show();
+
                                                 result.setVisibility(View.VISIBLE);
                                                 mMenuAdapter.notifyDataSetChanged();
                                             }

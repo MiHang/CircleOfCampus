@@ -29,7 +29,7 @@
             android:layout_weight="1"
             android:orientation="horizontal">
 
-            <TextView
+            <team.circleofcampus.view.DialogTextView
                 android:id="@+id/Receive_Msg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
                 android:src="@drawable/send_audio"
                 android:textSize="@dimen/chat_textSize" />
 
-            <TextView
+            <team.circleofcampus.view.FontTextView
                 android:id="@+id/Receive_Duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

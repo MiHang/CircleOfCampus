@@ -9,6 +9,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
+import team.circleofcampus.util.FontUtil;
+
 /**
  * 点击效果
  */
@@ -16,6 +18,7 @@ public class DialogTextView extends TextView{
 
     public DialogTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init(context);
         // TODO Auto-generated constructor stub
     }
 
@@ -90,5 +93,12 @@ public class DialogTextView extends TextView{
         }
         super.onDraw(canvas);
     }
-
+    /***
+     * 设置字体
+     *
+     * @return
+     */
+    public void init(Context context) {
+        setTypeface(FontUtil.setFont(context));
+    }
 }

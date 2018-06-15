@@ -49,9 +49,6 @@ public class MineFragment extends Fragment {
     private EditText userName;
     private TextView QR;
 
-    private RadioGroup genderRadioGroup;
-    private RadioButton maleRb;
-    private RadioButton femaleRb;
     String Account;
     int res;
     LoadingDialog dialog;
@@ -106,7 +103,7 @@ public class MineFragment extends Fragment {
 
                                 if (jsonObject.getString("result").equals("success")) {
 
-                                    if (jsonObject.has("gender")) {
+
                                         if (jsonObject.getString("gender").equals("male")) {
                                             sex.setText("男");
                                             res=R.drawable.man;
@@ -114,10 +111,9 @@ public class MineFragment extends Fragment {
                                             sex.setText("女");
                                             res=R.drawable.woman;
                                         }
-                                    }
+
                                     Glide.with(getContext())
                                             .load(helper.getPath()+"/res/img/"+Account)
-                                            .crossFade()
                                             .error(res)
                                             .into(Icon);
                                     account.setText(jsonObject.getString("email"));
@@ -171,9 +167,6 @@ public class MineFragment extends Fragment {
         icon_bg = (ImageView) view.findViewById(R.id.icon_bg);
         account = (TextView) view.findViewById(R.id.account);
         sex = (TextView) view.findViewById(R.id.sex);
-        genderRadioGroup = (RadioGroup) view.findViewById(R.id.mine_gender_radio_group);
-        maleRb = (RadioButton) view.findViewById(R.id.mine_gender_male_rb);
-        femaleRb = (RadioButton) view.findViewById(R.id.mine_gender_female_rb);
         college = (TextView) view.findViewById(R.id.college);
         department = (TextView) view.findViewById(R.id.department);
         userName = (EditText) view.findViewById(R.id.userName);
