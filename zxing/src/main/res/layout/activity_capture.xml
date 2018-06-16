@@ -33,7 +33,7 @@
                 android:layout_width="42dp"
                 android:layout_height="match_parent"
                 android:padding="6dp"
-                app:srcCompat="@drawable/ic_back"
+                app:srcCompat="@drawable/back"
                 tools:ignore="VectorDrawableCompat" />
 
             <TextView

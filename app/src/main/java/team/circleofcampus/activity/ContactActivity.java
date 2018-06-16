@@ -27,7 +27,7 @@ import team.circleofcampus.view.NoSlideViewPager;
 public class ContactActivity extends AppCompatActivity {
 
     MyFragmentPagerAdapter adapter;
-   public List<Fragment> data = new ArrayList<>();
+    public List<Fragment> data = new ArrayList<>();
     public FontTextView header_left_text;
     public ImageView header_left_image;
     public FontTextView header_title;
@@ -35,6 +35,7 @@ public class ContactActivity extends AppCompatActivity {
     public ImageView header_right_image;
     public NoSlideViewPager MyViewPager;
     UserInfoFragment userInfoFragment=new UserInfoFragment();
+    public  AddFriendsFragment addFriendsFragment=new AddFriendsFragment();
     public  ContactFragment contactFragment=new ContactFragment();
 
     @Override
@@ -65,7 +66,7 @@ public class ContactActivity extends AppCompatActivity {
                 }
             }
         });
-        data.add(new AddFriendsFragment());
+        data.add(addFriendsFragment);
         data.add(contactFragment);
         data.add(userInfoFragment);
         adapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), data);
@@ -95,8 +96,6 @@ public class ContactActivity extends AppCompatActivity {
          MyViewPager.setCurrentItem(1, true);
         }
     }
-
-
 
 
     private void initView() {

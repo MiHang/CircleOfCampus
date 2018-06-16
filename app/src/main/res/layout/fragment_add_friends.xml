@@ -32,11 +32,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/contact_column_height"
                     android:background="@color/white"
-                    android:drawableLeft="@drawable/search"
+                    android:drawableLeft="@drawable/qr"
                     android:gravity="center|left"
                     android:maxLines="1"
                     android:paddingLeft="@dimen/max_padding"
-                    android:text="扫一扫添加好友"
+                    android:text="一键添加"
                     android:textSize="@dimen/user_info_textSize" />
 
                 <LinearLayout

@@ -37,9 +37,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import team.circleofcampus.Interface.ListListener;
 import team.circleofcampus.Interface.MoreFragmentListener;
 import team.circleofcampus.Interface.OnItemClickListener;
 import team.circleofcampus.R;
+import team.circleofcampus.activity.ContactActivity;
 import team.circleofcampus.adapter.GoodFriendAdapter;
 import team.circleofcampus.adapter.GoodFriendItemDecoration;
 import team.circleofcampus.adapter.MyIndexAdapter;
@@ -127,6 +130,19 @@ public class ContactFragment extends Fragment implements com.bigkoo.alertview.On
         }
 
 
+        ContactActivity activity= (ContactActivity) getActivity();
+        activity.addFriendsFragment.setListener(new ListListener() {
+            @Override
+            public void update(boolean isFlag) {
+                if (isFlag){
+                    data.clear();
+                    Titles.clear();
+                    d.clear();
+                    setData(Account);
+
+                }
+            }
+        });
         return view;
     }
 public void setData(final String id){

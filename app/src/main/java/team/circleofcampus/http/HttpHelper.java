@@ -322,4 +322,40 @@ public class HttpHelper {
 
         return "";
     }
+    /**
+     * 一键添加好友
+     * @param user1,user2
+     * @return
+     */
+    public String addFriend(String user1,String user2) {
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
+        JSONObject js = new JSONObject();
+
+        try {
+            js.put("user1", user1);
+            js.put("user2", user2);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        MediaType mediaType = MediaType.parse("application/json;charset=utf8");
+        RequestBody requestBody = RequestBody.create(mediaType, js.toString());
+        Request request = new Request.Builder()
+                .url(url+"coc/addFriendByQr.do")
+                .post(requestBody)
+                .build();
+        try {
+            Response response = okHttpClient.newCall(request).execute();
+            if (response.isSuccessful()) {
+                return response.body().string();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
 }
