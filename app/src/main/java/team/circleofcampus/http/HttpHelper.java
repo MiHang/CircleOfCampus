@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -33,7 +34,10 @@ public class HttpHelper {
      * @return
      */
     public String getUserInfoByAccount(String account) {
-        OkHttpClient okHttpClient = new OkHttpClient();
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
         JSONObject js = new JSONObject();
 
         try {
@@ -65,7 +69,10 @@ public class HttpHelper {
      * @return
      */
     public String QueryRequestAddFriendInfo(String account) {
-        OkHttpClient okHttpClient = new OkHttpClient();
+        OkHttpClient okHttpClient =new OkHttpClient.Builder()
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
         JSONObject js = new JSONObject();
 
         try {
@@ -99,7 +106,10 @@ public class HttpHelper {
      * @return
      */
     public String QueryIsFriend(String user1,String user2) {
-        OkHttpClient okHttpClient = new OkHttpClient();
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
         JSONObject js = new JSONObject();
 
         try {
@@ -134,7 +144,10 @@ public class HttpHelper {
      */
     public String getUserInfoBySearch(String account) {
 
-        OkHttpClient okHttpClient = new OkHttpClient();
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
         JSONObject js = new JSONObject();
 
         try {
@@ -169,7 +182,10 @@ public class HttpHelper {
      * @return
      */
     public String updateFriendNote(String user1,String user2,String nickName) {
-        OkHttpClient okHttpClient = new OkHttpClient();
+        OkHttpClient okHttpClient =new OkHttpClient.Builder()
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
         JSONObject js = new JSONObject();
 
         try {
@@ -235,7 +251,10 @@ public class HttpHelper {
      * @return
      */
     public String requestAddFriend(String user1,String user2,String reason) {
-        OkHttpClient okHttpClient = new OkHttpClient();
+        OkHttpClient okHttpClient =new OkHttpClient.Builder()
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
         JSONObject js = new JSONObject();
 
         try {
@@ -270,7 +289,10 @@ public class HttpHelper {
      * @return
      */
     public String queryFriendInfo(String account) {
-        OkHttpClient okHttpClient = new OkHttpClient();
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
         JSONObject js = new JSONObject();
 
         try {

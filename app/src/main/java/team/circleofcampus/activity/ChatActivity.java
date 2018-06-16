@@ -1,7 +1,7 @@
 package team.circleofcampus.activity;
 
 
-import android.Manifest;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -24,16 +23,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.RotateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.common.dao.Data_Dao;
 import com.common.model.Message;
 import com.common.model.Msg;
@@ -58,7 +53,7 @@ import team.circleofcampus.Interface.RecordItemListener;
 import team.circleofcampus.R;
 import team.circleofcampus.adapter.MyFragmentPagerAdapter;
 import team.circleofcampus.adapter.RecordAdapter;
-import team.circleofcampus.background.MyService;
+import team.circleofcampus.service.MyService;
 import team.circleofcampus.util.SharedPreferencesUtil;
 import team.circleofcampus.view.FontButton;
 import team.circleofcampus.view.FontEditText;
@@ -105,7 +100,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private FontEditText MsgText;
     private ImageView Face;
     private ViewPager FaceViewPager;
-
+    List<byte[]> bytes;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,6 +137,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 myService = ((MyService.MsgBinder) service).getService();
 
                 myClient = myService.getMyClient();
+                bytes=myService.getData();
                 myService.setMessageListener(new MessageListener() {
                     @Override
                     public void sendMessage(byte[] bytes) {
@@ -192,6 +188,27 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
         myAdapter = new RecordAdapter(this, data);
         ChatRecord.setAdapter(myAdapter);
+        if (bytes!=null&&bytes.size()>0){
+             for (byte[] b:bytes){
+                 Msg msg = utils.toT(b);
+                 Message message = new Message();
+                 if (msg.getReceive().equals(send)) {
+                     msg.setSend(receive);
+                 }
+                 message.setMsg(msg);
+                 if (msg.getAudio() != null) {   //处理语音信息
+                     //保存录音文件
+                     File files = new File(getFilesDir(), msg.getAudioPath());
+                     sm.ByteToDoc(msg.getAudio(), files);
+
+                 }
+                 dao.setData(message);//储存聊天信息
+                 data.add(message);
+             }
+             myService.setData(null);
+             myAdapter.notifyDataSetChanged();
+        }
+
         myAdapter.setListener(new RecordItemListener() {
             @Override
             public void ClickIcon(View v, int position) {

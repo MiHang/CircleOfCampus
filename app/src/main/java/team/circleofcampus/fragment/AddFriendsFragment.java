@@ -15,6 +15,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.common.zxing.android.CaptureActivity;
+import com.common.zxing.common.Constant;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 
@@ -31,6 +33,8 @@ import team.circleofcampus.adapter.FriendSearchAdapter;
 import team.circleofcampus.http.HttpHelper;
 import team.circleofcampus.model.Contact;
 import team.circleofcampus.util.SharedPreferencesUtil;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by 惠普 on 2018-05-11.
@@ -158,9 +162,23 @@ public class AddFriendsFragment extends Fragment {
         QR_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(getActivity(), CaptureActivity.class);
+                startActivityForResult(intent, 1);
             }
         });
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // 扫描二维码/条码回传
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            if (data != null) {
+
+                String content = data.getStringExtra(Constant.CODED_CONTENT);
+                result.setText("扫描结果为：" + content);
+            }
+        }
     }
 
 

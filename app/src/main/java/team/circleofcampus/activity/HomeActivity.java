@@ -28,7 +28,7 @@ import team.circleofcampus.BroadcastReceiver.MyBroadcastReceiver;
 import team.circleofcampus.Interface.FragmentSwitchListener;
 import team.circleofcampus.R;
 import team.circleofcampus.adapter.MyFragmentPagerAdapter;
-import team.circleofcampus.background.MyService;
+import team.circleofcampus.service.MyService;
 import team.circleofcampus.fragment.CampusCircleFragment;
 import team.circleofcampus.fragment.CircleFragment;
 import team.circleofcampus.fragment.MessageFragment;

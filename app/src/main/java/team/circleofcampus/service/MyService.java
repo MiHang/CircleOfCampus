@@ -1,4 +1,4 @@
-package team.circleofcampus.background;
+package team.circleofcampus.service;
 
 import android.app.Service;
 import android.content.Intent;
@@ -41,6 +41,13 @@ public class MyService extends Service {
         return myClient;
     }
 
+    public List<byte[]> getData() {
+        return data;
+    }
+
+    public void setData(List<byte[]> data) {
+        this.data = data;
+    }
 
     @Override
     public void onCreate() {
@@ -90,10 +97,7 @@ public class MyService extends Service {
 
                     Log.d(TAG,"消息"+ msg.getSend()+":"+msg.getText());
                     if (listener!=null){
-
                             listener.sendMessage(bytes.array());
-
-
                     }else{
                         data.add(bytes.array());
                     }

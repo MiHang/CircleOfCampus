@@ -47,7 +47,7 @@
             android:windowSoftInputMode="adjustPan|stateHidden">
         </activity>
 
-        <service android:name=".background.MyService" />
+        <service android:name=".service.MyService" />
 
         <activity
             android:name=".activity.ContactActivity"
