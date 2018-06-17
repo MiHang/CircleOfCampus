@@ -44,8 +44,7 @@
         <activity android:name=".activity.RegisterActivity" />
         <activity
             android:name=".activity.HomeActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden">
-        </activity>
+            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
 
         <service android:name=".service.MyService" />
 
@@ -60,7 +59,8 @@
         <activity android:name=".activity.AlterUserInfoActivity" />
         <activity android:name=".activity.DetailCircleActivity" />
         <activity android:name=".activity.PublishActivity" />
-        <activity android:name=".activity.ApplySocietyAuthorityActivity"></activity>
+        <activity android:name=".activity.ApplySocietyAuthorityActivity" />
+        <activity android:name=".activity.DecoderActivity"></activity>
     </application>
 
 </manifest>

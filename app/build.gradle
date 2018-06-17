@@ -45,5 +45,5 @@ dependencies {
     implementation 'com.lcodecorex:tkrefreshlayout:1.0.7'
     implementation 'com.github.ForgetAll:LoadingDialog:v1.0.4'
     implementation 'com.readystatesoftware.systembartint:systembartint:1.0.3'
-    compile project(path: ':zxing')
+    compile 'com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.3'
 }

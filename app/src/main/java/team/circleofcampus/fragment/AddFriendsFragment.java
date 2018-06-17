@@ -18,23 +18,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.common.zxing.android.CaptureActivity;
-import com.common.zxing.common.Constant;
+
 import com.xiasuhuei321.loadingdialog.view.LoadingDialog;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
-
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
-
 import team.circleofcampus.Interface.ListListener;
 import team.circleofcampus.Interface.OnItemClickListener;
 import team.circleofcampus.R;
 import team.circleofcampus.activity.AddRequestActivity;
-import team.circleofcampus.activity.ContactActivity;
+import team.circleofcampus.activity.DecoderActivity;
 import team.circleofcampus.activity.MainActivity;
 import team.circleofcampus.adapter.FriendSearchAdapter;
 import team.circleofcampus.http.HttpHelper;
@@ -69,6 +65,7 @@ public class AddFriendsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_friends, null);
         initView(view);
+
         helper = new HttpHelper(getContext());
         recycler_view.setLayoutManager(new LinearLayoutManager(getContext()));// 布局管理器。
         recycler_view.setHasFixedSize(true);// 如果Item够简单，高度是确定的，打开FixSize将提高性能。
@@ -185,95 +182,96 @@ public class AddFriendsFragment extends Fragment {
         QR_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), CaptureActivity.class);
+                Intent intent = new Intent(getActivity(), DecoderActivity.class);
                 startActivityForResult(intent, 1);
+
             }
         });
     }
+    String message,jxResult;
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 
-        // 扫描二维码/条码回传
-        if (requestCode == 1 && resultCode == RESULT_OK) {
-            if (data != null) {
+        if (intent!=null) {
+             message = intent.getStringExtra("message");
+            final LoadingDialog  dialog = new LoadingDialog(getContext());
+            dialog.setLoadingText("请求中")
+                    .setSuccessText("添加成功")//显示加载成功时的文字
+                    .setFailedText("请勿重复添加")
+                    .closeSuccessAnim()
+                    .setShowTime(1000)
+                    .setInterceptBack(false)
+                    .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
+                    .show();
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject js=null;
+                    try {
+                        js = new JSONObject(message);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    if (js.has("Account")){
 
-                final String content = data.getStringExtra(Constant.CODED_CONTENT);
-
-                AsyncTask.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        JSONObject js=null;
                         try {
-                            js = new JSONObject(content);
+                            jxResult = helper.addFriend(Account,js.getString("Account"));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        if (js.has("Account")){
-                            String s= null;
-                            try {
-                                s = helper.addFriend(Account,js.getString("Account"));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            final String finalS = s;
-                            recycler_view.post(new Runnable() {
-                                @Override
-                                public void run() {
 
-                                    if (finalS !=null) {
+                        recycler_view.post(new Runnable() {
+                            @Override
+                            public void run() {
 
-                                        JSONObject jsonObject = null;
-                                        try {
-                                            jsonObject = new JSONObject(finalS);
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                        String result = null;
-                                        try {
-                                            result = jsonObject.getString("result");
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                        final String finalResult = result;
-                                        recycler_view.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                if (finalResult.equals("success")) {
-                                                    Toast.makeText(getActivity(), "添加成功", Toast.LENGTH_SHORT).show();
+                                if (jxResult !=null) {
 
-                                                    if (listener != null) {
-                                                        listener.update(true);
-                                                    }
-
-
-                                                } else {
-                                                    Toast.makeText(getActivity(), "你们已是好友", Toast.LENGTH_SHORT).show();
-
-
-                                                }
-                                            }
-                                        });
-
-
-
-
+                                    JSONObject jsonObject = null;
+                                    try {
+                                        jsonObject = new JSONObject(jxResult);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
                                     }
+                                    String result = null;
+                                    try {
+                                        result = jsonObject.getString("result");
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    final String finalResult = result;
+                                    recycler_view.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (finalResult.equals("success")) {
+                                                dialog.loadSuccess();
+                                                if (listener != null) {
+                                                    listener.update(true);
+                                                }
+
+                                            } else {
+                                                dialog.loadFailed();
+
+                                            }
+                                        }
+                                    });
                                 }
-                            });
+                            }
+                        });
 
 
-                        }else{
-
-                            Toast.makeText(getActivity(), "未扫描到账号信息", Toast.LENGTH_SHORT).show();
-
-                        }
+                    }else{
+                        Toast.makeText(getActivity(), "未扫描到账号信息", Toast.LENGTH_SHORT).show();
                     }
-                });
-
-            }
+                }
+            });
+        }else{
+            Toast.makeText(getActivity(), "扫描失败", Toast.LENGTH_SHORT).show();
         }
+
+
     }
+
+
 
 
 }
