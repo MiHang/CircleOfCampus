@@ -443,20 +443,15 @@ public void setData(final String id){
                                     if (!s.equals("")) {
                                           if (jsonObject.getString("result").equals("success")){
                                               dialog.loadSuccess();
-                                              data.get(position).setUserName(note);
+
+                                              list.clear();
+                                              data.clear();
                                               adapter.notifyDataSetChanged();
                                               Titles.clear();
-                                              Titles.put(0, data.get(0).getLastName());
-                                              for (int i = 1; i < data.size(); i++) {
-                                                  if (!data.get(i).getLastName().equals(data.get(i - 1).getLastName())) {
-                                                      Titles.put(i, data.get(i).getLastName());
-                                                  }
-
-                                              }
-                                              rv.invalidateItemDecorations();
                                               d.clear();
-                                              setSideBar();
-
+                                              myAdapter.notifyDataSetChanged();
+                                              rv.removeItemDecoration(itemDecoration);
+                                              setData(Account);
                                           }else{
                                               dialog.loadFailed();
                                           }
