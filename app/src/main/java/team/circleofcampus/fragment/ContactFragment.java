@@ -421,10 +421,15 @@ public void setData(final String id){
                 Toast.makeText(getContext(), "您未填写备注", Toast.LENGTH_SHORT).show();
 
             } else {
-                final ProgressDialog dialog = new ProgressDialog(getContext());
-                dialog.setTitle("提示");
-                dialog.setMessage("提交申请中");
-                dialog.show();
+                final LoadingDialog dialog = new LoadingDialog(getContext());
+                dialog.setLoadingText("加载中")
+                        .setSuccessText("修改成功")//显示加载成功时的文字
+                        .setFailedText("修改失败")
+                        .closeSuccessAnim()
+                        .setShowTime(500)
+                        .setInterceptBack(false)
+                        .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
+                        .show();
                 AsyncTask.execute(new Runnable() {
                     @Override
                     public void run() {
@@ -437,7 +442,7 @@ public void setData(final String id){
                                     JSONObject jsonObject = new JSONObject(s);
                                     if (!s.equals("")) {
                                           if (jsonObject.getString("result").equals("success")){
-
+                                              dialog.loadSuccess();
                                               data.get(position).setUserName(note);
                                               adapter.notifyDataSetChanged();
                                               Titles.clear();
@@ -451,16 +456,16 @@ public void setData(final String id){
                                               rv.invalidateItemDecorations();
                                               d.clear();
                                               setSideBar();
-                                              Toast.makeText(getContext(), "修改成功", Toast.LENGTH_LONG).show();
 
                                           }else{
-                                              Toast.makeText(getContext(), "修改失败", Toast.LENGTH_LONG).show();
+                                              dialog.loadFailed();
                                           }
                                     } else {
-                                        Toast.makeText(getContext(), "修改失败", Toast.LENGTH_LONG).show();
+                                        dialog.loadFailed();
+
                                     }
 
-                                    dialog.dismiss();
+
                                     closeable.smoothCloseMenu();
                                 } catch (JSONException e) {
                                     e.printStackTrace();

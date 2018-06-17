@@ -12,7 +12,7 @@
             android:layout_marginTop="@dimen/middle_padding"
             android:background="@color/white"
             android:gravity="center|left"
-            android:hint="用户ID/用户名"
+            android:hint="   用户ID/用户名"
             android:maxLines="1"
             android:paddingLeft="@dimen/max_padding"
             android:paddingRight="@dimen/max_padding"
@@ -36,7 +36,7 @@
                     android:gravity="center|left"
                     android:maxLines="1"
                     android:paddingLeft="@dimen/max_padding"
-                    android:text="一键添加"
+                    android:text="  一键添加"
                     android:textSize="@dimen/user_info_textSize" />
 
                 <LinearLayout
