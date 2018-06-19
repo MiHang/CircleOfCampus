@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:clipToPadding="true"
     android:background="@drawable/bg"
     android:fitsSystemWindows="true"
@@ -26,6 +25,7 @@
 
                 <!-- title -->
                 <team.circleofcampus.view.FontEditText
+                    android:id="@+id/publish_title_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -57,6 +57,7 @@
                         android:text="活动时间："/>
 
                     <team.circleofcampus.view.FontEditText
+                        android:id="@+id/publish_activity_time_edit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="10dp"
@@ -89,6 +90,7 @@
                         android:text="活动地点："/>
 
                     <team.circleofcampus.view.FontEditText
+                        android:id="@+id/publish_activity_venue_edit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="10dp"
@@ -109,6 +111,7 @@
 
                 <!-- content -->
                 <team.circleofcampus.view.FontEditText
+                    android:id="@+id/publish_content_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="200dp"

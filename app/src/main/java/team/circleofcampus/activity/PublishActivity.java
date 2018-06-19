@@ -9,6 +9,8 @@ import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.FileProvider;
@@ -17,9 +19,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.xiasuhuei321.loadingdialog.view.LoadingDialog;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileDescriptor;
@@ -31,6 +41,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import team.circleofcampus.R;
+import team.circleofcampus.http.LoginRequest;
+import team.circleofcampus.http.SocietyRequest;
+import team.circleofcampus.util.SharedPreferencesUtil;
+import team.circleofcampus.util.StorageUtil;
 
 public class PublishActivity extends AppCompatActivity {
 
@@ -47,10 +61,62 @@ public class PublishActivity extends AppCompatActivity {
     protected ImageView addImageView;
     @BindView(R.id.publish_display_image_view)
     protected ImageView displayImageView;
+    @BindView(R.id.publish_title_edit)
+    protected EditText title;
+    @BindView(R.id.publish_activity_time_edit)
+    protected EditText activityTime;
+    @BindView(R.id.publish_activity_venue_edit)
+    protected EditText activityVenue;
+    @BindView(R.id.publish_content_edit)
+    protected EditText content;
+
+    // 加载框
+    private LoadingDialog loadingDialog;
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0x0001 : { // 网络连接出错
+                    if (loadingDialog != null) {
+                        loadingDialog.close();
+                    }
+                    Toast.makeText(PublishActivity.this, "无法与服务器通信，请检查您的网络连接", Toast.LENGTH_SHORT).show();
+                } break;
+                case 0x0002 : { // 发布成功
+                    if (loadingDialog != null) {
+                        loadingDialog.loadSuccess();
+                    }
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            try {
+                                sleep(1000);
+                                handler.sendEmptyMessage(0x0004);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }.start();
+                } break;
+                case 0x0003 : { // 发布失败
+                    if (loadingDialog != null) {
+                        loadingDialog.loadFailed();
+                    }
+                } break;
+                case 0x0004 : { // 返回
+                    onBackPressed();
+                } break;
+            }
+        }
+    };
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        if (loadingDialog != null) {
+            loadingDialog.close();
+        }
         finish();
     }
 
@@ -68,7 +134,67 @@ public class PublishActivity extends AppCompatActivity {
      */
     @OnClick(R.id.header_right_text)
     public void onClickRightText() {
+        if (title.getText().toString().trim().equals("")) {
+            Toast.makeText(PublishActivity.this, "公告标题不能为空", Toast.LENGTH_SHORT).show();
+        } else if (title.getText().toString().trim().length() > 45) {
+            Toast.makeText(PublishActivity.this, "公告标题超出45字，当前字数为"
+                    + title.getText().toString().trim().length() + "字", Toast.LENGTH_SHORT).show();
+        } else if (activityTime.getText().toString().trim().equals("")) {
+            Toast.makeText(PublishActivity.this, "活动时间不能为空", Toast.LENGTH_SHORT).show();
+        } else if (activityTime.getText().toString().trim().length() > 23) {
+            Toast.makeText(PublishActivity.this, "活动时间内容过长", Toast.LENGTH_SHORT).show();
+        } else if (activityVenue.getText().toString().trim().equals("")) {
+            Toast.makeText(PublishActivity.this, "活动地点不能为空", Toast.LENGTH_SHORT).show();
+        } else if (activityVenue.getText().toString().trim().length() > 45) {
+            Toast.makeText(PublishActivity.this, "活动地点内容过长(45字以内)", Toast.LENGTH_SHORT).show();
+        } else if (content.getText().toString().trim().equals("")) {
+            Toast.makeText(PublishActivity.this, "公告内容不能为空", Toast.LENGTH_SHORT).show();
+        } else if (content.getText().toString().trim().length() > 240) {
+            Toast.makeText(PublishActivity.this, "公告内容过长(240字以内), 当前字数为"
+                    +content.getText().toString().trim().length() + "字", Toast.LENGTH_SHORT).show();
+        } else if (!new File(StorageUtil.getUploadImgTempPath() + "uploadTempImage").exists()) {
+            Toast.makeText(PublishActivity.this, "请添加一张图片", Toast.LENGTH_SHORT).show();
+        } else {
 
+            // 加载对话框
+            loadingDialog = new LoadingDialog(this);
+            loadingDialog.setLoadingText("正在发布")
+                    .setSuccessText("发布成功")//显示加载成功时的文字
+                    .setFailedText("发布失败")
+                    .closeSuccessAnim()
+                    .closeFailedAnim()
+                    .setShowTime(1000)
+                    .setInterceptBack(false)
+                    .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
+                    .show();
+
+            new Thread(){
+                @Override
+                public void run() {
+                    int uId = SharedPreferencesUtil.getUID(PublishActivity.this);
+                    File file = new File(StorageUtil.getUploadImgTempPath() + "uploadTempImage");
+                    String result = SocietyRequest.addSocietyCircle(uId, title.getText().toString().trim(),
+                            content.getText().toString().trim(), activityVenue.getText().toString().trim(),
+                            activityTime.getText().toString().trim(), file);
+                    if (null != result) {
+                        try {
+                            JSONObject json = new JSONObject(result);
+                            result = json.getString("result");
+
+                            if (result.equals("success")) {
+                                handler.sendEmptyMessage(0x0002);
+                            } else if (result.equals("error")) {
+                                handler.sendEmptyMessage(0x0003);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        handler.sendEmptyMessage(0x0001);
+                    }
+                }
+            }.start();
+        }
     }
 
     /**
@@ -120,10 +246,37 @@ public class PublishActivity extends AppCompatActivity {
                 if(bundle != null) {
                     Bitmap bitmap = bundle.getParcelable("data");
                     displayImageView.setImageBitmap(bitmap);
+                    saveBitmapFile(bitmap); // 将图片保存到手机内存卡
                 }
                 break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * 将剪裁过的图片保存为临时文件
+     * @param bitmap
+     */
+    public void saveBitmapFile(Bitmap bitmap){
+
+        // 保存校园圈临时数据的根路径
+        String path = StorageUtil.getUploadImgTempPath();
+        File file = new File(path);
+        if (!file.exists() && !file.isDirectory()) {
+            file.mkdirs();
+            System.out.println("创建路径：" + path);
+        }
+
+        Log.e("tag", "path = " + path);
+        File imageFile = new File(path + "uploadTempImage");//将要保存图片的路径
+        try {
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(imageFile));
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            bos.flush();
+            bos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
