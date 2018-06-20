@@ -185,7 +185,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    sleep(2000);
+                    sleep(1000);
                     handler.sendEmptyMessage(0x0005);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
