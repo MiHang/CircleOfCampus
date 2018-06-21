@@ -11,7 +11,7 @@ import java.io.File;
 public class SocietyRequest {
 
     /**
-     *
+     * 发布一条社团圈信息
      * @param uId
      * @param title
      * @param content

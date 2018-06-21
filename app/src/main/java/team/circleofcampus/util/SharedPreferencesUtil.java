@@ -11,6 +11,81 @@ import java.util.ArrayList;
 public class SharedPreferencesUtil {
 
     /**
+     * 设置我发布的社团圈的记录大小
+     * @param context
+     * @param size
+     */
+    public static void setMyPublishSocietyCircleCount (Context context, int size) {
+        //实例化SharedPreferences对象
+        SharedPreferences preferences = context.getSharedPreferences("share", Context.MODE_PRIVATE);
+
+        //实例化SharedPreferences.Editor对象
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("myPublishSocietyCircleCount", size);//保存数据
+        editor.commit();//提交当前数据
+    }
+
+    /**
+     * 获取我发布的社团圈的记录大小
+     * @param context
+     * @return
+     */
+    public static int getMyPublishSocietyCircleCount (Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("share", Context.MODE_PRIVATE);
+        return preferences.getInt("myPublishSocietyCircleCount", 0);
+    }
+
+    /**
+     * 设置校园圈的记录大小
+     * @param context
+     * @param size
+     */
+    public static void setCampusCircleCount (Context context, int size) {
+        //实例化SharedPreferences对象
+        SharedPreferences preferences = context.getSharedPreferences("share", Context.MODE_PRIVATE);
+
+        //实例化SharedPreferences.Editor对象
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("campusCircleCount", size);//保存数据
+        editor.commit();//提交当前数据
+    }
+
+    /**
+     * 获取校园圈的记录大小
+     * @param context
+     * @return
+     */
+    public static int getCampusCircleCount (Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("share", Context.MODE_PRIVATE);
+        return preferences.getInt("campusCircleCount", 0);
+    }
+
+    /**
+     * 设置社团圈的记录大小
+     * @param context
+     * @param size
+     */
+    public static void setSocietyCircleCount (Context context, int size) {
+        //实例化SharedPreferences对象
+        SharedPreferences preferences = context.getSharedPreferences("share", Context.MODE_PRIVATE);
+
+        //实例化SharedPreferences.Editor对象
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("societyCircleCount", size);//保存数据
+        editor.commit();//提交当前数据
+    }
+
+    /**
+     * 获取社团圈的记录大小
+     * @param context
+     * @return
+     */
+    public static int getSocietyCircleCount (Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("share", Context.MODE_PRIVATE);
+        return preferences.getInt("societyCircleCount", 0);
+    }
+
+    /**
      * 设置用户是否拥有发布社团圈的权限
      * @param context
      * @param isAuthorized

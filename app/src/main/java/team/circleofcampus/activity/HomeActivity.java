@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
@@ -20,6 +21,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +31,8 @@ import team.circleofcampus.BroadcastReceiver.MyBroadcastReceiver;
 import team.circleofcampus.Interface.FragmentSwitchListener;
 import team.circleofcampus.R;
 import team.circleofcampus.adapter.MyFragmentPagerAdapter;
+import team.circleofcampus.http.CampusCircleRequest;
+import team.circleofcampus.http.SocietyCircleRequest;
 import team.circleofcampus.service.MyService;
 import team.circleofcampus.fragment.CampusCircleFragment;
 import team.circleofcampus.fragment.CircleFragment;
@@ -37,6 +42,7 @@ import team.circleofcampus.fragment.MineFragment;
 import team.circleofcampus.fragment.QRFragment;
 import team.circleofcampus.fragment.SocietyCircleFragment;
 import team.circleofcampus.http.SocietyAuthorityRequest;
+import team.circleofcampus.service.ThreadService;
 import team.circleofcampus.util.SharedPreferencesUtil;
 import team.circleofcampus.view.NoPreloadViewPager;
 
@@ -92,6 +98,18 @@ public class HomeActivity extends AppCompatActivity {
                         SharedPreferencesUtil.setAuthorized(HomeActivity.this, false);
                     }
                 } break;
+                case 0x0003 : { // 获取校园圈的数量
+                    SharedPreferencesUtil.setCampusCircleCount(HomeActivity.this, msg.arg1);
+                    Log.e("tag", "campus circle count = " + msg.arg1);
+                } break;
+                case 0x0004 : { // 获取校园圈的数量
+                    SharedPreferencesUtil.setSocietyCircleCount(HomeActivity.this, msg.arg1);
+                    Log.e("tag", "society circle count = " + msg.arg1);
+                } break;
+                case 0x0005 : { // 获取我发布的社团圈的数量
+                    SharedPreferencesUtil.setMyPublishSocietyCircleCount(HomeActivity.this, msg.arg1);
+                    Log.e("tag", "my publish society circle count = " + msg.arg1);
+                } break;
             }
         }
     };
@@ -126,8 +144,12 @@ public class HomeActivity extends AppCompatActivity {
         // 记录本次登陆时间
         SharedPreferencesUtil.setLoginTime(HomeActivity.this, System.currentTimeMillis());
 
-        // 加载网络数据 - 社团发布权限
-        loadingSocietyAuthority();
+        // 单例线程池
+        ExecutorService singleThreadExecutor = ThreadService.getSingleThreadPool();
+        singleThreadExecutor.execute(loadingSocietyAuthority()); // 加载社团发布权限
+        singleThreadExecutor.execute(loadingCampusCircleCount()); // 获取校园圈的数量
+        singleThreadExecutor.execute(loadingSocietyCircleCount()); // 获取社团圈的数量
+        singleThreadExecutor.execute(loadingMyPublishSocietyCircleCount()); // 获取我发布的社团圈的数量
 
         // 校园圈
         CircleFragment circleFragment = new CircleFragment();
@@ -151,7 +173,6 @@ public class HomeActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MyService.class);
             intent.putExtra("send", account);
             startService(intent);
-
         }
 
         // 消息
@@ -212,7 +233,6 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
     @Override
@@ -224,11 +244,94 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /**
+     * 获取我发布的社团圈的数量
+     */
+    private Runnable loadingMyPublishSocietyCircleCount() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                String result = SocietyCircleRequest.getMyPublishSocietyCircleSize(userId);
+                if (null != result) {
+                    try {
+                        JSONObject json = new JSONObject(result);
+                        if (json.has("size")) { // 查询成功
+                            int size = json.getInt("size");
+                            Message msg = new Message();
+                            msg.what = 0x0005;
+                            msg.arg1 = size;
+                            handler.sendMessage(msg);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    handler.sendEmptyMessage(0x0001);
+                }
+            }
+        };
+    }
+
+    /**
+     * 获取社团圈的数量
+     */
+    private Runnable loadingSocietyCircleCount() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                String result = SocietyCircleRequest.getSocietyCircleSize(userId);
+                if (null != result) {
+                    try {
+                        JSONObject json = new JSONObject(result);
+                        if (json.has("size")) { // 查询成功
+                            int size = json.getInt("size");
+                            Message msg = new Message();
+                            msg.what = 0x0004;
+                            msg.arg1 = size;
+                            handler.sendMessage(msg);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    handler.sendEmptyMessage(0x0001);
+                }
+            }
+        };
+    }
+
+    /**
+     * 获取校园圈的数量
+     */
+    private Runnable loadingCampusCircleCount() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                String result = CampusCircleRequest.getCampusCircleSize(userId);
+                if (null != result) {
+                    try {
+                        JSONObject json = new JSONObject(result);
+                        if (json.has("size")) { // 查询成功
+                            int size = json.getInt("size");
+                            Message msg = new Message();
+                            msg.what = 0x0003;
+                            msg.arg1 = size;
+                            handler.sendMessage(msg);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    handler.sendEmptyMessage(0x0001);
+                }
+            }
+        };
+    }
+
+    /**
      * 加载网络数据 - 社团发布权限
      */
-    private void loadingSocietyAuthority() {
-        // 联网线程
-        new Thread(){
+    private Runnable loadingSocietyAuthority() {
+        return new Runnable(){
             @Override
             public void run() {
                 String result = SocietyAuthorityRequest.hasSocietyAuthority(userId);
@@ -252,7 +355,7 @@ public class HomeActivity extends AppCompatActivity {
                     handler.sendEmptyMessage(0x0001);
                 }
             }
-        }.start();
+        };
     }
 
     /**
