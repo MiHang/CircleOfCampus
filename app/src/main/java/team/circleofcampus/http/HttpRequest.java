@@ -20,7 +20,7 @@ import okhttp3.Response;
  */
 public class HttpRequest {
     //public static final String IP = "192.168.43.70";
-    public static final String IP = "192.168.137.1";
+    public static final String IP = "192.168.1.188";
     public static final String URL = "http://"+IP+":8080/";
     private static final MediaType mediatype = MediaType.parse("application/json;charset=utf-8");
 
@@ -96,6 +96,36 @@ public class HttpRequest {
             Response response = okHttpClient.newCall(request).execute();
             if (response.isSuccessful()) {
                 return response.body().string();
+            } else {
+                Log.e("coc error", "request failed, error code = " + response.code());
+                throw new Exception("request failed, error code = " + response.code());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 下载图片
+     * @param url - 图片url
+     * @return
+     */
+    public static byte[] downloadImg(String url) {
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
+        try {
+            Response response = okHttpClient.newCall(request).execute();
+            if (response.isSuccessful()) {
+                return response.body().bytes();
             } else {
                 Log.e("coc error", "request failed, error code = " + response.code());
                 throw new Exception("request failed, error code = " + response.code());

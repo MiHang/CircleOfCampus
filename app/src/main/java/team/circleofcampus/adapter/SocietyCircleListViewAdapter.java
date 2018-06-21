@@ -19,19 +19,19 @@ import org.json.JSONObject;
 import java.util.List;
 
 import team.circleofcampus.R;
-import team.circleofcampus.pojo.CampusCircle;
+import team.circleofcampus.pojo.SocietyCircle;
 import team.circleofcampus.util.StorageUtil;
 
 /**
- * 首页校园圈公告展示列表
+ * 首页社团圈公告展示列表
  */
-public class CampusCircleListViewAdapter extends BaseAdapter {
+public class SocietyCircleListViewAdapter extends BaseAdapter {
 
     private LayoutInflater inflater;
-    private List<CampusCircle> items;
+    private List<SocietyCircle> items;
 
-    public CampusCircleListViewAdapter(Context context, List<CampusCircle> items) {
-        this.inflater = LayoutInflater.from(context);
+    public SocietyCircleListViewAdapter(Context context, List<SocietyCircle> items) {
+        inflater = LayoutInflater.from(context);
         this.items = items;
     }
 

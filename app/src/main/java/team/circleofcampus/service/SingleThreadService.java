@@ -11,6 +11,14 @@ public class SingleThreadService {
     private static ExecutorService singleThreadExecutor;
 
     /**
+     * 创建一个新的单例的线程池
+     * @return
+     */
+    public static ExecutorService newSingleThreadExecutor() {
+        return Executors.newSingleThreadExecutor();
+    }
+
+    /**
      * 获取一个单例的线程池
      * @return
      */

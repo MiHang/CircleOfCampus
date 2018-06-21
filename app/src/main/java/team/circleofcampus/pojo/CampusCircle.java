@@ -12,9 +12,9 @@ import java.io.Serializable;
 public class CampusCircle implements Serializable {
     /**
      * ID
-     * 自增长主键
+     * 禁止自增长主键
      */
-    @DatabaseField(columnName = "id", generatedId = true)
+    @DatabaseField(columnName = "id", generatedId = false)
     private int id;
     /**
      * 标题
@@ -30,7 +30,7 @@ public class CampusCircle implements Serializable {
      * 图片地址，多个图片使用json数组表示
      */
     @DatabaseField(columnName = "images_url")
-    private String imagesUrls;
+    private String imagesUrl;
     /**
      * 发布时间
      */
@@ -50,13 +50,13 @@ public class CampusCircle implements Serializable {
     public CampusCircle() {}
 
     public CampusCircle(int id, String title,
-                        String content, String imagesUrls,
+                        String content, String imagesUrl,
                         String publishTime, String venue,
                         String activityTime) {
         this.id = id;
         this.title = title;
         this.content = content;
-        this.imagesUrls = imagesUrls;
+        this.imagesUrl = imagesUrl;
         this.publishTime = publishTime;
         this.venue = venue;
         this.activityTime = activityTime;
@@ -86,12 +86,12 @@ public class CampusCircle implements Serializable {
         this.content = content;
     }
 
-    public String getImagesUrls() {
-        return imagesUrls;
+    public String getImagesUrl() {
+        return imagesUrl;
     }
 
-    public void setImagesUrls(String imagesUrls) {
-        this.imagesUrls = imagesUrls;
+    public void setImagesUrl(String imagesUrl) {
+        this.imagesUrl = imagesUrl;
     }
 
     public String getPublishTime() {
