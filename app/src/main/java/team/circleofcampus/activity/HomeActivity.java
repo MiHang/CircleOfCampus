@@ -16,13 +16,13 @@ import android.widget.Toast;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,7 +42,7 @@ import team.circleofcampus.fragment.MineFragment;
 import team.circleofcampus.fragment.QRFragment;
 import team.circleofcampus.fragment.SocietyCircleFragment;
 import team.circleofcampus.http.SocietyAuthorityRequest;
-import team.circleofcampus.service.ThreadService;
+import team.circleofcampus.service.SingleThreadService;
 import team.circleofcampus.util.SharedPreferencesUtil;
 import team.circleofcampus.view.NoPreloadViewPager;
 
@@ -145,7 +145,7 @@ public class HomeActivity extends AppCompatActivity {
         SharedPreferencesUtil.setLoginTime(HomeActivity.this, System.currentTimeMillis());
 
         // 单例线程池
-        ExecutorService singleThreadExecutor = ThreadService.getSingleThreadPool();
+        ExecutorService singleThreadExecutor = SingleThreadService.getSingleThreadPool();
         singleThreadExecutor.execute(loadingSocietyAuthority()); // 加载社团发布权限
         singleThreadExecutor.execute(loadingCampusCircleCount()); // 获取校园圈的数量
         singleThreadExecutor.execute(loadingSocietyCircleCount()); // 获取社团圈的数量

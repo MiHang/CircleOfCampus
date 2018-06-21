@@ -9,6 +9,26 @@ import org.json.JSONObject;
 public class SocietyCircleRequest {
 
     /**
+     * 查询社团圈信息
+     * @param uId - 用户ID
+     * @param start
+     * @param end
+     * @return
+     */
+    public static String getSocietyCircle(int uId, int start, int end) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("uId", uId);
+            json.put("start", start);
+            json.put("end", end);
+            return HttpRequest.postRequest(HttpRequest.URL + "coc/getSocietyCircle.do", json.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
      * 查询某用户发布的社团圈信息
      * @return
      */
