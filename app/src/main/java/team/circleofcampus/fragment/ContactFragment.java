@@ -117,9 +117,7 @@ public class ContactFragment extends Fragment implements com.bigkoo.alertview.On
             dialog = new LoadingDialog(getContext());
             dialog.setLoadingText("加载中")
                     .setSuccessText("加载成功")//显示加载成功时的文字
-                    .setFailedText("加载失败")
-                    .closeSuccessAnim()
-                    .setShowTime(500)
+                    .setFailedText("暂无联系人信息")
                     .setInterceptBack(false)
                     .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
                     .show();
@@ -165,7 +163,7 @@ public void setData(final String id){
                             index= Integer.parseInt(jsonObject.getString("result"));
                             if (index ==0){
                                 num.setText("暂无联系人");
-                                dialog.loadFailed();
+                                dialog.loadSuccess();
                                 return;
                             }
 
@@ -229,7 +227,7 @@ public void setData(final String id){
                             dialog.loadSuccess();
                         } else {
                             num.setText("暂无联系人");
-                            dialog.loadFailed();
+                            dialog.loadSuccess();
                         }
 
 
@@ -417,6 +415,7 @@ public void setData(final String id){
         //判断是否是拓展窗口View，而且点击的是非取消按钮
         if (o == mAlertViewExt && position != AlertView.CANCELPOSITION) {
             final String note = edit.getText().toString();
+            edit.setHint("请填写备注信息");
             if (note.isEmpty()) {
                 Toast.makeText(getContext(), "您未填写备注", Toast.LENGTH_SHORT).show();
 

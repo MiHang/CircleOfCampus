@@ -20,7 +20,7 @@ import okhttp3.Response;
  */
 public class HttpRequest {
     //public static final String IP = "192.168.43.70";
-    public static final String IP = "192.168.1.188";
+    public static final String IP = "192.168.137.1";
     public static final String URL = "http://"+IP+":8080/";
     private static final MediaType mediatype = MediaType.parse("application/json;charset=utf-8");
 

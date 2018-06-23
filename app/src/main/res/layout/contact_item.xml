@@ -22,6 +22,7 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:text="用户名"
+        android:textColor="@color/black"
         android:textSize="@dimen/userInfo_text_size" />
 
 </LinearLayout>

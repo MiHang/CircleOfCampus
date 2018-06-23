@@ -13,6 +13,7 @@
             android:background="@color/white"
             android:gravity="center|left"
             android:hint="   用户ID/用户名"
+            android:visibility="gone"
             android:maxLines="1"
             android:paddingLeft="@dimen/max_padding"
             android:paddingRight="@dimen/max_padding"

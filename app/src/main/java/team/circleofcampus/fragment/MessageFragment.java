@@ -46,7 +46,6 @@ public class MessageFragment extends Fragment {
     List<UserMsg> data=new ArrayList<>();
     TimeUtil timeUtil=new TimeUtil();
     Date date;
-    ByteUtils utils=new ByteUtils();
 
     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     MyBroadcastReceiver BroadcastReceiver;
