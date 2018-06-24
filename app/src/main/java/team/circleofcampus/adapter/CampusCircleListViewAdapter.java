@@ -68,8 +68,8 @@ public class CampusCircleListViewAdapter extends BaseAdapter {
         // 加载公告封面
         LoadImage(holder.cover, items.get(i).getImagesUrl());
         holder.title.setText(items.get(i).getTitle());
-        holder.activityTime.setText(items.get(i).getActivityTime());
-        holder.venue.setText(items.get(i).getVenue());
+        holder.activityTime.setText("时 间：" + items.get(i).getActivityTime());
+        holder.venue.setText("地 点：" + items.get(i).getVenue());
 
         return view;
     }

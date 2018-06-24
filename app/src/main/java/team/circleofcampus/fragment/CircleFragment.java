@@ -43,6 +43,7 @@ import team.circleofcampus.dao.CampusCircleDao;
 import team.circleofcampus.dao.SocietyCircleDao;
 import team.circleofcampus.http.CampusCircleRequest;
 import team.circleofcampus.http.HttpRequest;
+import team.circleofcampus.http.ImageRequest;
 import team.circleofcampus.http.SocietyCircleRequest;
 import team.circleofcampus.pojo.CampusCircle;
 import team.circleofcampus.pojo.SocietyCircle;
@@ -279,7 +280,7 @@ public class CircleFragment extends Fragment {
                                         for (int j = 0; j < jsonArray.length(); j ++) {
                                             JSONObject jsonObject = new JSONObject(jsonArray.getString(j));
                                             // 下载校园圈图片
-                                            downloadImageSingleThreadExecutor.execute(downloadImage(jsonObject.getString("url")));
+                                            downloadImageSingleThreadExecutor.execute(ImageRequest.downloadImage(jsonObject.getString("url")));
                                         }
                                     }
                                 }
@@ -352,7 +353,7 @@ public class CircleFragment extends Fragment {
                                         for (int j = 0; j < jsonArray.length(); j ++) {
                                             JSONObject jsonObject = new JSONObject(jsonArray.getString(j));
                                             // 下载校园圈图片
-                                            downloadImageSingleThreadExecutor.execute(downloadImage(jsonObject.getString("url")));
+                                            downloadImageSingleThreadExecutor.execute(ImageRequest.downloadImage(jsonObject.getString("url")));
                                         }
                                     }
                                 }
@@ -369,46 +370,6 @@ public class CircleFragment extends Fragment {
                     }
                 } else {
                     handler.sendEmptyMessage(0x0001);
-                }
-            }
-        };
-    }
-
-    /**
-     * 下载图片
-     * @param url
-     * @return
-     */
-    private Runnable downloadImage(final String url) {
-        return new Runnable() {
-            private String imageUrl = url;
-            @Override
-            public void run() {
-                Log.e("tag", "download image : " + HttpRequest.URL + url);
-
-                String storagePath = StorageUtil.getStorageDirectory(); // 获取内置存储卡路径
-                String[] tempPath = imageUrl.split("/");
-                String catalogPath = tempPath[0] + "/" + tempPath[1] + "/";
-                String filename = tempPath[2];
-
-                File file = new File(storagePath + catalogPath);
-                if (!file.exists() && !file.isDirectory()) {
-                    file.mkdirs();
-                    Log.e("tag", "创建路径：" + storagePath + catalogPath);
-                }
-
-                byte[] bytes = HttpRequest.downloadImg(HttpRequest.URL + url);
-                if (bytes != null) {
-                    try {
-                        FileOutputStream fos = new FileOutputStream(storagePath + catalogPath + filename);
-                        fos.write(bytes);
-                        fos.flush();
-                        fos.close();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }
             }
         };

@@ -1,5 +1,7 @@
 package team.circleofcampus.http;
 
+import android.util.Log;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -11,29 +13,34 @@ import team.circleofcampus.util.StorageUtil;
 /**
  * 下载图片
  */
-public class DownloadImage {
+public class ImageRequest {
 
     /**
      * 下载图片
-     * @param urls
+     * @param url
+     * @return
      */
-    public static void downloadImages(final ArrayList<String> urls) {
-        new Thread(){
+    public static Runnable downloadImage(final String url) {
+        return new Runnable() {
+            private String imageUrl = url;
             @Override
             public void run() {
-                for (String url : urls) {
+                Log.e("tag", "download image : " + HttpRequest.URL + url);
 
-                    String storagePath = StorageUtil.getStorageDirectory(); // 获取内置存储卡路径
-                    String[] tempPath = url.split("/");
-                    String catalogPath = "/" + tempPath[0] + "/" + tempPath[1] + "/";
-                    String filename = tempPath[2];
+                String storagePath = StorageUtil.getStorageDirectory(); // 获取内置存储卡路径
+                String[] tempPath = imageUrl.split("/");
+                String catalogPath = tempPath[0] + "/" + tempPath[1] + "/";
+                String filename = tempPath[2];
 
-                    File file = new File(storagePath + catalogPath);
-                    if (!file.exists() && !file.isDirectory()) {
-                        file.mkdirs();
-                        System.out.println("创建路径：" + storagePath + catalogPath);
-                    }
+                File file = new File(storagePath + catalogPath);
+                if (!file.exists() && !file.isDirectory()) {
+                    file.mkdirs();
+                    Log.e("tag", "创建路径：" + storagePath + catalogPath);
+                }
 
+                // 文件不存在时，下载
+                File imageFile = new File(storagePath + catalogPath + filename);
+                if (!imageFile.exists()) {
                     byte[] bytes = HttpRequest.downloadImg(HttpRequest.URL + url);
                     if (bytes != null) {
                         try {
@@ -49,6 +56,7 @@ public class DownloadImage {
                     }
                 }
             }
-        }.start();
+        };
     }
+
 }

@@ -220,6 +220,7 @@ public class LoginActivity extends AppCompatActivity {
                     .setInterceptBack(false)
                     .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
                     .show();
+
             // 联网线程
             new Thread() {
                 @Override

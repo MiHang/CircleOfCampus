@@ -120,8 +120,17 @@ public class HomeActivity extends AppCompatActivity {
                 case 0x0005 : { // 获取我发布的社团圈的数量
                     SharedPreferencesUtil.setMyPublishSocietyCircleCount(HomeActivity.this, msg.arg1);
                     Log.e("tag", "my publish society circle count = " + msg.arg1);
-                    // 加载与HomeActivity相关的其他fragment的页面信息
-                    LoadingFragmentData();
+                    loadData();
+                } break;
+                case 0x0006 : { // 网络重新连接
+                    if (selectedPageId == 0) {
+                        singleThreadExecutor.execute(loadingSocietyAuthority()); // 加载社团发布权限
+                        singleThreadExecutor.execute(loadingCampusCircleCount()); // 获取校园圈的数量
+                        singleThreadExecutor.execute(loadingSocietyCircleCount()); // 获取社团圈的数量
+                        singleThreadExecutor.execute(loadingMyPublishSocietyCircleCount()); // 获取我发布的社团圈的数量
+                    } else {
+                        loadData();
+                    }
                 } break;
             }
         }
@@ -185,6 +194,7 @@ public class HomeActivity extends AppCompatActivity {
         MessageFragment bFragment = new MessageFragment();
         bFragment.bind(broadcastReceiver);
         data.add(bFragment);
+
         // 我的发布
         data.add(new MyPublishFragment());
 
@@ -251,10 +261,7 @@ public class HomeActivity extends AppCompatActivity {
             public void networkAvailable(int type) {
                 // 数据加载， 网络重新连接上可再次加载
                 Log.e("tag", "HomeActivity reload data...");
-                singleThreadExecutor.execute(loadingSocietyAuthority()); // 加载社团发布权限
-                singleThreadExecutor.execute(loadingCampusCircleCount()); // 获取校园圈的数量
-                singleThreadExecutor.execute(loadingSocietyCircleCount()); // 获取社团圈的数量
-                singleThreadExecutor.execute(loadingMyPublishSocietyCircleCount()); // 获取我发布的社团圈的数量
+                handler.sendEmptyMessage(0x0006);
             }
             @Override
             public void networkUnavailable() {
@@ -293,10 +300,17 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /**
-     * 加载与HomeActivity相关的其他fragment的页面信息
+     * 重新加载页面数据
      */
-    private void LoadingFragmentData() {
-        ((CircleFragment)data.get(0)).loadData(userId); // 加载首页相关数据
+    private void loadData() {
+        switch (selectedPageId) {
+            case 0 : { // 加载首页相关数据
+                ((CircleFragment)data.get(0)).loadData(userId);
+            } break;
+            case 2 : { // 加载我的发布页相关数据
+                ((MyPublishFragment)data.get(2)).loadData();
+            } break;
+        }
     }
 
     /**

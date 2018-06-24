@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -37,11 +38,13 @@
     </LinearLayout>
 
     <!-- 封面 -->
-    <ImageView
+    <team.circleofcampus.view.RoundImageView
         android:id="@+id/item_my_publish_cover"
         android:layout_width="100dp"
-        android:layout_height="80dp"
-        android:scaleType="centerInside"
-        android:src="@drawable/test_community_recruit"/>
+        android:layout_height="58dp"
+        app:roundHeight="6dp"
+        app:roundWidth="6dp"
+        android:src="@drawable/img_loading_failed"
+        android:scaleType="centerCrop"/>
 
 </LinearLayout>

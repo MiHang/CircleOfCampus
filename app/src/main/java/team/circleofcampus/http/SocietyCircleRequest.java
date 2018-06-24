@@ -30,9 +30,21 @@ public class SocietyCircleRequest {
 
     /**
      * 查询某用户发布的社团圈信息
+     * @param uId
+     * @param start
+     * @param end
      * @return
      */
-    public static String getMyPublishSocietyCircle() {
+    public static String getMyPublishSocietyCircle(int uId, int start, int end) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("uId", uId);
+            json.put("start", start);
+            json.put("end", end);
+            return HttpRequest.postRequest(HttpRequest.URL + "coc/getMyPublishSocietyCircle.do", json.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

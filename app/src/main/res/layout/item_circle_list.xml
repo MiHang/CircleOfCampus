@@ -18,7 +18,7 @@
         android:layout_marginBottom="5dp"
         app:roundHeight="6dp"
         app:roundWidth="6dp"
-        android:src="@drawable/img_sxcz"
+        android:src="@drawable/img_loading_failed"
         android:scaleType="centerCrop"/>
 
     <LinearLayout
@@ -44,13 +44,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="时间：2018年06月01日"
-            android:textSize="10dp"/>
+            android:textColor="#9b9b9b"
+            android:textSize="11dp"/>
 
         <team.circleofcampus.view.FontTextView
             android:id="@+id/item_circle_venue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="#9b9b9b"
             android:text="地点：学术交流中心"
-            android:textSize="10dp"/>
+            android:textSize="11dp"/>
     </LinearLayout>
 </LinearLayout>

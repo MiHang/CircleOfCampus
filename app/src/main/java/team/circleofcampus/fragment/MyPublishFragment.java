@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,6 +35,7 @@ import team.circleofcampus.activity.RegisterActivity;
 import team.circleofcampus.adapter.MyFragmentPagerAdapter;
 import team.circleofcampus.http.LoginRequest;
 import team.circleofcampus.http.SocietyAuthorityRequest;
+import team.circleofcampus.service.SingleThreadService;
 import team.circleofcampus.util.DensityUtil;
 import team.circleofcampus.util.FontUtil;
 import team.circleofcampus.util.SharedPreferencesUtil;
@@ -44,34 +46,30 @@ import team.circleofcampus.util.SharedPreferencesUtil;
 public class MyPublishFragment extends Fragment {
 
     private View view;
-
     @BindView(R.id.unauthorized_root)
     protected LinearLayout unauthorizedRoot;
     @BindView(R.id.authorized_root)
     protected LinearLayout authorizedRoot;
-
     @BindView(R.id.my_publish_tab_layout)
     protected TabLayout tabLayout;
     @BindView(R.id.my_publish_view_pager)
     protected ViewPager viewPager;
     private MyFragmentPagerAdapter myPublishFragmentAdapter;
-
     private ArrayList<Fragment> fragments = new ArrayList<Fragment>();
 
+    private int userId = 0; // 用户ID
+    private boolean isAuthority = false; // 是否已被授权发布社团公告
+    private boolean isResume = true; // 当前Fragment是否可见
     private boolean isSkipAuthority = false; // 是否已跳转到权限申请页面
-
-    /**
-     * 用户ID
-     */
-    private int userId = 0;
-    private boolean isAuthority = false;
 
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0x0001 : {
-                    Toast.makeText(getContext(), "无法与服务器通信，请检查您的网络连接", Toast.LENGTH_SHORT).show();
+                    if (isResume) {
+                        Toast.makeText(getContext(), "无法与服务器通信，请检查您的网络连接", Toast.LENGTH_SHORT).show();
+                    }
                 } break;
                 case 0x0002 : { // 已授权
                     SharedPreferencesUtil.setAuthorized(getContext(), true);
@@ -87,24 +85,6 @@ public class MyPublishFragment extends Fragment {
             }
         }
     };
-
-    @Override
-    public void onDestroyView() {
-        super .onDestroyView();
-        if (null != view) {
-            ((ViewGroup) view.getParent()).removeView(view);
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (isSkipAuthority) {
-            Log.e("tag", "onResume()....., 从权限申请页面返回");
-            isSkipAuthority = false;
-            loadingSocietyAuthority();
-        }
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -127,7 +107,6 @@ public class MyPublishFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.e("tag", "MyPublishFragment onCreateView....");
         if (isAuthority != SharedPreferencesUtil.isAuthorized(getContext())) {
             if (SharedPreferencesUtil.isAuthorized(getContext())) {
                 handler.sendEmptyMessage(0x0002);
@@ -135,7 +114,6 @@ public class MyPublishFragment extends Fragment {
                 handler.sendEmptyMessage(0x0003);
             }
         }
-
         return view;
     }
 
@@ -157,12 +135,8 @@ public class MyPublishFragment extends Fragment {
         // 设置tab显示的文本
         tabLayout.getTabAt(0).setText("已审核");
         tabLayout.getTabAt(1).setText("未审核");
-
-        // 设置Tab文字字体
-        changeTabsFont();
-
-        // 设置下划线左右边距
-        setTabLine(tabLayout, 63,63);
+        changeTabsFont(); // 设置Tab文字字体
+        setTabLine(tabLayout, 63,63); // 设置下划线左右边距
 
         // 为tab添加垂直分割线
         LinearLayout linearLayout = (LinearLayout) tabLayout.getChildAt(0);
@@ -170,35 +144,40 @@ public class MyPublishFragment extends Fragment {
         linearLayout.setDividerDrawable(ContextCompat.getDrawable(getContext(),
                 R.drawable.shape_tab_layout_divider));
         linearLayout.setDividerPadding(DensityUtil.dpToPx(getContext(), 10f));
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        isResume = true;
+        if (isSkipAuthority) {
+            Log.e("tag", "onResume()....., 从权限申请页面返回");
+            isSkipAuthority = false;
+            loadingSocietyAuthority();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isResume = false;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super .onDestroyView();
+        if (null != view) {
+            ((ViewGroup) view.getParent()).removeView(view);
+        }
     }
 
     /**
-     * 加载我发布过的社团圈信息
+     * 数据加载
      */
-    private void loadingMyPublishSocietyCircle() {
-        // 联网线程
-        new Thread(){
-            @Override
-            public void run() {
-//                String result = SocietyAuthorityRequest.hasSocietyAuthority(userId);
-//                if (null != result) {
-//                    try {
-//                        JSONObject json = new JSONObject(result);
-//                        result = json.getString("result");
-//                        if ("authority".equals(result)) { // 已授权
-//                            handler.sendEmptyMessage(0x0002);
-//                        } else if ("unauthority".equals(result)) { // 未授权
-//                            handler.sendEmptyMessage(0x0003);
-//                        }
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                } else {
-//                    handler.sendEmptyMessage(0x0001);
-//                }
-            }
-        }.start();
+    public void loadData() {
+        if (fragments.size() > 0) {
+            ((AuditedFragment)fragments.get(0)).loadData(userId);
+        }
     }
 
     /**
