@@ -5,6 +5,7 @@ import android.content.Context;
 import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -54,6 +55,21 @@ public class CampusCircleDao {
     public int insertData(CampusCircle campusCircle) {
         try {
             dao.create(campusCircle);
+            return 1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * 删除全部数据
+     * @return 1 - 数据删除成功， 0 - 数据删除失败
+     */
+    public int deleteForAllData() {
+        try {
+            List<CampusCircle> campusCircles = dao.queryForAll();
+            dao.delete(campusCircles);
             return 1;
         } catch (SQLException e) {
             e.printStackTrace();

@@ -84,9 +84,11 @@ public class HomeActivity extends AppCompatActivity {
 
     // 单例线程池
     private ExecutorService singleThreadExecutor;
-
     // 网络连接状态改变广播
     private NetworkConnectChangedReceiver networkConnectChangedReceiver = new NetworkConnectChangedReceiver();
+
+    // 当前activity可见
+    private boolean isResume = true;
 
     /**
      * 用户ID
@@ -98,7 +100,9 @@ public class HomeActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0x0001 : {
-                    Toast.makeText(HomeActivity.this, "无法与服务器通信，请检查您的网络连接", Toast.LENGTH_SHORT).show();
+                    if (isResume) {
+                        Toast.makeText(HomeActivity.this, "无法与服务器通信，请检查您的网络连接", Toast.LENGTH_SHORT).show();
+                    }
                 } break;
                 case 0x0002 : { // 社团权限信息
                     if ((boolean)msg.obj) { // 已授权
@@ -118,6 +122,8 @@ public class HomeActivity extends AppCompatActivity {
                 case 0x0005 : { // 获取我发布的社团圈的数量
                     SharedPreferencesUtil.setMyPublishSocietyCircleCount(HomeActivity.this, msg.arg1);
                     Log.e("tag", "my publish society circle count = " + msg.arg1);
+                    // 加载与HomeActivity相关的其他fragment的页面信息
+                    LoadingFragmentData();
                 } break;
             }
         }
@@ -251,7 +257,6 @@ public class HomeActivity extends AppCompatActivity {
                 singleThreadExecutor.execute(loadingCampusCircleCount()); // 获取校园圈的数量
                 singleThreadExecutor.execute(loadingSocietyCircleCount()); // 获取社团圈的数量
                 singleThreadExecutor.execute(loadingMyPublishSocietyCircleCount()); // 获取我发布的社团圈的数量
-                ((CircleFragment)data.get(0)).loadData(); // 加载首页相关数据
             }
             @Override
             public void networkUnavailable() {
@@ -259,6 +264,18 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isResume = true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isResume = false;
     }
 
     @Override
@@ -275,6 +292,13 @@ public class HomeActivity extends AppCompatActivity {
             singleThreadExecutor.shutdownNow();
             SingleThreadService.destroySingleThreadPool();
         }
+    }
+
+    /**
+     * 加载与HomeActivity相关的其他fragment的页面信息
+     */
+    private void LoadingFragmentData() {
+        ((CircleFragment)data.get(0)).loadData(userId); // 加载首页相关数据
     }
 
     /**

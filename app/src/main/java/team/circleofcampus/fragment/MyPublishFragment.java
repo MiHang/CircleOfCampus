@@ -127,6 +127,7 @@ public class MyPublishFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.e("tag", "MyPublishFragment onCreateView....");
         if (isAuthority != SharedPreferencesUtil.isAuthorized(getContext())) {
             if (SharedPreferencesUtil.isAuthorized(getContext())) {
                 handler.sendEmptyMessage(0x0002);
@@ -170,8 +171,6 @@ public class MyPublishFragment extends Fragment {
                 R.drawable.shape_tab_layout_divider));
         linearLayout.setDividerPadding(DensityUtil.dpToPx(getContext(), 10f));
 
-        // 加载我发布过的社团圈信息
-        loadingMyPublishSocietyCircle();
     }
 
     /**
@@ -182,22 +181,22 @@ public class MyPublishFragment extends Fragment {
         new Thread(){
             @Override
             public void run() {
-                String result = SocietyAuthorityRequest.hasSocietyAuthority(userId);
-                if (null != result) {
-                    try {
-                        JSONObject json = new JSONObject(result);
-                        result = json.getString("result");
-                        if ("authority".equals(result)) { // 已授权
-                            handler.sendEmptyMessage(0x0002);
-                        } else if ("unauthority".equals(result)) { // 未授权
-                            handler.sendEmptyMessage(0x0003);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    handler.sendEmptyMessage(0x0001);
-                }
+//                String result = SocietyAuthorityRequest.hasSocietyAuthority(userId);
+//                if (null != result) {
+//                    try {
+//                        JSONObject json = new JSONObject(result);
+//                        result = json.getString("result");
+//                        if ("authority".equals(result)) { // 已授权
+//                            handler.sendEmptyMessage(0x0002);
+//                        } else if ("unauthority".equals(result)) { // 未授权
+//                            handler.sendEmptyMessage(0x0003);
+//                        }
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                } else {
+//                    handler.sendEmptyMessage(0x0001);
+//                }
             }
         }.start();
     }

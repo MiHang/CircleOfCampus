@@ -62,6 +62,21 @@ public class SocietyCircleDao {
     }
 
     /**
+     * 删除全部数据
+     * @return 1 - 数据删除成功， 0 - 数据删除失败
+     */
+    public int deleteForAllData() {
+        try {
+            List<SocietyCircle> societyCircles = dao.queryForAll();
+            dao.delete(societyCircles);
+            return 1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
      * 删除多行数据
      * @param societyCircles
      * @return 1 - 数据删除成功， 0 - 数据删除失败

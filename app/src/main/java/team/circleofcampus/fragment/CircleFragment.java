@@ -89,43 +89,35 @@ public class CircleFragment extends Fragment {
     }
 
     private int userId = 0; // 用户ID
+    private boolean isRefreshing = false; // 当前是否正在刷新
+    private boolean isResume = true; // 当前Fragment是否可见
 
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0x0001: {
-                    Toast.makeText(getContext(), "无法与服务器通信，请检查您的网络连接", Toast.LENGTH_SHORT).show();
+                    if (isResume) {
+                        Toast.makeText(getContext(), "无法与服务器通信，请检查您的网络连接", Toast.LENGTH_SHORT).show();
+                    }
                 } break;
                 case 0x0002: { // 校园圈与社团圈数据加载完毕
                     campusCircleListViewAdapter.notifyDataSetChanged();
                     societyCircleListViewAdapter.notifyDataSetChanged();
+                    if (isRefreshing) {
+                        isRefreshing = false;
+                        refreshLayout.finishRefreshing();
+                    }
                 } break;
             }
         }
     };
 
     @Override
-    public void onDestroyView() {
-        super .onDestroyView();
-        if (null != view) {
-            ((ViewGroup) view.getParent()).removeView(view);
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_home, null);
         ButterKnife.bind(this, view);
-
-        // 获取用户ID
-        userId = SharedPreferencesUtil.getUID(getContext());
 
         // 设置下拉刷新部分的HeadView
         BezierLayout headerView = new BezierLayout(getContext());
@@ -140,12 +132,9 @@ public class CircleFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new RefreshListenerAdapter(){
             @Override
             public void onRefresh(final TwinklingRefreshLayout refreshLayout) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshLayout.finishRefreshing();
-                    }
-                },3000);
+                Log.e("tag", "CircleFragment refresh data...");
+                isRefreshing = true;
+                loadData();
             }
             @Override
             public void onLoadMore(final TwinklingRefreshLayout refreshLayout) {}
@@ -169,10 +158,10 @@ public class CircleFragment extends Fragment {
             SocietyCircleDao societyCircleDao = new SocietyCircleDao(getContext());
             List<CampusCircle> campusCircleList = campusCircleDao.queryDataTopNum(3);
             List<SocietyCircle> societyCircleList = societyCircleDao.queryDataTopNum(3);
-            if (campusCircleList != null) {
+            if (campusCircleList != null && campusCircleList.size() > 0) {
                 campusCircles = campusCircleList;
             }
-            if (societyCircleList != null) {
+            if (societyCircleList != null && societyCircleList.size() > 0) {
                 societyCircles = societyCircleList;
             }
         } catch (SQLException e) {
@@ -209,8 +198,27 @@ public class CircleFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.e("tag", "CircleFragment onCreateView....");
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isResume = true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isResume = false;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super .onDestroyView();
+        if (null != view) {
+            ((ViewGroup) view.getParent()).removeView(view);
+        }
     }
 
     /**
@@ -229,6 +237,14 @@ public class CircleFragment extends Fragment {
     }
 
     /**
+     * 数据加载,同时设置用户ID
+     */
+    public void loadData(int userId) {
+        this.userId = userId; // 用户ID
+        loadData();
+    }
+
+    /**
      * 加载3条社团圈数据
      * @return
      */
@@ -243,12 +259,17 @@ public class CircleFragment extends Fragment {
                         JSONArray jsonArr = new JSONArray(result);
                         Gson gson = new Gson();
                         JSONObject json = new JSONObject(jsonArr.getString(0));
-                        if (!json.has("result")) {
+                        if (!json.has("result") && jsonArr.length() > 0) {
 
-                            societyCircles.clear();
+                            // 清除本地相关缓存数据，重新加载
+                            SocietyCircleDao societyCircleDao = new SocietyCircleDao(getContext());
+                            societyCircleDao.deleteForAllData(); // 清空本地数据库数据
+
+//                            // 清除本地缓存图片
+//                            String storagePath = StorageUtil.getStorageDirectory(); // 获取内置存储卡路径
+//                            StorageUtil.delAllFile(storagePath + "coc/society_circle/");
 
                             // 将数据保存到本地数据库
-                            SocietyCircleDao societyCircleDao = new SocietyCircleDao(getContext());
                             for (int i =0; i < jsonArr.length(); i ++) {
                                 SocietyCircle societyCircle = gson.fromJson(jsonArr.getString(i), SocietyCircle.class);
                                 if (societyCircleDao.queryDataById(societyCircle.getId()) == null) {
@@ -267,7 +288,10 @@ public class CircleFragment extends Fragment {
                                         }
                                     }
                                 }
-                                societyCircles.add(societyCircle);
+                                societyCircles.add(i, societyCircle);
+                                if (i+1 < societyCircles.size()) {
+                                    societyCircles.remove(i+1);
+                                }
                             }
                             downloadImageSingleThreadExecutor.shutdown();
                             while (true) {
@@ -308,12 +332,17 @@ public class CircleFragment extends Fragment {
                         JSONArray jsonArr = new JSONArray(result);
                         Gson gson = new Gson();
                         JSONObject json = new JSONObject(jsonArr.getString(0));
-                        if (!json.has("result")) {
+                        if (!json.has("result") && jsonArr.length() > 0) {
 
-                            campusCircles.clear();
+                            // 清除本地相关缓存数据，重新加载
+                            CampusCircleDao campusCircleDao = new CampusCircleDao(getContext());
+                            campusCircleDao.deleteForAllData(); // 清空本地数据库数据
+
+//                            // 清除本地缓存图片
+//                            String storagePath = StorageUtil.getStorageDirectory(); // 获取内置存储卡路径
+//                            StorageUtil.delAllFile(storagePath + "coc/campus_circle/");
 
                             // 将数据保存到本地数据库
-                            CampusCircleDao campusCircleDao = new CampusCircleDao(getContext());
                             for (int i =0; i < jsonArr.length(); i ++) {
                                 CampusCircle campusCircle = gson.fromJson(jsonArr.getString(i), CampusCircle.class);
                                 if (campusCircleDao.queryDataById(campusCircle.getId()) == null) {
@@ -332,7 +361,10 @@ public class CircleFragment extends Fragment {
                                         }
                                     }
                                 }
-                                campusCircles.add(campusCircle);
+                                campusCircles.add(i, campusCircle);
+                                if (i+1 < campusCircles.size()) {
+                                    campusCircles.remove(i+1);
+                                }
                             }
                         }
                     } catch (JSONException e) {

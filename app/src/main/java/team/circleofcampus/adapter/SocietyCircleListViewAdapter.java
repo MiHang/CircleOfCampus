@@ -55,7 +55,6 @@ public class SocietyCircleListViewAdapter extends BaseAdapter {
 
         ViewHolder holder = null;
         if (view == null) {
-
             view = inflater.inflate(R.layout.item_circle_list, viewGroup, false);
             holder = new ViewHolder(view);
             view.setTag(holder);
