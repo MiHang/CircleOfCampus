@@ -1,8 +1,6 @@
 package team.circleofcampus.fragment;
 
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -37,10 +35,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import team.circleofcampus.Interface.FragmentSwitchListener;
-import team.circleofcampus.Interface.NetworkStateChangeListener;
 import team.circleofcampus.R;
 import team.circleofcampus.activity.DetailCircleActivity;
-import team.circleofcampus.activity.HomeActivity;
 import team.circleofcampus.adapter.CampusCircleListViewAdapter;
 import team.circleofcampus.adapter.SocietyCircleListViewAdapter;
 import team.circleofcampus.dao.CampusCircleDao;
@@ -50,7 +46,6 @@ import team.circleofcampus.http.HttpRequest;
 import team.circleofcampus.http.SocietyCircleRequest;
 import team.circleofcampus.pojo.CampusCircle;
 import team.circleofcampus.pojo.SocietyCircle;
-import team.circleofcampus.receiver.NetworkConnectChangedReceiver;
 import team.circleofcampus.service.SingleThreadService;
 import team.circleofcampus.util.SharedPreferencesUtil;
 import team.circleofcampus.util.StorageUtil;

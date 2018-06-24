@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.common.utils.ByteUtils;
 import com.common.utils.TimeUtil;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
 import com.yanzhenjie.recyclerview.swipe.OnSwipeMenuItemClickListener;
@@ -27,7 +26,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import team.circleofcampus.BroadcastReceiver.MyBroadcastReceiver;
+import team.circleofcampus.receiver.MyBroadcastReceiver;
 import team.circleofcampus.Interface.MsgBroadcastReceiverListener;
 import team.circleofcampus.Interface.OnItemClickListener;
 import team.circleofcampus.R;

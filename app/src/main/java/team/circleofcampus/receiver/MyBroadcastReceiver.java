@@ -1,4 +1,4 @@
-package team.circleofcampus.BroadcastReceiver;
+package team.circleofcampus.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
