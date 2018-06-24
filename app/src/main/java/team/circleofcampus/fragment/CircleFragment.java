@@ -1,6 +1,8 @@
 package team.circleofcampus.fragment;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -35,8 +37,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import team.circleofcampus.Interface.FragmentSwitchListener;
+import team.circleofcampus.Interface.NetworkStateChangeListener;
 import team.circleofcampus.R;
 import team.circleofcampus.activity.DetailCircleActivity;
+import team.circleofcampus.activity.HomeActivity;
 import team.circleofcampus.adapter.CampusCircleListViewAdapter;
 import team.circleofcampus.adapter.SocietyCircleListViewAdapter;
 import team.circleofcampus.dao.CampusCircleDao;
@@ -46,6 +50,7 @@ import team.circleofcampus.http.HttpRequest;
 import team.circleofcampus.http.SocietyCircleRequest;
 import team.circleofcampus.pojo.CampusCircle;
 import team.circleofcampus.pojo.SocietyCircle;
+import team.circleofcampus.receiver.NetworkConnectChangedReceiver;
 import team.circleofcampus.service.SingleThreadService;
 import team.circleofcampus.util.SharedPreferencesUtil;
 import team.circleofcampus.util.StorageUtil;
@@ -106,6 +111,11 @@ public class CircleFragment extends Fragment {
         if (null != view) {
             ((ViewGroup) view.getParent()).removeView(view);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
@@ -194,14 +204,6 @@ public class CircleFragment extends Fragment {
                 getActivity().overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
             }
         });
-
-        // 图片下载单例线程池
-        downloadImageSingleThreadExecutor = SingleThreadService.newSingleThreadExecutor();
-
-        // 单例线程池
-        singleThreadExecutor = SingleThreadService.getSingleThreadPool();
-        singleThreadExecutor.execute(loadingTop3CampusCircle()); // 加载3条校园圈数据
-        singleThreadExecutor.execute(loadingTop3SocietyCircle()); // 加载3条社团圈数据
     }
 
     @Override
@@ -209,6 +211,21 @@ public class CircleFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.e("tag", "CircleFragment onCreateView....");
         return view;
+    }
+
+    /**
+     * 数据加载
+     */
+    public void loadData() {
+        Log.e("tag", "CircleFragment reload data...");
+        if (downloadImageSingleThreadExecutor == null) { // 图片下载单例线程池
+            downloadImageSingleThreadExecutor = SingleThreadService.newSingleThreadExecutor();
+        }
+        if (singleThreadExecutor == null) { // 数据加载单例线程池
+            singleThreadExecutor = SingleThreadService.getSingleThreadPool();
+        }
+        singleThreadExecutor.execute(loadingTop3CampusCircle()); // 加载3条校园圈数据
+        singleThreadExecutor.execute(loadingTop3SocietyCircle()); // 加载3条社团圈数据
     }
 
     /**

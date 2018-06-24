@@ -2,6 +2,8 @@ package team.circleofcampus.activity;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -29,10 +31,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import team.circleofcampus.BroadcastReceiver.MyBroadcastReceiver;
 import team.circleofcampus.Interface.FragmentSwitchListener;
+import team.circleofcampus.Interface.NetworkStateChangeListener;
 import team.circleofcampus.R;
 import team.circleofcampus.adapter.MyFragmentPagerAdapter;
 import team.circleofcampus.http.CampusCircleRequest;
 import team.circleofcampus.http.SocietyCircleRequest;
+import team.circleofcampus.receiver.NetworkConnectChangedReceiver;
 import team.circleofcampus.service.MyService;
 import team.circleofcampus.fragment.CampusCircleFragment;
 import team.circleofcampus.fragment.CircleFragment;
@@ -45,7 +49,6 @@ import team.circleofcampus.http.SocietyAuthorityRequest;
 import team.circleofcampus.service.SingleThreadService;
 import team.circleofcampus.util.SharedPreferencesUtil;
 import team.circleofcampus.view.NoPreloadViewPager;
-
 
 /**
  * 主界面
@@ -78,6 +81,12 @@ public class HomeActivity extends AppCompatActivity {
     private int selectedPageId = 0;
     SharedPreferencesUtil sharedPreferencesUtil;
     String account;
+
+    // 单例线程池
+    private ExecutorService singleThreadExecutor;
+
+    // 网络连接状态改变广播
+    private NetworkConnectChangedReceiver networkConnectChangedReceiver = new NetworkConnectChangedReceiver();
 
     /**
      * 用户ID
@@ -132,24 +141,17 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
+
+        // 获取用户ID
+        userId = SharedPreferencesUtil.getUID(HomeActivity.this);
+        // 记录本次登陆时间
+        SharedPreferencesUtil.setLoginTime(HomeActivity.this, System.currentTimeMillis());
+
         SystemBarTintManager tintManager = new SystemBarTintManager(this);
         tintManager.setStatusBarTintEnabled(true);
         tintManager.setNavigationBarTintEnabled(true);
         tintManager.setTintResource(R.drawable.bg);
         headerSelect(0);
-
-        // 获取用户ID
-        userId = SharedPreferencesUtil.getUID(HomeActivity.this);
-
-        // 记录本次登陆时间
-        SharedPreferencesUtil.setLoginTime(HomeActivity.this, System.currentTimeMillis());
-
-        // 单例线程池
-        ExecutorService singleThreadExecutor = SingleThreadService.getSingleThreadPool();
-        singleThreadExecutor.execute(loadingSocietyAuthority()); // 加载社团发布权限
-        singleThreadExecutor.execute(loadingCampusCircleCount()); // 获取校园圈的数量
-        singleThreadExecutor.execute(loadingSocietyCircleCount()); // 获取社团圈的数量
-        singleThreadExecutor.execute(loadingMyPublishSocietyCircleCount()); // 获取我发布的社团圈的数量
 
         // 校园圈
         CircleFragment circleFragment = new CircleFragment();
@@ -164,7 +166,7 @@ public class HomeActivity extends AppCompatActivity {
         });
         data.add(circleFragment);
 
-        account=sharedPreferencesUtil.getAccount(this);
+        account = sharedPreferencesUtil.getAccount(this);
         if (account!=null){
             broadcastReceiver = new MyBroadcastReceiver();
             IntentFilter intentFilter = new IntentFilter();
@@ -233,6 +235,30 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         });
+
+        // 获取单例线程池
+        singleThreadExecutor = SingleThreadService.getSingleThreadPool();
+        // 注册网络连接状态改变广播
+        IntentFilter netWorkIntentFilter = new IntentFilter();
+        netWorkIntentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkConnectChangedReceiver, netWorkIntentFilter);
+        networkConnectChangedReceiver.setNetworkStateChangeListener(new NetworkStateChangeListener() {
+            @Override
+            public void networkAvailable(int type) {
+                // 数据加载， 网络重新连接上可再次加载
+                Log.e("tag", "HomeActivity reload data...");
+                singleThreadExecutor.execute(loadingSocietyAuthority()); // 加载社团发布权限
+                singleThreadExecutor.execute(loadingCampusCircleCount()); // 获取校园圈的数量
+                singleThreadExecutor.execute(loadingSocietyCircleCount()); // 获取社团圈的数量
+                singleThreadExecutor.execute(loadingMyPublishSocietyCircleCount()); // 获取我发布的社团圈的数量
+                ((CircleFragment)data.get(0)).loadData(); // 加载首页相关数据
+            }
+            @Override
+            public void networkUnavailable() {
+                Toast.makeText(HomeActivity.this, "糟糕，网络开小差了(;′⌒`)", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     @Override
@@ -240,6 +266,14 @@ public class HomeActivity extends AppCompatActivity {
         super.onDestroy();
         if (broadcastReceiver!=null){
             unregisterReceiver(broadcastReceiver);
+        }
+        if (networkConnectChangedReceiver != null) {
+            Log.e("tag", "HomeActivity unregister networkConnectChangedReceiver...");
+            unregisterReceiver(networkConnectChangedReceiver);
+        }
+        if (singleThreadExecutor != null) {
+            singleThreadExecutor.shutdownNow();
+            SingleThreadService.destroySingleThreadPool();
         }
     }
 

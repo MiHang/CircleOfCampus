@@ -28,4 +28,11 @@ public class SingleThreadService {
         }
         return singleThreadExecutor;
     }
+
+    /**
+     * 销毁单例线程池
+     */
+    public static void destroySingleThreadPool() {
+        singleThreadExecutor = null;
+    }
 }

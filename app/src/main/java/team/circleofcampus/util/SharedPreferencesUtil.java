@@ -5,9 +5,6 @@ import android.content.SharedPreferences;
 
 import java.util.ArrayList;
 
-/**
- * Created by Jaye Li on 2017/11/30.
- */
 public class SharedPreferencesUtil {
 
     /**
