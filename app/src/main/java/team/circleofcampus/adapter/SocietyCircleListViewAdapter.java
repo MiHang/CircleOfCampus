@@ -20,6 +20,8 @@ import java.util.List;
 
 import team.circleofcampus.R;
 import team.circleofcampus.pojo.SocietyCircle;
+import team.circleofcampus.util.AsyncTaskImageLoad;
+import team.circleofcampus.util.ImageUtil;
 import team.circleofcampus.util.StorageUtil;
 
 /**
@@ -63,26 +65,22 @@ public class SocietyCircleListViewAdapter extends BaseAdapter {
         }
 
         // 加载公告封面
-        if (items.get(i).getImagesUrl() != null && !items.get(i).getImagesUrl().equals("")) {
-            try {
-                JSONArray jsonArray = new JSONArray(items.get(i).getImagesUrl());
-                if (jsonArray.length() > 0) {
-                    JSONObject json = new JSONObject(jsonArray.getString(0));
-                    String path = StorageUtil.getStorageDirectory();
-                    String filePath = path + json.getString("url");
-                    Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-                    Drawable drawable = new BitmapDrawable(bitmap);
-                    holder.cover.setImageDrawable(drawable);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+        LoadImage(holder.cover, items.get(i).getImagesUrl());
         holder.title.setText(items.get(i).getTitle());
         holder.activityTime.setText(items.get(i).getActivityTime());
         holder.venue.setText(items.get(i).getVenue());
 
         return view;
+    }
+
+    /**
+     * 异步加载图片资源
+     * @param imageView - 图片控件
+     * @param imagesPath - 图片路径
+     */
+    private void LoadImage(ImageView imageView, String imagesPath) {
+        AsyncTaskImageLoad async = new AsyncTaskImageLoad(imageView);
+        async.execute(imagesPath);
     }
 
     class ViewHolder {
