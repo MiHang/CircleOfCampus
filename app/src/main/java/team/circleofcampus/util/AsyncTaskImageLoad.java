@@ -39,10 +39,12 @@ public class AsyncTaskImageLoad extends AsyncTask<String, Integer, Drawable> {
                     String path = StorageUtil.getStorageDirectory();
                     String filePath = path + json.getString("url");
                     Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-                    bitmap = ImageUtil.sizeCompress(bitmap, 208, 114); // 尺寸压缩
-                    bitmap = ImageUtil.compressImage(bitmap, 80); // 质量压缩
-                    Drawable drawable = new BitmapDrawable(bitmap);
-                    return drawable;
+                    if(bitmap != null) {
+                        bitmap = ImageUtil.sizeCompress(bitmap, 208, 114); // 尺寸压缩
+                        bitmap = ImageUtil.compressImage(bitmap, 80); // 质量压缩
+                        Drawable drawable = new BitmapDrawable(bitmap);
+                        return drawable;
+                    }
                 }
             }
         } catch (JSONException e) {
