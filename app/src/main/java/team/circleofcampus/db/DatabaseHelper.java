@@ -10,6 +10,7 @@ import com.j256.ormlite.table.TableUtils;
 import java.sql.SQLException;
 
 import team.circleofcampus.pojo.CampusCircle;
+import team.circleofcampus.pojo.MyPublishSocietyCircle;
 import team.circleofcampus.pojo.SocietyCircle;
 import team.circleofcampus.pojo.User;
 
@@ -48,6 +49,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, CampusCircle.class);
             // 创建"t_society_circle"社团圈表
             TableUtils.createTable(connectionSource, SocietyCircle.class);
+            // 创建"t_my_publish_society_circle"我发布的社团公告表
+            TableUtils.createTable(connectionSource, MyPublishSocietyCircle.class);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

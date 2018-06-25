@@ -8,17 +8,42 @@ import java.util.ArrayList;
 public class SharedPreferencesUtil {
 
     /**
-     * 设置用户是否发布新的社团圈信息
+     * 设置网络是否可用
      * @param context
-     * @param iPublishNewCircle
+     * @param isNetworkAvailable
      */
-    public static void setPublishedNewCircle(Context context, boolean iPublishNewCircle) {
+    public static void setNetworkAvailable(Context context, boolean isNetworkAvailable) {
         //实例化SharedPreferences对象
         SharedPreferences preferences = context.getSharedPreferences("share", Context.MODE_PRIVATE);
 
         //实例化SharedPreferences.Editor对象
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean("iPublishNewCircle", iPublishNewCircle);//保存数据
+        editor.putBoolean("isNetworkAvailable", isNetworkAvailable);//保存数据
+        editor.commit();//提交当前数据
+    }
+
+    /**
+     * 获取用户是否发布新的社团圈信息
+     * @param context
+     * @return
+     */
+    public static boolean isNetworkAvailable (Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("share", Context.MODE_PRIVATE);
+        return preferences.getBoolean("isNetworkAvailable", true);
+    }
+
+    /**
+     * 设置用户是否发布新的社团圈信息
+     * @param context
+     * @param isPublishNewCircle
+     */
+    public static void setPublishedNewCircle(Context context, boolean isPublishNewCircle) {
+        //实例化SharedPreferences对象
+        SharedPreferences preferences = context.getSharedPreferences("share", Context.MODE_PRIVATE);
+
+        //实例化SharedPreferences.Editor对象
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("isPublishNewCircle", isPublishNewCircle);//保存数据
         editor.commit();//提交当前数据
     }
 
@@ -29,7 +54,7 @@ public class SharedPreferencesUtil {
      */
     public static boolean isPublishedNewCircle (Context context) {
         SharedPreferences preferences = context.getSharedPreferences("share", Context.MODE_PRIVATE);
-        return preferences.getBoolean("iPublishNewCircle", false);
+        return preferences.getBoolean("isPublishNewCircle", false);
     }
 
     /**

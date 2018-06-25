@@ -1,10 +1,13 @@
 package team.circleofcampus.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -22,10 +25,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import me.weyye.hipermission.HiPermission;
+import me.weyye.hipermission.PermissionCallback;
+import me.weyye.hipermission.PermissionItem;
 import team.circleofcampus.Interface.OnItemListPopupClickListener;
 import team.circleofcampus.R;
 import team.circleofcampus.adapter.HistoryAccountListPopupAdapter;
@@ -175,6 +182,30 @@ public class LoginActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        // android 6.0 存储权限申请
+        List<PermissionItem> permissionItems = new ArrayList<PermissionItem>();
+        permissionItems.add(new PermissionItem(Manifest.permission.WRITE_EXTERNAL_STORAGE, "存储", R.drawable.permission_ic_storage));
+        HiPermission.create(LoginActivity.this)
+                .permissions(permissionItems)
+                .msg("此权限是必须的权限，拒绝此权限会导致app异常")
+                .filterColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, getTheme()))//图标的颜色
+                .style(R.style.PermissionStyle)
+                .checkMutiPermission(new PermissionCallback(){
+                    @Override
+                    public void onClose() {
+                        // 此权限为必要的权限，拒绝会影响程序运行
+                    }
+                    @Override
+                    public void onFinish() {
+                        Log.e("tag", "所有权限申请完成");
+                    }
+                    @Override
+                    public void onDeny(String permission, int position) {}
+                    @Override
+                    public void onGuarantee(String permission, int position) {}
+                });
+
     }
 
     /**

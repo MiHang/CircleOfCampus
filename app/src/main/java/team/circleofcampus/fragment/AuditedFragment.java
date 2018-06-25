@@ -70,6 +70,9 @@ public class AuditedFragment extends Fragment {
                 case 0x0001 : {
                     if (isResume) {
                         Toast.makeText(getContext(), "无法与服务器通信，请检查您的网络连接", Toast.LENGTH_SHORT).show();
+                        if (loadingDialog != null) {
+                            loadingDialog.close();
+                        }
                     }
                 } break;
                 case 0x0002 : { // 数据加载完成
@@ -132,7 +135,7 @@ public class AuditedFragment extends Fragment {
             isLoaded = false;
             SharedPreferencesUtil.setPublishedNewCircle(getContext(), false);
             loadData(); // 加载数据
-        } else if (!isLoaded) { // 显示加载对话框
+        } else if (!isLoaded && SharedPreferencesUtil.isNetworkAvailable(getContext())) { // 显示加载对话框
             loadingDialog = new LoadingDialog(getContext());
             loadingDialog.setLoadingText("数据加载中")
                     .setSuccessText("加载成功")

@@ -261,10 +261,12 @@ public class HomeActivity extends AppCompatActivity {
             public void networkAvailable(int type) {
                 // 数据加载， 网络重新连接上可再次加载
                 Log.e("tag", "HomeActivity reload data...");
+                SharedPreferencesUtil.setNetworkAvailable(HomeActivity.this, true);
                 handler.sendEmptyMessage(0x0006);
             }
             @Override
             public void networkUnavailable() {
+                SharedPreferencesUtil.setNetworkAvailable(HomeActivity.this, false);
                 Toast.makeText(HomeActivity.this, "糟糕，网络开小差了(;′⌒`)", Toast.LENGTH_SHORT).show();
             }
         });
