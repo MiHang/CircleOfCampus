@@ -222,9 +222,11 @@ public class CircleFragment extends Fragment {
      */
     public void loadData() {
         Log.e("tag", "CircleFragment reload data...");
-        if (downloadImageSingleThreadExecutor == null) { // 图片下载单例线程池
-            downloadImageSingleThreadExecutor = SingleThreadService.newSingleThreadExecutor();
-        }
+//        if (downloadImageSingleThreadExecutor == null) { // 图片下载单例线程池
+//            downloadImageSingleThreadExecutor = SingleThreadService.newSingleThreadExecutor();
+//        }
+        // 图片下载单例线程池
+        downloadImageSingleThreadExecutor = SingleThreadService.newSingleThreadExecutor();
         if (singleThreadExecutor == null) { // 数据加载单例线程池
             singleThreadExecutor = SingleThreadService.getSingleThreadPool();
         }
@@ -260,10 +262,6 @@ public class CircleFragment extends Fragment {
                             // 清除本地相关缓存数据，重新加载
                             SocietyCircleDao societyCircleDao = new SocietyCircleDao(getContext());
                             societyCircleDao.deleteForAllData(); // 清空本地数据库数据
-
-//                            // 清除本地缓存图片
-//                            String storagePath = StorageUtil.getStorageDirectory(); // 获取内置存储卡路径
-//                            StorageUtil.delAllFile(storagePath + "coc/society_circle/");
 
                             // 将数据保存到本地数据库
                             for (int i =0; i < jsonArr.length(); i ++) {

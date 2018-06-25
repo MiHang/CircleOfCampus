@@ -29,6 +29,7 @@ import java.util.concurrent.ExecutorService;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import team.circleofcampus.R;
+import team.circleofcampus.activity.HomeActivity;
 import team.circleofcampus.adapter.MyPublishRecyclerAdapter;
 import team.circleofcampus.dao.CampusCircleDao;
 import team.circleofcampus.dao.MyPublishSocietyCircleDao;
@@ -94,17 +95,6 @@ public class AuditedFragment extends Fragment {
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_audited, null);
         ButterKnife.bind(this, view);
 
-        // 初始化加载框
-        loadingDialog = new LoadingDialog(getContext());
-        loadingDialog.setLoadingText("数据加载中")
-                .setSuccessText("加载成功")
-                .setFailedText("加载失败")
-                .closeSuccessAnim()
-                .closeFailedAnim()
-                .setShowTime(1000)
-                .setInterceptBack(false)
-                .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO);
-
         // 获取用户ID
         userId = SharedPreferencesUtil.getUID(getContext());
 
@@ -137,6 +127,23 @@ public class AuditedFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        boolean isPublishedNewCircle = SharedPreferencesUtil.isPublishedNewCircle(getContext());
+        if (isPublishedNewCircle) {
+            isLoaded = false;
+            SharedPreferencesUtil.setPublishedNewCircle(getContext(), false);
+            loadData(); // 加载数据
+        } else if (!isLoaded) { // 显示加载对话框
+            loadingDialog = new LoadingDialog(getContext());
+            loadingDialog.setLoadingText("数据加载中")
+                    .setSuccessText("加载成功")
+                    .setFailedText("加载失败")
+                    .closeSuccessAnim()
+                    .closeFailedAnim()
+                    .setShowTime(1000)
+                    .setInterceptBack(false)
+                    .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
+                    .show();
+        }
         return view;
     }
 
@@ -144,9 +151,6 @@ public class AuditedFragment extends Fragment {
     public void onResume() {
         super.onResume();
         isResume = true;
-        if (!isLoaded && loadingDialog != null) { // 显示加载对话框
-            loadingDialog.show();
-        }
     }
 
     @Override
@@ -177,9 +181,8 @@ public class AuditedFragment extends Fragment {
     public void loadData() {
         Log.e("tag", "AuditedFragment reload data...");
         isLoaded = false;
-        if (downloadImageSingleThreadExecutor == null) { // 图片下载单例线程池
-            downloadImageSingleThreadExecutor = SingleThreadService.newSingleThreadExecutor();
-        }
+        // 图片下载单例线程池
+        downloadImageSingleThreadExecutor = SingleThreadService.newSingleThreadExecutor();
         if (singleThreadExecutor == null) { // 数据加载单例线程池
             singleThreadExecutor = SingleThreadService.getSingleThreadPool();
         }

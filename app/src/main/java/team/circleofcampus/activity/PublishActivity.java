@@ -87,10 +87,14 @@ public class PublishActivity extends AppCompatActivity {
                     if (loadingDialog != null) {
                         loadingDialog.loadSuccess();
                     }
+                    SharedPreferencesUtil.setPublishedNewCircle(PublishActivity.this, true);
                     new Thread(){
                         @Override
                         public void run() {
                             try {
+                                // 删除临时图片文件
+                                File file = new File(StorageUtil.getUploadImgTempPath() + "uploadTempImage");
+                                if (file.exists()) file.delete();
                                 sleep(1000);
                                 handler.sendEmptyMessage(0x0004);
                             } catch (InterruptedException e) {

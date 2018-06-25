@@ -8,6 +8,31 @@ import java.util.ArrayList;
 public class SharedPreferencesUtil {
 
     /**
+     * 设置用户是否发布新的社团圈信息
+     * @param context
+     * @param iPublishNewCircle
+     */
+    public static void setPublishedNewCircle(Context context, boolean iPublishNewCircle) {
+        //实例化SharedPreferences对象
+        SharedPreferences preferences = context.getSharedPreferences("share", Context.MODE_PRIVATE);
+
+        //实例化SharedPreferences.Editor对象
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("iPublishNewCircle", iPublishNewCircle);//保存数据
+        editor.commit();//提交当前数据
+    }
+
+    /**
+     * 获取用户是否发布新的社团圈信息
+     * @param context
+     * @return
+     */
+    public static boolean isPublishedNewCircle (Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("share", Context.MODE_PRIVATE);
+        return preferences.getBoolean("iPublishNewCircle", false);
+    }
+
+    /**
      * 设置我发布的社团圈的记录大小
      * @param context
      * @param size
