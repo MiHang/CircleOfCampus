@@ -1,5 +1,6 @@
 package team.circleofcampus.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,7 +29,9 @@ import java.util.concurrent.ExecutorService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import team.circleofcampus.Interface.OnItemClickListener;
 import team.circleofcampus.R;
+import team.circleofcampus.activity.DetailCircleActivity;
 import team.circleofcampus.activity.HomeActivity;
 import team.circleofcampus.adapter.MyPublishRecyclerAdapter;
 import team.circleofcampus.dao.CampusCircleDao;
@@ -115,6 +118,19 @@ public class AuditedFragment extends Fragment {
 
         // 设置recycler适配器
         myPublishRecyclerAdapter = new MyPublishRecyclerAdapter(myPublishSocietyCircles);
+        myPublishRecyclerAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Log.e("tag", "society circle id = " + position);
+                Intent intent = new Intent(getContext(), DetailCircleActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("id", (int)position);
+                bundle.putBoolean("isCampusCircle", false);
+                intent.putExtras(bundle);
+                getActivity().startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
+            }
+        });
         //设置布局管理器
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         //设置adapter

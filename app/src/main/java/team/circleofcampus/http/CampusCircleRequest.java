@@ -10,6 +10,22 @@ import org.json.JSONObject;
 public class CampusCircleRequest {
 
     /**
+     * 获取校园公告的详情
+     * @param id
+     * @return
+     */
+    public static String getCampusCircleDetail(int id) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("id", id);
+            return HttpRequest.postRequest(HttpRequest.URL + "coc/getCampusCircleDetail.do", json.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
      * 获取用户所在学校的校园圈
      * @param uId
      * @param start
