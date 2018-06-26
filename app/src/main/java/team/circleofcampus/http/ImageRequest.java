@@ -38,21 +38,17 @@ public class ImageRequest {
                     Log.e("tag", "创建路径：" + storagePath + catalogPath);
                 }
 
-                // 文件不存在时，下载
-                File imageFile = new File(storagePath + catalogPath + filename);
-                if (!imageFile.exists()) {
-                    byte[] bytes = HttpRequest.downloadImg(HttpRequest.URL + url);
-                    if (bytes != null) {
-                        try {
-                            FileOutputStream fos = new FileOutputStream(storagePath + catalogPath + filename);
-                            fos.write(bytes);
-                            fos.flush();
-                            fos.close();
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                byte[] bytes = HttpRequest.downloadImg(HttpRequest.URL + url);
+                if (bytes != null) {
+                    try {
+                        FileOutputStream fos = new FileOutputStream(storagePath + catalogPath + filename);
+                        fos.write(bytes);
+                        fos.flush();
+                        fos.close();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
             }

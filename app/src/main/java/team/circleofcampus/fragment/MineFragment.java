@@ -97,6 +97,12 @@ public class MineFragment extends Fragment {
                 case 0x0002 : { // 数据加载失败
                     if (dialog != null) dialog.loadFailed();
                 } break;
+                case 0x0003 : { // 头像修改成功
+                    Toast.makeText(getContext(), "头像修改成功", Toast.LENGTH_SHORT).show();
+                } break;
+                case 0x0004 : { // 头像修改失败
+                    Toast.makeText(getContext(), "头像修改失败", Toast.LENGTH_SHORT).show();
+                } break;
             }
         }
     };
@@ -159,6 +165,7 @@ public class MineFragment extends Fragment {
                              Bundle savedInstanceState) {
         return view;
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -167,35 +174,37 @@ public class MineFragment extends Fragment {
             try {
                 Uri uri = data.getData();
                 final String absolutePath = getAbsolutePath(getContext(), uri);
-
-//                Toast.makeText(getContext(), "图片路径"+absolutePath, Toast.LENGTH_SHORT).show();
-
                 AsyncTask.execute(new Runnable() {
                     @Override
                     public void run() {
-
-                        JSONObject json = new JSONObject();
                         try {
+                            JSONObject json = new JSONObject();
                             json.put("uId", SharedPreferencesUtil.getUID(getContext()));
+                            File file=new File(absolutePath);
+                            String result = helper.upload(json.toString(),file);
+                            if (result != null) {
+                                JSONObject jsonObject = new JSONObject(result);
+                                if (jsonObject.getString("result").equals("success")) {
+                                    downloadImageSingleThreadExecutor = SingleThreadService.newSingleThreadExecutor();
+                                    downloadImageSingleThreadExecutor.execute(ImageRequest.downloadImage(jsonObject.getString("url")));
+                                    handler.sendEmptyMessage(0x0003);
+                                }
+                            } else {
+                                handler.sendEmptyMessage(0x0004);
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        File file=new File(absolutePath);
-                        String result = helper.upload(json.toString(),file);
-                        Log.e("tag", "result = " + result);
-
                     }
                 });
                 showImage(absolutePath);
             } catch (Exception e) {
                 e.printStackTrace();
-
             }
-
         }
     }
-    public String getAbsolutePath(final Context context,
-                                  final Uri uri) {
+
+    public String getAbsolutePath(final Context context, final Uri uri) {
         if (null == uri) return null;
         final String scheme = uri.getScheme();
         String data = null;
@@ -219,11 +228,13 @@ public class MineFragment extends Fragment {
             }
         }     return data;
     }
+
     //加载图片
     private void showImage(String imaePath){
         Bitmap bm = BitmapFactory.decodeFile(imaePath);
         Icon.setImageBitmap(bm);
     }
+
     private void initView(View view) {
 
         Icon = (CircleImageView) view.findViewById(R.id.Icon);
@@ -274,12 +285,10 @@ public class MineFragment extends Fragment {
             UserDao userDao = new UserDao(getContext());
             User user = userDao.queryData(SharedPreferencesUtil.getUID(getContext()));
             if (user != null) {
-
                 // 加载用户头像
                 String filePath = StorageUtil.getStorageDirectory() + user.getHeadIcon();
                 Bitmap bitmap = BitmapFactory.decodeFile(filePath);
                 if(bitmap != null) {
-
                     Icon.setImageBitmap(bitmap);
                 } else {
                     Icon.setImageResource(user.getGender().equals("male")?R.drawable.man:R.drawable.woman);
@@ -307,7 +316,6 @@ public class MineFragment extends Fragment {
         if (singleThreadExecutor == null) { // 数据加载单例线程池
             singleThreadExecutor = SingleThreadService.getSingleThreadPool();
         }
-
         singleThreadExecutor.execute(loadingUserInfo()); // 加载用户数据
     }
 
@@ -330,24 +338,20 @@ public class MineFragment extends Fragment {
                             Log.e("tag", "清空本地数据库用户表数据");
                         }
 
-
                         final User user = new User();
                         user.setuId(jsonObject.getInt("uId"));
                         user.setUserName(jsonObject.getString("userName"));
-                        user.setHeadIcon("res/img/" + Account);
+                        user.setHeadIcon("res/img/" + user.getUserName());
                         user.setEmail(jsonObject.getString("email"));
                         user.setGender(jsonObject.getString("gender"));
                         user.setCampusName(jsonObject.getString("campusName"));
                         user.setFacultyName(jsonObject.getString("facultyName"));
-
-
 
                         // 将数据写入本地数据库
                         userDao.insertData(user);
 
                         // 下载用户头像
                         downloadImageSingleThreadExecutor.execute(ImageRequest.downloadImage(user.getHeadIcon()));
-
                         downloadImageSingleThreadExecutor.shutdown();
                         while (true) {
                             if(downloadImageSingleThreadExecutor.isTerminated()){
