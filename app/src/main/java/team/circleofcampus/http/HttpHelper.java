@@ -1,14 +1,18 @@
 package team.circleofcampus.http;
 
 import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -358,4 +362,56 @@ public class HttpHelper {
 
         return "";
     }
+    /**
+     * 上传多张图片及参数
+
+     * @param jsonParam
+     * @param image
+     */
+    public static String upload(String jsonParam, File image) {
+
+        MediaType mediaType = MediaType.parse("image/png");
+
+        MultipartBody.Builder multipartBodyBuilder = new MultipartBody.Builder();
+        multipartBodyBuilder.setType(MultipartBody.FORM);
+
+        // 添加需要上传的参数jsonParam到builder
+        if (jsonParam != null){
+            multipartBodyBuilder.addFormDataPart("param", jsonParam);
+        }
+
+        // 上传图片
+        if (image != null){
+            multipartBodyBuilder.addFormDataPart("avatar",
+                    image.getName(), RequestBody.create(mediaType, image));
+        }
+
+        //构建请求体
+        RequestBody requestBody = multipartBodyBuilder.build();
+
+        Request request = new Request.Builder()
+                .url(url+"coc/alterAvatar.do")
+                .post(requestBody)
+                .build();
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
+        try {
+            Response response = okHttpClient.newCall(request).execute();
+            if (response.isSuccessful()) {
+                return response.body().string();
+            } else {
+                Log.e("coc error", "request failed, error code = " + response.code());
+                throw new Exception("request failed, error code = " + response.code());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

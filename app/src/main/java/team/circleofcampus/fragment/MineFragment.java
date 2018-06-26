@@ -1,11 +1,18 @@
 package team.circleofcampus.fragment;
 
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,12 +27,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+import com.common.utils.ByteUtils;
+import com.lcodecore.tkrefreshlayout.utils.LogUtil;
 import com.xiasuhuei321.loadingdialog.view.LoadingDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.concurrent.ExecutorService;
 
@@ -35,6 +48,7 @@ import team.circleofcampus.activity.ChatActivity;
 import team.circleofcampus.activity.LoginActivity;
 import team.circleofcampus.dao.UserDao;
 import team.circleofcampus.http.HttpHelper;
+import team.circleofcampus.http.HttpRequest;
 import team.circleofcampus.http.ImageRequest;
 import team.circleofcampus.pojo.User;
 import team.circleofcampus.service.SingleThreadService;
@@ -93,6 +107,15 @@ public class MineFragment extends Fragment {
 
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_mine, null);
         initView(view);
+        Icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //调用相册
+                Intent intent = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, 1);
+            }
+        });
 
         // 加载本地数据
         loadLocalData();
@@ -136,7 +159,71 @@ public class MineFragment extends Fragment {
                              Bundle savedInstanceState) {
         return view;
     }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //获取图片路径
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK && data != null) {
+            try {
+                Uri uri = data.getData();
+                final String absolutePath = getAbsolutePath(getContext(), uri);
 
+//                Toast.makeText(getContext(), "图片路径"+absolutePath, Toast.LENGTH_SHORT).show();
+
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        JSONObject json = new JSONObject();
+                        try {
+                            json.put("uId", SharedPreferencesUtil.getUID(getContext()));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        File file=new File(absolutePath);
+                        String result = helper.upload(json.toString(),file);
+                        Log.e("tag", "result = " + result);
+
+                    }
+                });
+                showImage(absolutePath);
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+
+        }
+    }
+    public String getAbsolutePath(final Context context,
+                                  final Uri uri) {
+        if (null == uri) return null;
+        final String scheme = uri.getScheme();
+        String data = null;
+        if (scheme == null)
+            data = uri.getPath();
+        else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
+            data = uri.getPath();
+        } else if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
+            Cursor cursor = context.getContentResolver().query(uri,
+                    new String[]{MediaStore.Images.ImageColumns.DATA},
+                    null, null, null);
+            if (null != cursor) {
+                if (cursor.moveToFirst()) {
+                    int index = cursor.getColumnIndex(
+                            MediaStore.Images.ImageColumns.DATA);
+                    if (index > -1) {
+                        data = cursor.getString(index);
+                    }
+                }
+                cursor.close();
+            }
+        }     return data;
+    }
+    //加载图片
+    private void showImage(String imaePath){
+        Bitmap bm = BitmapFactory.decodeFile(imaePath);
+        Icon.setImageBitmap(bm);
+    }
     private void initView(View view) {
 
         Icon = (CircleImageView) view.findViewById(R.id.Icon);
@@ -192,6 +279,7 @@ public class MineFragment extends Fragment {
                 String filePath = StorageUtil.getStorageDirectory() + user.getHeadIcon();
                 Bitmap bitmap = BitmapFactory.decodeFile(filePath);
                 if(bitmap != null) {
+
                     Icon.setImageBitmap(bitmap);
                 } else {
                     Icon.setImageResource(user.getGender().equals("male")?R.drawable.man:R.drawable.woman);
@@ -219,6 +307,7 @@ public class MineFragment extends Fragment {
         if (singleThreadExecutor == null) { // 数据加载单例线程池
             singleThreadExecutor = SingleThreadService.getSingleThreadPool();
         }
+
         singleThreadExecutor.execute(loadingUserInfo()); // 加载用户数据
     }
 
@@ -241,7 +330,8 @@ public class MineFragment extends Fragment {
                             Log.e("tag", "清空本地数据库用户表数据");
                         }
 
-                        User user = new User();
+
+                        final User user = new User();
                         user.setuId(jsonObject.getInt("uId"));
                         user.setUserName(jsonObject.getString("userName"));
                         user.setHeadIcon("res/img/" + Account);
@@ -249,6 +339,8 @@ public class MineFragment extends Fragment {
                         user.setGender(jsonObject.getString("gender"));
                         user.setCampusName(jsonObject.getString("campusName"));
                         user.setFacultyName(jsonObject.getString("facultyName"));
+
+
 
                         // 将数据写入本地数据库
                         userDao.insertData(user);
