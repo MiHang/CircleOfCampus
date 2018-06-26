@@ -1,6 +1,7 @@
 package team.circleofcampus.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,8 +34,11 @@ public class MyPublishRecyclerAdapter extends RecyclerView.Adapter<MyPublishRecy
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        // 给 cover 设置一个tag, 通过 tag 来防止图片错位
+        holder.cover.setTag("tag" + position);
+        holder.cover.setImageResource(R.drawable.img_loading_failed);
         // 异步加载公告封面
-        LoadImage(holder.cover, items.get(position).getImagesUrl());
+        LoadImage(holder.cover, items.get(position).getImagesUrl(), "tag" + position);
         // 设置标题
         holder.title.setText(items.get(position).getTitle());
         // 设置申请时间
@@ -51,9 +55,9 @@ public class MyPublishRecyclerAdapter extends RecyclerView.Adapter<MyPublishRecy
      * @param imageView - 图片控件
      * @param imagesPath - 图片路径
      */
-    private void LoadImage(ImageView imageView, String imagesPath) {
+    private void LoadImage(ImageView imageView, String imagesPath, String tag) {
         AsyncTaskImageLoad async = new AsyncTaskImageLoad(imageView);
-        async.execute(imagesPath);
+        async.execute(imagesPath, tag);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

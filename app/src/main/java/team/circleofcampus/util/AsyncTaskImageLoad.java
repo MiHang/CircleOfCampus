@@ -18,6 +18,7 @@ import org.json.JSONObject;
 public class AsyncTaskImageLoad extends AsyncTask<String, Integer, Drawable> {
 
     private ImageView imageView = null;
+    private String tag;
 
     public AsyncTaskImageLoad(ImageView imageView) {
         this.imageView = imageView;
@@ -32,6 +33,7 @@ public class AsyncTaskImageLoad extends AsyncTask<String, Integer, Drawable> {
     protected Drawable doInBackground(String... params) {
         try {
             String ImagesPath = params[0];
+            tag = params[1];
             if (ImagesPath != null && !ImagesPath.equals("")) {
                 JSONArray jsonArray = new JSONArray(ImagesPath);
                 if (jsonArray.length() > 0) {
@@ -60,7 +62,10 @@ public class AsyncTaskImageLoad extends AsyncTask<String, Integer, Drawable> {
     @Override
     protected void onPostExecute(Drawable drawable) {
         if(imageView != null && drawable != null) {
-            imageView.setImageDrawable(drawable);
+            // 通过 tag 来防止图片错位
+            if (imageView.getTag() != null && imageView.getTag().equals(tag)) {
+                imageView.setImageDrawable(drawable);
+            }
         }
         super.onPostExecute(drawable);
     }

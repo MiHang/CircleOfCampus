@@ -65,8 +65,11 @@ public class CampusCircleListViewAdapter extends BaseAdapter {
             holder = (ViewHolder)view.getTag();
         }
 
+        // 给 cover 设置一个tag, 通过 tag 来防止图片错位
+        holder.cover.setTag("tag" + i);
+        holder.cover.setImageResource(R.drawable.img_loading_failed);
         // 加载公告封面
-        LoadImage(holder.cover, items.get(i).getImagesUrl());
+        LoadImage(holder.cover, items.get(i).getImagesUrl(), "tag" + i);
         holder.title.setText(items.get(i).getTitle());
         holder.activityTime.setText("时 间：" + items.get(i).getActivityTime());
         holder.venue.setText("地 点：" + items.get(i).getVenue());
@@ -79,9 +82,9 @@ public class CampusCircleListViewAdapter extends BaseAdapter {
      * @param imageView - 图片控件
      * @param imagesPath - 图片路径
      */
-    private void LoadImage(ImageView imageView, String imagesPath) {
+    private void LoadImage(ImageView imageView, String imagesPath, String tag) {
         AsyncTaskImageLoad async = new AsyncTaskImageLoad(imageView);
-        async.execute(imagesPath);
+        async.execute(imagesPath, tag);
     }
 
     class ViewHolder {
