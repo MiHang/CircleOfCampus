@@ -9,6 +9,22 @@ import org.json.JSONObject;
 public class SocietyCircleRequest {
 
     /**
+     * 获取校园公告的详情
+     * @param id
+     * @return
+     */
+    public static String getSocietyCircleDetail(int id) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("id", id);
+            return HttpRequest.postRequest(HttpRequest.URL + "coc/getSocietyCircleDetail.do", json.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
      * 查询社团圈信息
      * @param uId - 用户ID
      * @param start

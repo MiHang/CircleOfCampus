@@ -49,7 +49,7 @@ public class SocietyCircleListViewAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int i) {
-        return i;
+        return (items!=null?items.get(i).getId():0);
     }
 
     @Override

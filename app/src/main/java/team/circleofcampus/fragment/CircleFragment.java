@@ -171,7 +171,12 @@ public class CircleFragment extends Fragment {
         campusCircleListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.e("tag", "campus circle id = " + id);
                 Intent intent = new Intent(getContext(), DetailCircleActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("id", (int)id);
+                bundle.putBoolean("isCampusCircle", true);
+                intent.putExtras(bundle);
                 getActivity().startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
             }
@@ -184,7 +189,12 @@ public class CircleFragment extends Fragment {
         societyCircleListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.e("tag", "society circle id = " + id);
                 Intent intent = new Intent(getContext(), DetailCircleActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("id", (int)id);
+                bundle.putBoolean("isCampusCircle", false);
+                intent.putExtras(bundle);
                 getActivity().startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
             }
