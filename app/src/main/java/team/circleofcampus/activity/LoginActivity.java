@@ -188,7 +188,7 @@ public class LoginActivity extends AppCompatActivity {
         permissionItems.add(new PermissionItem(Manifest.permission.WRITE_EXTERNAL_STORAGE, "存储", R.drawable.permission_ic_storage));
         HiPermission.create(LoginActivity.this)
                 .permissions(permissionItems)
-                .msg("此权限是必须的权限，拒绝此权限会导致app异常")
+                .msg("必要权限，拒绝此权限会导致app异常")
                 .filterColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, getTheme()))//图标的颜色
                 .style(R.style.PermissionStyle)
                 .checkMutiPermission(new PermissionCallback(){

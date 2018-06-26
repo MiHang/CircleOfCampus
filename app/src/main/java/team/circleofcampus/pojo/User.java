@@ -12,15 +12,20 @@ import java.io.Serializable;
 public class User implements Serializable {
     /**
      * 用户ID
-     * 自增长主键
+     * 禁止自增长主键
      */
-    @DatabaseField(columnName = "id", generatedId = true)
+    @DatabaseField(columnName = "id", generatedId = false)
     private int uId;
     /**
      * 用户名
      */
     @DatabaseField(columnName = "name")
     private String userName;
+    /**
+     * 用户头像
+     */
+    @DatabaseField(columnName = "head_icon")
+    private String headIcon;
     /**
      * 电子邮箱
      */
@@ -45,10 +50,12 @@ public class User implements Serializable {
     public User() {}
 
     public User(int uId, String userName,
-                String email, String gender,
-                String campusName, String facultyName) {
+                String headIcon, String email,
+                String gender, String campusName,
+                String facultyName) {
         this.uId = uId;
         this.userName = userName;
+        this.headIcon = headIcon;
         this.email = email;
         this.gender = gender;
         this.campusName = campusName;
@@ -69,6 +76,14 @@ public class User implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getHeadIcon() {
+        return headIcon;
+    }
+
+    public void setHeadIcon(String headIcon) {
+        this.headIcon = headIcon;
     }
 
     public String getEmail() {

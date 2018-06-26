@@ -124,18 +124,22 @@ public class AuditedFragment extends Fragment {
         //添加分割线
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
 
-        loadData(); // 加载数据
+        // 有网络连接时，加载数据
+        if (SharedPreferencesUtil.isNetworkAvailable(getContext())) {
+            loadData(); // 加载数据
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         boolean isPublishedNewCircle = SharedPreferencesUtil.isPublishedNewCircle(getContext());
-        if (isPublishedNewCircle) {
+        boolean isNetworkAvailable = SharedPreferencesUtil.isNetworkAvailable(getContext());
+        if (isPublishedNewCircle && isNetworkAvailable) {
             isLoaded = false;
             SharedPreferencesUtil.setPublishedNewCircle(getContext(), false);
             loadData(); // 加载数据
-        } else if (!isLoaded && SharedPreferencesUtil.isNetworkAvailable(getContext())) { // 显示加载对话框
+        } else if (!isLoaded && isNetworkAvailable) { // 显示加载对话框
             loadingDialog = new LoadingDialog(getContext());
             loadingDialog.setLoadingText("数据加载中")
                     .setSuccessText("加载成功")
@@ -218,28 +222,29 @@ public class AuditedFragment extends Fragment {
 
                             // 清除本地相关缓存数据，重新加载
                             MyPublishSocietyCircleDao myPublishSocietyCircleDao = new MyPublishSocietyCircleDao(getContext());
-                            myPublishSocietyCircleDao.deleteForAllData(); // 清空本地数据库数据
+                            if(myPublishSocietyCircleDao.deleteForAllData() == 1) { // 清空本地数据库数据
+                                Log.e("tag", "清空本地数据库我发布的社团公告表数据");
+                            }
 
                             // 将数据保存到本地数据库
                             for (int i =0; i < jsonArr.length(); i ++) {
                                 MyPublishSocietyCircle myPublishSocietyCircle = gson.fromJson(
                                         jsonArr.getString(i), MyPublishSocietyCircle.class);
-                                if (myPublishSocietyCircleDao.queryDataById(myPublishSocietyCircle.getId()) == null) {
-                                    myPublishSocietyCircleDao.insertData(myPublishSocietyCircle);
-                                    Log.e("tag", "my publish society circle write local sqlite ：" +
-                                            "id = " + myPublishSocietyCircle.getId() + "; title = " + myPublishSocietyCircle.getTitle());
+                                myPublishSocietyCircleDao.insertData(myPublishSocietyCircle);
+                                Log.e("tag", "my publish society circle write local sqlite ：" +
+                                        "id = " + myPublishSocietyCircle.getId() + "; title = " + myPublishSocietyCircle.getTitle());
 
-                                    // 获取要下载的图片的URL
-                                    String str = myPublishSocietyCircle.getImagesUrl();
-                                    if (str != null && !str.equals("")) {
-                                        JSONArray jsonArray = new JSONArray(str);
-                                        for (int j = 0; j < jsonArray.length(); j ++) {
-                                            JSONObject jsonObject = new JSONObject(jsonArray.getString(j));
-                                            // 下载校园圈图片
-                                            downloadImageSingleThreadExecutor.execute(ImageRequest.downloadImage(jsonObject.getString("url")));
-                                        }
+                                // 获取要下载的图片的URL
+                                String str = myPublishSocietyCircle.getImagesUrl();
+                                if (str != null && !str.equals("")) {
+                                    JSONArray jsonArray = new JSONArray(str);
+                                    for (int j = 0; j < jsonArray.length(); j ++) {
+                                        JSONObject jsonObject = new JSONObject(jsonArray.getString(j));
+                                        // 下载校园圈图片
+                                        downloadImageSingleThreadExecutor.execute(ImageRequest.downloadImage(jsonObject.getString("url")));
                                     }
                                 }
+
                                 myPublishSocietyCircles.add(i, myPublishSocietyCircle);
                                 if (i+1 < myPublishSocietyCircles.size()) {
                                     myPublishSocietyCircles.remove(i+1);

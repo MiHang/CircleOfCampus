@@ -68,8 +68,7 @@ public class CampusCircleDao {
      */
     public int deleteForAllData() {
         try {
-            List<CampusCircle> campusCircles = dao.queryForAll();
-            dao.delete(campusCircles);
+            dao.queryRaw("delete from t_camus_circle");
             return 1;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -139,7 +138,7 @@ public class CampusCircleDao {
     }
 
     /**
-     * 通过用户ID查询数据
+     * 通过校园圈ID查询数据
      * @param cid - 校园圈ID
      * @return 查询成功返回CampusCircle，失败返回null
      */

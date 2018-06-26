@@ -261,27 +261,28 @@ public class CircleFragment extends Fragment {
 
                             // 清除本地相关缓存数据，重新加载
                             SocietyCircleDao societyCircleDao = new SocietyCircleDao(getContext());
-                            societyCircleDao.deleteForAllData(); // 清空本地数据库数据
+                            if(societyCircleDao.deleteForAllData() == 1) { // 清空本地数据库数据
+                                Log.e("tag", "清空本地数据库社团公告表数据");
+                            }
 
                             // 将数据保存到本地数据库
                             for (int i =0; i < jsonArr.length(); i ++) {
                                 SocietyCircle societyCircle = gson.fromJson(jsonArr.getString(i), SocietyCircle.class);
-                                if (societyCircleDao.queryDataById(societyCircle.getId()) == null) {
-                                    societyCircleDao.insertData(societyCircle);
-                                    Log.e("tag", "society circle write local sqlite ：" +
-                                            "id = " + societyCircle.getId() + "; title = " + societyCircle.getTitle());
+                                societyCircleDao.insertData(societyCircle);
+                                Log.e("tag", "society circle write local sqlite ：" +
+                                        "id = " + societyCircle.getId() + "; title = " + societyCircle.getTitle());
 
-                                    // 获取要下载的图片的URL
-                                    String str = societyCircle.getImagesUrl();
-                                    if (str != null && !str.equals("")) {
-                                        JSONArray jsonArray = new JSONArray(str);
-                                        for (int j = 0; j < jsonArray.length(); j ++) {
-                                            JSONObject jsonObject = new JSONObject(jsonArray.getString(j));
-                                            // 下载校园圈图片
-                                            downloadImageSingleThreadExecutor.execute(ImageRequest.downloadImage(jsonObject.getString("url")));
-                                        }
+                                // 获取要下载的图片的URL
+                                String str = societyCircle.getImagesUrl();
+                                if (str != null && !str.equals("")) {
+                                    JSONArray jsonArray = new JSONArray(str);
+                                    for (int j = 0; j < jsonArray.length(); j ++) {
+                                        JSONObject jsonObject = new JSONObject(jsonArray.getString(j));
+                                        // 下载校园圈图片
+                                        downloadImageSingleThreadExecutor.execute(ImageRequest.downloadImage(jsonObject.getString("url")));
                                     }
                                 }
+
                                 societyCircles.add(i, societyCircle);
                                 if (i+1 < societyCircles.size()) {
                                     societyCircles.remove(i+1);
@@ -330,31 +331,33 @@ public class CircleFragment extends Fragment {
 
                             // 清除本地相关缓存数据，重新加载
                             CampusCircleDao campusCircleDao = new CampusCircleDao(getContext());
-                            campusCircleDao.deleteForAllData(); // 清空本地数据库数据
+                            if(campusCircleDao.deleteForAllData() == 1) { // 清空本地数据库数据
+                                Log.e("tag", "清空本地数据库校园公告表数据");
+                            }
 
-//                            // 清除本地缓存图片
-//                            String storagePath = StorageUtil.getStorageDirectory(); // 获取内置存储卡路径
-//                            StorageUtil.delAllFile(storagePath + "coc/campus_circle/");
+//                           // 清除本地缓存图片
+//                           String storagePath = StorageUtil.getStorageDirectory(); // 获取内置存储卡路径
+//                           StorageUtil.delAllFile(storagePath + "coc/campus_circle/");
 
                             // 将数据保存到本地数据库
                             for (int i =0; i < jsonArr.length(); i ++) {
                                 CampusCircle campusCircle = gson.fromJson(jsonArr.getString(i), CampusCircle.class);
-                                if (campusCircleDao.queryDataById(campusCircle.getId()) == null) {
-                                    campusCircleDao.insertData(campusCircle);
-                                    Log.e("tag", "campus circle write local sqlite ：" +
-                                            "id = " + campusCircle.getId() + "; title = " + campusCircle.getTitle());
 
-                                    // 获取要下载的图片的URL
-                                    String str = campusCircle.getImagesUrl();
-                                    if (str != null && !str.equals("")) {
-                                        JSONArray jsonArray = new JSONArray(str);
-                                        for (int j = 0; j < jsonArray.length(); j ++) {
-                                            JSONObject jsonObject = new JSONObject(jsonArray.getString(j));
-                                            // 下载校园圈图片
-                                            downloadImageSingleThreadExecutor.execute(ImageRequest.downloadImage(jsonObject.getString("url")));
-                                        }
+                                campusCircleDao.insertData(campusCircle);
+                                Log.e("tag", "campus circle write local sqlite ：" +
+                                        "id = " + campusCircle.getId() + "; title = " + campusCircle.getTitle());
+
+                                // 获取要下载的图片的URL
+                                String str = campusCircle.getImagesUrl();
+                                if (str != null && !str.equals("")) {
+                                    JSONArray jsonArray = new JSONArray(str);
+                                    for (int j = 0; j < jsonArray.length(); j ++) {
+                                        JSONObject jsonObject = new JSONObject(jsonArray.getString(j));
+                                        // 下载校园圈图片
+                                        downloadImageSingleThreadExecutor.execute(ImageRequest.downloadImage(jsonObject.getString("url")));
                                     }
                                 }
+
                                 campusCircles.add(i, campusCircle);
                                 if (i+1 < campusCircles.size()) {
                                     campusCircles.remove(i+1);

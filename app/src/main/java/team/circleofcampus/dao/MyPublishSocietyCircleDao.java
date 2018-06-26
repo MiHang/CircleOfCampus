@@ -67,8 +67,7 @@ public class MyPublishSocietyCircleDao {
      */
     public int deleteForAllData() {
         try {
-            List<MyPublishSocietyCircle> societyCircles = dao.queryForAll();
-            dao.delete(societyCircles);
+            dao.queryRaw("delete from t_my_publish_society_circle");
             return 1;
         } catch (SQLException e) {
             e.printStackTrace();

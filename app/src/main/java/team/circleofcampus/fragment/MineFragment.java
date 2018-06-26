@@ -1,12 +1,13 @@
 package team.circleofcampus.fragment;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
-import android.os.AsyncTask;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,12 +25,22 @@ import com.xiasuhuei321.loadingdialog.view.LoadingDialog;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.sql.SQLException;
+import java.util.concurrent.ExecutorService;
+
 import team.circleofcampus.Interface.FragmentSwitchListener;
 import team.circleofcampus.R;
 import team.circleofcampus.activity.ChatActivity;
 import team.circleofcampus.activity.LoginActivity;
+import team.circleofcampus.dao.UserDao;
 import team.circleofcampus.http.HttpHelper;
+import team.circleofcampus.http.ImageRequest;
+import team.circleofcampus.pojo.User;
+import team.circleofcampus.service.SingleThreadService;
+import team.circleofcampus.util.ImageUtil;
 import team.circleofcampus.util.SharedPreferencesUtil;
+import team.circleofcampus.util.StorageUtil;
 import team.circleofcampus.view.CircleImageView;
 
 /**
@@ -40,7 +51,6 @@ public class MineFragment extends Fragment {
     private View view;
     private CircleImageView Icon;
     private Button Log_out;
-    private ImageView icon_bg;
     HttpHelper helper;
     private TextView account;
     private TextView sex;
@@ -54,20 +64,28 @@ public class MineFragment extends Fragment {
     LoadingDialog dialog;
 
     FragmentSwitchListener switchListener;
-    SharedPreferencesUtil sharedPreferencesUtil;
-
-
     public void setSwitchListener(FragmentSwitchListener switchListener) {
         this.switchListener = switchListener;
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (view!=null){
-            ((ViewGroup) view.getParent()).removeView(view);
+    // 单例线程池
+    private ExecutorService singleThreadExecutor;
+    private ExecutorService downloadImageSingleThreadExecutor;
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0x0001 : { // 数据加载完成
+                    if (dialog != null) dialog.loadSuccess();
+                    loadLocalData();
+                } break;
+                case 0x0002 : { // 数据加载失败
+                    if (dialog != null) dialog.loadFailed();
+                } break;
+            }
         }
-    }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,13 +94,16 @@ public class MineFragment extends Fragment {
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_mine, null);
         initView(view);
 
-        helper=new HttpHelper(getContext());
-        sharedPreferencesUtil=new SharedPreferencesUtil();
-        Account=sharedPreferencesUtil.getAccount(getContext());
-        if (Account!=null){
+        // 加载本地数据
+        loadLocalData();
+
+        helper = new HttpHelper(getContext());
+        Account = SharedPreferencesUtil.getAccount(getContext());
+        boolean isNetworkAvailable = SharedPreferencesUtil.isNetworkAvailable(getContext());
+        if (Account != null && isNetworkAvailable) {
             dialog = new LoadingDialog(getContext());
             dialog.setLoadingText("加载中")
-                    .setSuccessText("加载成功")//显示加载成功时的文字
+                    .setSuccessText("加载成功")
                     .setFailedText("加载失败")
                     .closeSuccessAnim()
                     .setShowTime(1000)
@@ -90,53 +111,9 @@ public class MineFragment extends Fragment {
                     .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
                     .show();
 
-            AsyncTask.execute(new Runnable() {
-                @Override
-                public void run() {
-                    final String s = helper.getUserInfoByAccount(Account);
-                    account.post(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            try {
-                                JSONObject jsonObject = new JSONObject(s);
-
-                                if (jsonObject.getString("result").equals("success")) {
-
-
-                                        if (jsonObject.getString("gender").equals("male")) {
-                                            sex.setText("男");
-                                            res=R.drawable.man;
-                                        } else {
-                                            sex.setText("女");
-                                            res=R.drawable.woman;
-                                        }
-                                    account.setText(jsonObject.getString("email"));
-                                    userName.setText(jsonObject.getString("userName"));
-                                    department.setText(jsonObject.getString("facultyName"));
-                                    college.setText(jsonObject.getString("campusName"));
-                                    dialog.loadSuccess();
-                                    Glide.with(getContext())
-                                            .load(helper.getPath()+"/res/img/"+Account)
-                                            .placeholder(res)
-                                            .error(res)
-                                            .into(Icon);
-                                } else {
-                                    dialog.loadFailed();
-                                    Toast.makeText(getContext(), "查询失败", Toast.LENGTH_LONG).show();
-                                }
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-
-                        }
-
-                    });
-                }
-            });
+            loadData(); // 联网加载数据
         }
+
         Log_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -164,7 +141,6 @@ public class MineFragment extends Fragment {
 
         Icon = (CircleImageView) view.findViewById(R.id.Icon);
         Log_out = (Button) view.findViewById(R.id.Log_out);
-        icon_bg = (ImageView) view.findViewById(R.id.icon_bg);
         account = (TextView) view.findViewById(R.id.account);
         sex = (TextView) view.findViewById(R.id.sex);
         college = (TextView) view.findViewById(R.id.college);
@@ -182,12 +158,126 @@ public class MineFragment extends Fragment {
                 }else{
                     Toast.makeText(getContext(),"您暂未登录",Toast.LENGTH_LONG).show();
                 }
-
             }
 
         });
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (view!=null){
+            ((ViewGroup) view.getParent()).removeView(view);
+        }
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (dialog != null) {
+            dialog.close();
+        }
+    }
+
+    /**
+     * 加载本地数据
+     */
+    private void loadLocalData() {
+        try {
+            UserDao userDao = new UserDao(getContext());
+            User user = userDao.queryData(SharedPreferencesUtil.getUID(getContext()));
+            if (user != null) {
+
+                // 加载用户头像
+                String filePath = StorageUtil.getStorageDirectory() + user.getHeadIcon();
+                Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+                if(bitmap != null) {
+                    Icon.setImageBitmap(bitmap);
+                } else {
+                    Icon.setImageResource(user.getGender().equals("male")?R.drawable.man:R.drawable.woman);
+                }
+                sex.setText(user.getGender().equals("male")?"男":"女");
+                account.setText(user.getEmail());
+                userName.setText(user.getUserName());
+                department.setText(user.getFacultyName());
+                college.setText(user.getCampusName());
+            } else {
+                Log.e("tag", "user is null");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 加载数据
+     */
+    public void loadData() {
+        Log.e("tag", "MineFragment load data...");
+        // 图片下载单例线程池
+        downloadImageSingleThreadExecutor = SingleThreadService.newSingleThreadExecutor();
+        if (singleThreadExecutor == null) { // 数据加载单例线程池
+            singleThreadExecutor = SingleThreadService.getSingleThreadPool();
+        }
+        singleThreadExecutor.execute(loadingUserInfo()); // 加载用户数据
+    }
+
+    /**
+     * 加载用户数据
+     * @return
+     */
+    private Runnable loadingUserInfo() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String result = helper.getUserInfoByAccount(Account);
+                    JSONObject jsonObject = new JSONObject(result);
+                    if (jsonObject.getString("result").equals("success")) {
+
+                        // 将用户数据保存到本地数据库
+                        UserDao userDao = new UserDao(getContext());
+                        if(userDao.deleteForAllData() == 1) { // 清空本地数据库数据
+                            Log.e("tag", "清空本地数据库用户表数据");
+                        }
+
+                        User user = new User();
+                        user.setuId(jsonObject.getInt("uId"));
+                        user.setUserName(jsonObject.getString("userName"));
+                        user.setHeadIcon("res/img/" + Account);
+                        user.setEmail(jsonObject.getString("email"));
+                        user.setGender(jsonObject.getString("gender"));
+                        user.setCampusName(jsonObject.getString("campusName"));
+                        user.setFacultyName(jsonObject.getString("facultyName"));
+
+                        // 将数据写入本地数据库
+                        userDao.insertData(user);
+
+                        // 下载用户头像
+                        downloadImageSingleThreadExecutor.execute(ImageRequest.downloadImage(user.getHeadIcon()));
+
+                        downloadImageSingleThreadExecutor.shutdown();
+                        while (true) {
+                            if(downloadImageSingleThreadExecutor.isTerminated()){
+                                Log.e("tag", "用户信息加载完毕");
+                                handler.sendEmptyMessage(0x0001);
+                                break;
+                            }
+                            Thread.sleep(1000);
+                        }
+
+                    } else { // 查询失败
+                        handler.sendEmptyMessage(0x0002);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+    }
 
 }

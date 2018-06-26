@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
 
+import java.net.UnknownServiceException;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
@@ -54,6 +55,20 @@ public class UserDao {
     public int insertData(User user) {
         try {
             dao.create(user);
+            return 1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * 删除全部数据
+     * @return 1 - 数据删除成功， 0 - 数据删除失败
+     */
+    public int deleteForAllData() {
+        try {
+            dao.queryRaw("delete from t_user");
             return 1;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -113,7 +128,10 @@ public class UserDao {
      */
     public User queryData(int u_id) {
         try {
-            return dao.queryForId(u_id);
+            List<User> users = dao.queryBuilder().where().eq("id", u_id).query();
+            if (users != null && users.size() > 0) {
+                return users.get(0);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

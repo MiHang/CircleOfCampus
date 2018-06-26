@@ -94,7 +94,7 @@ public class MyPublishFragment extends Fragment {
 
         // 获取用户ID
         userId = SharedPreferencesUtil.getUID(getContext());
-
+        
         // 社团圈发布权限管理
         isAuthority = SharedPreferencesUtil.isAuthorized(getContext());
         if (isAuthority) {
