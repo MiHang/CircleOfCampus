@@ -1,7 +1,5 @@
 package team.circleofcampus.activity;
 
-
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -49,6 +47,7 @@ import java.util.Date;
 import java.util.List;
 
 import team.circleofcampus.Interface.MessageListener;
+import team.circleofcampus.Interface.MsgLongClickListener;
 import team.circleofcampus.Interface.RecordItemListener;
 import team.circleofcampus.R;
 import team.circleofcampus.adapter.MyFragmentPagerAdapter;
@@ -74,7 +73,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     float x2 = 0;
     float y1 = 0;
     float y2 = 0;
-
     boolean isDown = false;//用于上滑取消发送语音信息
     AudioUtils sm;//录音工具类
     Handler handler = new Handler();//录音时长线程
@@ -100,7 +98,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private FontEditText MsgText;
     private ImageView Face;
     private ViewPager FaceViewPager;
-    List<byte[]> bytes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,11 +135,18 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 myService = ((MyService.MsgBinder) service).getService();
 
                 myClient = myService.getMyClient();
-                bytes=myService.getData();
+
                 myService.setMessageListener(new MessageListener() {
                     @Override
-                    public void sendMessage(byte[] bytes) {
-                        ReceiveMessage(bytes);
+                    public void update(boolean isUpdate) {
+                        data.clear();
+                        List<Message> msg=dao.getMessage(receive, send);
+                       for(Message m :msg){
+                           data.add(m);
+                       }
+                        myAdapter.notifyDataSetChanged();
+                        ChatRecord.smoothScrollToPosition(data.size());
+
                     }
                 });
 
@@ -188,31 +193,21 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
         myAdapter = new RecordAdapter(this, data);
         ChatRecord.setAdapter(myAdapter);
-        if (bytes!=null&&bytes.size()>0){
-             for (byte[] b:bytes){
-                 Msg msg = utils.toT(b);
-                 Message message = new Message();
-                 if (msg.getReceive().equals(send)) {
-                     msg.setSend(receive);
-                 }
-                 message.setMsg(msg);
-                 if (msg.getAudio() != null) {   //处理语音信息
-                     //保存录音文件
-                     File files = new File(getFilesDir(), msg.getAudioPath());
-                     sm.ByteToDoc(msg.getAudio(), files);
 
-                 }
-                 dao.setData(message);//储存聊天信息
-                 data.add(message);
-             }
-             myService.setData(null);
-             myAdapter.notifyDataSetChanged();
-        }
+        myAdapter.setLongClickListener(new MsgLongClickListener() {
+            @Override
+            public void clickItem(int position) {
+                Message msg = data.get(position);
+                if (msg.getMsg().getAudio() != null) {
+                    Toast.makeText(getApplicationContext(), "语音识别", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         myAdapter.setListener(new RecordItemListener() {
             @Override
             public void ClickIcon(View v, int position) {
-                Toast.makeText(ChatActivity.this, "toux", Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
@@ -410,38 +405,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    /**
-     * 接收服务器信息，更新Ui
-     *
-     * @param bytes
-     */
-    public void ReceiveMessage(final byte[] bytes) {
-        ChatRecord.post(new Runnable() {
-            @Override
-            public void run() {
-                Msg msg = utils.toT(bytes);
-                Log.e("tag", "文本" + msg.getText() + "语音" + msg.getAudio() + "图片" + msg.getImg());
-                Message message = new Message();
-
-                if (msg.getReceive().equals(send)) {
-                    msg.setSend(receive);
-                }
-
-                message.setMsg(msg);
-                if (msg.getAudio() != null) {   //处理语音信息
-                    //保存录音文件
-                    File files = new File(getFilesDir(), msg.getAudioPath());
-                    sm.ByteToDoc(msg.getAudio(), files);
-
-                }
-                dao.setData(message);//储存聊天信息
-                data.add(message);
-                myAdapter.notifyDataSetChanged();
-            }
-        });
-
-
-    }
 
 
     /**

@@ -38,8 +38,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import team.circleofcampus.Interface.MsgLongClickListener;
 import team.circleofcampus.Interface.RecordItemListener;
 import team.circleofcampus.R;
+import team.circleofcampus.http.HttpRequest;
 import team.circleofcampus.view.DialogTextView;
 import team.circleofcampus.view.FontTextView;
 import team.circleofcampus.view.IconImageView;
@@ -58,6 +60,11 @@ public class RecordAdapter extends BaseAdapter {
     ByteUtils byteUtils = new ByteUtils();
     IconImageView icon;
     Bitmap bp = null;
+    MsgLongClickListener longClickListener;
+
+    public void setLongClickListener(MsgLongClickListener longClickListener) {
+        this.longClickListener = longClickListener;
+    }
 
     public RecordAdapter(Context context, List<Message> data) {
         this.context = context;
@@ -113,11 +120,11 @@ public class RecordAdapter extends BaseAdapter {
             bp = byteUtils.BytesToBitmap(msg.getMsg().getImg());
         }
         icon=vh.Send_Icon;
-        String account=msg.getMsg().getSend();
+        String username=msg.getMsg().getUserName();
         int res=R.drawable.woman;
         if (msg.getReceive() == Symbol.Receive_Mode) {//接收
             icon=vh.Receive_Icon;
-            account=msg.getMsg().getReceive();
+            username=msg.getMsg().getReceive();
         }
         if (msg.getMsg().getSex()==null||msg.getMsg().getSex().equals("male")) {
             res=R.drawable.man;
@@ -127,7 +134,7 @@ public class RecordAdapter extends BaseAdapter {
 
             //加载头像
             Glide.with(context)
-                    .load("http://192.168.1.157:8080/res/img/" + account)
+                    .load("http://"+ HttpRequest.IP+":8080/res/img/" + username)
                     .asBitmap()
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .error(res)
@@ -137,7 +144,6 @@ public class RecordAdapter extends BaseAdapter {
                         public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
                             return false;
                         }
-
                         @Override
                         public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
                            return false;
@@ -171,6 +177,15 @@ public class RecordAdapter extends BaseAdapter {
                 if (msg.getReceive() == Symbol.Receive_Mode) {//接收
                     vh.Receive_dialog.setVisibility(View.VISIBLE);
                     vh.Send_dialog.setVisibility(View.GONE);
+                    vh.Receive_dialog.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            if (longClickListener!=null){
+                                longClickListener.clickItem(i);
+                            }
+                            return false;
+                        }
+                    });
 
 
                     if (msg.getMsg().getText() != null) {//接收文本消息
@@ -206,7 +221,15 @@ public class RecordAdapter extends BaseAdapter {
 
                     vh.Send_dialog.setVisibility(View.VISIBLE);
                     vh.Receive_dialog.setVisibility(View.GONE);
-
+                    vh.Send_dialog.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            if (longClickListener!=null){
+                                longClickListener.clickItem(i);
+                            }
+                            return false;
+                        }
+                    });
                     if (msg.getMsg().getText() != null) {
                         vh.Send_Duration.setVisibility(View.GONE);
                         vh.Send_Msg.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);

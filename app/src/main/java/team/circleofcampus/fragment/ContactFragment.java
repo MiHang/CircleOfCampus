@@ -1,7 +1,6 @@
 package team.circleofcampus.fragment;
 
-import android.app.ProgressDialog;
-import android.content.Intent;
+
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,7 +36,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import team.circleofcampus.Interface.ListListener;
 import team.circleofcampus.Interface.MoreFragmentListener;
 import team.circleofcampus.Interface.OnItemClickListener;
@@ -52,7 +50,7 @@ import team.circleofcampus.model.Letter;
 import team.circleofcampus.util.LanguageUtils;
 import team.circleofcampus.util.SharedPreferencesUtil;
 import team.circleofcampus.view.FontTextView;
-import team.circleofcampus.view.MyEditText;
+
 
 
 /**
@@ -78,7 +76,7 @@ public class ContactFragment extends Fragment implements com.bigkoo.alertview.On
     LoadingDialog dialog;
     EditText edit;
     List<Contact> list = new ArrayList<Contact>();
-    private AlertView mAlertViewExt;//窗口拓展例子
+    private AlertView mAlertViewExt;
     GoodFriendItemDecoration itemDecoration ;
     SharedPreferencesUtil sharedPreferencesUtil;
     String Account;
@@ -113,7 +111,10 @@ public class ContactFragment extends Fragment implements com.bigkoo.alertview.On
         helper = new HttpHelper(getContext());
 
         Account=sharedPreferencesUtil.getAccount(getContext());
-        if (Account!=null){
+        if (Account==null){
+            getActivity().finish();
+        }
+
             dialog = new LoadingDialog(getContext());
             dialog.setLoadingText("加载中")
                     .setSuccessText("加载成功")//显示加载成功时的文字
@@ -123,9 +124,6 @@ public class ContactFragment extends Fragment implements com.bigkoo.alertview.On
                     .show();
             setData(Account);
 
-        }else{
-            getActivity().finish();
-        }
 
 
         ContactActivity activity= (ContactActivity) getActivity();
@@ -172,7 +170,6 @@ public void setData(final String id){
                                 Contact contact = new Contact();
                                 contact.setUserName(js.getString("nickName"));
                                 contact.setSex(js.getString("sex"));
-
                                 contact.setAccount(js.getString("account"));
                                 list.add(contact);
                             }
@@ -220,10 +217,7 @@ public void setData(final String id){
                             // 设置菜单Item点击监听。
                             rv.setSwipeMenuItemClickListener(menuItemClickListener);
 
-
                             setSideBar();
-
-
                             dialog.loadSuccess();
                         } else {
                             num.setText("暂无联系人");

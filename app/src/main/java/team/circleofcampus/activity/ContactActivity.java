@@ -49,7 +49,7 @@ public class ContactActivity extends AppCompatActivity {
         initView();
         header_title.setText("好友列表");
         header_right_text.setText("添加好友");
-//        header_left_image.setVisibility(View.GONE);
+
 
 
 

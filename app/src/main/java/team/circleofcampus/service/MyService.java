@@ -6,12 +6,18 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
+
+import com.common.dao.Data_Dao;
+import com.common.model.Message;
 import com.common.model.Msg;
+import com.common.utils.AudioUtils;
 import com.common.utils.ByteUtils;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
@@ -30,8 +36,8 @@ public class MyService extends Service {
     MsgBinder binder=new MsgBinder();
     WebSocketClient myClient;
     String send;
+    Data_Dao dao = new Data_Dao(this, "12.db");
     MessageListener listener;
-    List<byte[]> data=new ArrayList<>();
 
     public void setMessageListener(MessageListener listener) {
         this.listener = listener;
@@ -41,13 +47,7 @@ public class MyService extends Service {
         return myClient;
     }
 
-    public List<byte[]> getData() {
-        return data;
-    }
 
-    public void setData(List<byte[]> data) {
-        this.data = data;
-    }
 
     @Override
     public void onCreate() {
@@ -74,10 +74,7 @@ public class MyService extends Service {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
-
                     myClient.send(js.toString());
-
-
                 }
 
                 /**
@@ -96,10 +93,13 @@ public class MyService extends Service {
                     Msg msg =utils.toT(bytes.array());
 
                     Log.d(TAG,"消息"+ msg.getSend()+":"+msg.getText());
+                    Message message = new Message();
+
+                    message.setMsg(msg);
+                    dao.setData(message);//储存聊天信息
+
                     if (listener!=null){
-                            listener.sendMessage(bytes.array());
-                    }else{
-                        data.add(bytes.array());
+                            listener.update(true);
                     }
 
 
