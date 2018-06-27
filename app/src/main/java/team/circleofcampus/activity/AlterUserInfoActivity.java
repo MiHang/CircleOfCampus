@@ -1,6 +1,8 @@
 package team.circleofcampus.activity;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.xiasuhuei321.loadingdialog.view.LoadingDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,6 +21,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import team.circleofcampus.R;
+import team.circleofcampus.http.LoginRequest;
+import team.circleofcampus.http.UserRequest;
+import team.circleofcampus.util.SharedPreferencesUtil;
 
 public class AlterUserInfoActivity extends AppCompatActivity {
 
@@ -34,12 +42,50 @@ public class AlterUserInfoActivity extends AppCompatActivity {
     @BindView(R.id.alter_faculty_edit_text)
     protected EditText facultyEdit;
 
+    private LoadingDialog loadingDialog;
+
     private int uId = 0;
+    private String gender;
+    private String userNameStr;
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0x0001 : {
+                    if (loadingDialog != null) {
+                        loadingDialog.close();
+                    }
+                    Toast.makeText(AlterUserInfoActivity.this, "无法与服务器通信，请检查您的网络连接", Toast.LENGTH_SHORT).show();
+                } break;
+                case 0x0002 : { // 修改成功
+                    if (loadingDialog != null) {
+                        loadingDialog.loadSuccess();
+                    }
+                    SharedPreferencesUtil.setUserInfoUpdate(AlterUserInfoActivity.this, true);
+                    onBackPressed();
+                } break;
+                case 0x0003 : { // 修改失败
+                    if (loadingDialog != null) {
+                        loadingDialog.loadFailed();
+                    }
+                } break;
+            }
+        }
+    };
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (loadingDialog != null) {
+            loadingDialog.close();
+        }
     }
 
     @Override
@@ -55,8 +101,9 @@ public class AlterUserInfoActivity extends AppCompatActivity {
             JSONObject jsonParam = new JSONObject(intent.getStringExtra("param"));
             uId = jsonParam.getInt("uId");
             idEdit.setText(jsonParam.getString("email"));
-            userName.setText(jsonParam.getString("userName"));
-            String gender = jsonParam.getString("gender");
+            userNameStr = jsonParam.getString("userName");
+            userName.setText(userNameStr);
+            gender = jsonParam.getString("gender");
             if (gender.equals("female")) {
                 femaleRb.setChecked(true);
             } else {
@@ -76,6 +123,49 @@ public class AlterUserInfoActivity extends AppCompatActivity {
     @OnClick(R.id.alter_user_info_btn)
     public void onClickAlterBtn() {
 
+        if (userName.getText().toString().trim().equals("")) {
+            Toast.makeText(AlterUserInfoActivity.this, "用户名不能为空", Toast.LENGTH_SHORT).show();
+        } else if (userName.getText().toString().trim().equals(userNameStr) &&
+                ((gender.equals("female") && femaleRb.isChecked()) || (gender.equals("male") && maleRb.isChecked()))) {
+            Toast.makeText(AlterUserInfoActivity.this, "您未做任何修改", Toast.LENGTH_SHORT).show();
+        } else {
+            // 加载对话框
+            loadingDialog = new LoadingDialog(this);
+            loadingDialog.setLoadingText("正在修改")
+                    .setSuccessText("修改成功")
+                    .setFailedText("修改失败")
+                    .closeSuccessAnim()
+                    .closeFailedAnim()
+                    .setShowTime(1000)
+                    .setInterceptBack(false)
+                    .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
+                    .show();
+
+            new Thread(){
+                @Override
+                public void run() {
+                    String gender = null;
+                    if (maleRb.isChecked()) gender = "male";
+                    else if (femaleRb.isChecked()) gender = "female";
+                    String result = UserRequest.updateUserInfo(uId, userName.getText().toString().trim(), gender);
+                    if (null != result) {
+                        try {
+                            JSONObject json = new JSONObject(result);
+                            result = json.getString("result");
+                            if (result.equals("success")) {
+                                handler.sendEmptyMessage(0x0002);
+                            } else {
+                                handler.sendEmptyMessage(0x0003);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        handler.sendEmptyMessage(0x0001);
+                    }
+                }
+            }.start();
+        }
     }
 
     /**

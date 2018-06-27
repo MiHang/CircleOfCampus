@@ -20,6 +20,7 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -27,6 +28,8 @@ import java.util.concurrent.ExecutorService;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import team.circleofcampus.dao.UserDao;
+import team.circleofcampus.pojo.User;
 import team.circleofcampus.receiver.MyBroadcastReceiver;
 import team.circleofcampus.Interface.FragmentSwitchListener;
 import team.circleofcampus.Interface.NetworkStateChangeListener;
@@ -312,6 +315,9 @@ public class HomeActivity extends AppCompatActivity {
             case 2 : { // 加载我的发布页相关数据
                 ((MyPublishFragment)data.get(2)).loadData();
             } break;
+            case 3 : { // 加载我的页面相关数据
+                ((MineFragment)data.get(3)).loadData();
+            } break;
         }
     }
 
@@ -546,19 +552,25 @@ public class HomeActivity extends AppCompatActivity {
             }
         } else if (selectedPageId == 3) { // 我的页面 - 编辑
             try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("uId",1);
-                jsonObject.put("email","jayevip@163.com");
-                jsonObject.put("userName","userName");
-                jsonObject.put("gender","male");
-                jsonObject.put("campusName","成都职业技术学院");
-                jsonObject.put("facultyName","软件分院");
+                UserDao userDao = new UserDao(HomeActivity.this);
+                User user = userDao.queryData(SharedPreferencesUtil.getUID(HomeActivity.this));
+                if (user != null) {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("uId",user.getuId());
+                    jsonObject.put("email",user.getEmail());
+                    jsonObject.put("userName",user.getUserName());
+                    jsonObject.put("gender",user.getGender());
+                    jsonObject.put("campusName",user.getCampusName());
+                    jsonObject.put("facultyName",user.getFacultyName());
 
-                Intent intent = new Intent(HomeActivity.this, AlterUserInfoActivity.class);
-                intent.putExtra("param", jsonObject.toString());
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
+                    Intent intent = new Intent(HomeActivity.this, AlterUserInfoActivity.class);
+                    intent.putExtra("param", jsonObject.toString());
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
+                }
             } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }

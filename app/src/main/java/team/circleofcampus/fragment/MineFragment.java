@@ -98,10 +98,10 @@ public class MineFragment extends Fragment {
                     if (dialog != null) dialog.loadFailed();
                 } break;
                 case 0x0003 : { // 头像修改成功
-                    Toast.makeText(getContext(), "头像修改成功", Toast.LENGTH_SHORT).show();
+                    if (dialog != null) dialog.loadSuccess();
                 } break;
                 case 0x0004 : { // 头像修改失败
-                    Toast.makeText(getContext(), "头像修改失败", Toast.LENGTH_SHORT).show();
+                    if (dialog != null) dialog.loadFailed();
                 } break;
             }
         }
@@ -163,6 +163,22 @@ public class MineFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        boolean isUserInfoUpdate = SharedPreferencesUtil.isUserInfoUpdate(getContext());
+        boolean isNetworkAvailable = SharedPreferencesUtil.isNetworkAvailable(getContext());
+        if (Account != null && isNetworkAvailable && isUserInfoUpdate) {
+            SharedPreferencesUtil.setUserInfoUpdate(getContext(), false);
+            dialog = new LoadingDialog(getContext());
+            dialog.setLoadingText("加载中")
+                    .setSuccessText("加载成功")
+                    .setFailedText("加载失败")
+                    .closeSuccessAnim()
+                    .setShowTime(1000)
+                    .setInterceptBack(false)
+                    .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
+                    .show();
+
+            loadData(); // 联网加载数据
+        }
         return view;
     }
 
@@ -174,6 +190,15 @@ public class MineFragment extends Fragment {
             try {
                 Uri uri = data.getData();
                 final String absolutePath = getAbsolutePath(getContext(), uri);
+                dialog = new LoadingDialog(getContext());
+                dialog.setLoadingText("头像修改中")
+                        .setSuccessText("头像修改成功")
+                        .setFailedText("头像修改失败")
+                        .closeSuccessAnim()
+                        .setShowTime(1000)
+                        .setInterceptBack(false)
+                        .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
+                        .show();
                 AsyncTask.execute(new Runnable() {
                     @Override
                     public void run() {
@@ -188,6 +213,7 @@ public class MineFragment extends Fragment {
                                     downloadImageSingleThreadExecutor = SingleThreadService.newSingleThreadExecutor();
                                     downloadImageSingleThreadExecutor.execute(ImageRequest.downloadImage(jsonObject.getString("url")));
                                     handler.sendEmptyMessage(0x0003);
+                                    showImage(absolutePath);
                                 }
                             } else {
                                 handler.sendEmptyMessage(0x0004);
@@ -197,7 +223,6 @@ public class MineFragment extends Fragment {
                         }
                     }
                 });
-                showImage(absolutePath);
             } catch (Exception e) {
                 e.printStackTrace();
             }

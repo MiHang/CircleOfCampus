@@ -8,6 +8,31 @@ import java.util.ArrayList;
 public class SharedPreferencesUtil {
 
     /**
+     * 设置用户信息是否更新
+     * @param context
+     * @param isUserInfoUpdate
+     */
+    public static void setUserInfoUpdate(Context context, boolean isUserInfoUpdate) {
+        //实例化SharedPreferences对象
+        SharedPreferences preferences = context.getSharedPreferences("share", Context.MODE_PRIVATE);
+
+        //实例化SharedPreferences.Editor对象
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("isUserInfoUpdate", isUserInfoUpdate);//保存数据
+        editor.commit();//提交当前数据
+    }
+
+    /**
+     * 获取用户信息是否更新
+     * @param context
+     * @return
+     */
+    public static boolean isUserInfoUpdate (Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("share", Context.MODE_PRIVATE);
+        return preferences.getBoolean("isUserInfoUpdate", false);
+    }
+
+    /**
      * 设置网络是否可用
      * @param context
      * @param isNetworkAvailable
