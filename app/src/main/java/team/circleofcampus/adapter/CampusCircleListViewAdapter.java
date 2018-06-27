@@ -55,7 +55,6 @@ public class CampusCircleListViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-
         ViewHolder holder = null;
         if (view == null) {
             view = inflater.inflate(R.layout.item_circle_list, viewGroup, false);

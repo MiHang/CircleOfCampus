@@ -12,8 +12,6 @@ public class Circle implements Serializable {
     private int id;
     // 标题
     private String title;
-    // 文本内容
-    private String content;
     // 图片地址
     private String imagesUrl;
     // 发布时间
@@ -26,12 +24,10 @@ public class Circle implements Serializable {
     public Circle() {}
 
     public Circle(int id, String title,
-                  String content, String imagesUrl,
-                  String publishTime, String venue,
-                  String activityTime) {
+                  String imagesUrl, String publishTime,
+                  String venue, String activityTime) {
         this.id = id;
         this.title = title;
-        this.content = content;
         this.imagesUrl = imagesUrl;
         this.publishTime = publishTime;
         this.venue = venue;
@@ -52,14 +48,6 @@ public class Circle implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
     public String getImagesUrl() {

@@ -232,9 +232,6 @@ public class CircleFragment extends Fragment {
      */
     public void loadData() {
         Log.e("tag", "CircleFragment reload data...");
-//        if (downloadImageSingleThreadExecutor == null) { // 图片下载单例线程池
-//            downloadImageSingleThreadExecutor = SingleThreadService.newSingleThreadExecutor();
-//        }
         // 图片下载单例线程池
         downloadImageSingleThreadExecutor = SingleThreadService.newSingleThreadExecutor();
         if (singleThreadExecutor == null) { // 数据加载单例线程池
