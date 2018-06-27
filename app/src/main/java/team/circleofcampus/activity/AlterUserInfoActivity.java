@@ -65,8 +65,16 @@ public class AlterUserInfoActivity extends AppCompatActivity {
                     SharedPreferencesUtil.setUserInfoUpdate(AlterUserInfoActivity.this, true);
                     onBackPressed();
                 } break;
-                case 0x0003 : { // 修改失败
+                case 0x0003 : { // 用户名被占用
                     if (loadingDialog != null) {
+                        loadingDialog.setFailedText("此用户名已被占用");
+                        loadingDialog.loadFailed();
+                    }
+                    userName.requestFocus(); // 用户名文本框获取焦点
+                } break;
+                case 0x0004 : { // 修改失败
+                    if (loadingDialog != null) {
+                        loadingDialog.setFailedText("修改失败");
                         loadingDialog.loadFailed();
                     }
                 } break;
@@ -133,7 +141,6 @@ public class AlterUserInfoActivity extends AppCompatActivity {
             loadingDialog = new LoadingDialog(this);
             loadingDialog.setLoadingText("正在修改")
                     .setSuccessText("修改成功")
-                    .setFailedText("修改失败")
                     .closeSuccessAnim()
                     .closeFailedAnim()
                     .setShowTime(1000)
@@ -154,8 +161,10 @@ public class AlterUserInfoActivity extends AppCompatActivity {
                             result = json.getString("result");
                             if (result.equals("success")) {
                                 handler.sendEmptyMessage(0x0002);
-                            } else {
+                            } else if (result.equals("occupy")) {
                                 handler.sendEmptyMessage(0x0003);
+                            } else {
+                                handler.sendEmptyMessage(0x0004);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

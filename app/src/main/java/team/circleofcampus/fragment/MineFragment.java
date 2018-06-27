@@ -99,6 +99,7 @@ public class MineFragment extends Fragment {
                 } break;
                 case 0x0003 : { // 头像修改成功
                     if (dialog != null) dialog.loadSuccess();
+                    showImage((String)msg.obj);
                 } break;
                 case 0x0004 : { // 头像修改失败
                     if (dialog != null) dialog.loadFailed();
@@ -130,16 +131,6 @@ public class MineFragment extends Fragment {
         Account = SharedPreferencesUtil.getAccount(getContext());
         boolean isNetworkAvailable = SharedPreferencesUtil.isNetworkAvailable(getContext());
         if (Account != null && isNetworkAvailable) {
-            dialog = new LoadingDialog(getContext());
-            dialog.setLoadingText("加载中")
-                    .setSuccessText("加载成功")
-                    .setFailedText("加载失败")
-                    .closeSuccessAnim()
-                    .setShowTime(1000)
-                    .setInterceptBack(false)
-                    .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
-                    .show();
-
             loadData(); // 联网加载数据
         }
 
@@ -163,22 +154,6 @@ public class MineFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        boolean isUserInfoUpdate = SharedPreferencesUtil.isUserInfoUpdate(getContext());
-        boolean isNetworkAvailable = SharedPreferencesUtil.isNetworkAvailable(getContext());
-        if (Account != null && isNetworkAvailable && isUserInfoUpdate) {
-            SharedPreferencesUtil.setUserInfoUpdate(getContext(), false);
-            dialog = new LoadingDialog(getContext());
-            dialog.setLoadingText("加载中")
-                    .setSuccessText("加载成功")
-                    .setFailedText("加载失败")
-                    .closeSuccessAnim()
-                    .setShowTime(1000)
-                    .setInterceptBack(false)
-                    .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
-                    .show();
-
-            loadData(); // 联网加载数据
-        }
         return view;
     }
 
@@ -212,8 +187,10 @@ public class MineFragment extends Fragment {
                                 if (jsonObject.getString("result").equals("success")) {
                                     downloadImageSingleThreadExecutor = SingleThreadService.newSingleThreadExecutor();
                                     downloadImageSingleThreadExecutor.execute(ImageRequest.downloadImage(jsonObject.getString("url")));
-                                    handler.sendEmptyMessage(0x0003);
-                                    showImage(absolutePath);
+                                    Message message = new Message();
+                                    message.obj = absolutePath;
+                                    message.what = 0x0003;
+                                    handler.sendMessage(message);
                                 }
                             } else {
                                 handler.sendEmptyMessage(0x0004);
@@ -336,6 +313,15 @@ public class MineFragment extends Fragment {
      */
     public void loadData() {
         Log.e("tag", "MineFragment load data...");
+        dialog = new LoadingDialog(getContext());
+        dialog.setLoadingText("加载中")
+                .setSuccessText("加载成功")
+                .setFailedText("加载失败")
+                .closeSuccessAnim()
+                .setShowTime(1000)
+                .setInterceptBack(false)
+                .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
+                .show();
         // 图片下载单例线程池
         downloadImageSingleThreadExecutor = SingleThreadService.newSingleThreadExecutor();
         if (singleThreadExecutor == null) { // 数据加载单例线程池

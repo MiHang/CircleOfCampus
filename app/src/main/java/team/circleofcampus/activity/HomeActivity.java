@@ -280,6 +280,14 @@ public class HomeActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         isResume = true;
+
+        // 更新用户数据后返回我的信息页面更新用户数据
+        boolean isUserInfoUpdate = SharedPreferencesUtil.isUserInfoUpdate(HomeActivity.this);
+        boolean isNetworkAvailable = SharedPreferencesUtil.isNetworkAvailable(HomeActivity.this);
+        if (isUserInfoUpdate && selectedPageId==3 && isNetworkAvailable) {
+            SharedPreferencesUtil.setUserInfoUpdate(HomeActivity.this, false);
+            loadData();
+        }
     }
 
     @Override
