@@ -68,7 +68,7 @@ public class MyMessageAdapter extends SwipeMenuAdapter<MyMessageAdapter.ViewHold
         if (holder.icon.getDrawable() == null) {
             //加载头像 查询服务器是否有头像图片，若无则按性别加载
             Glide.with(context)
-                    .load(http.getPath()+"/res/img/"+data.get(position).getAccount())
+                    .load(http.getPath()+"/res/img/"+data.get(position).getUserName())
                     .override(scale,scale)
                     .crossFade()
                     .listener(new RequestListener<String, GlideDrawable>() {

@@ -41,6 +41,7 @@ import java.util.regex.Pattern;
 import team.circleofcampus.Interface.MsgLongClickListener;
 import team.circleofcampus.Interface.RecordItemListener;
 import team.circleofcampus.R;
+import team.circleofcampus.http.HttpRequest;
 import team.circleofcampus.view.DialogTextView;
 import team.circleofcampus.view.FontTextView;
 import team.circleofcampus.view.IconImageView;
@@ -119,11 +120,11 @@ public class RecordAdapter extends BaseAdapter {
             bp = byteUtils.BytesToBitmap(msg.getMsg().getImg());
         }
         icon=vh.Send_Icon;
-        String account=msg.getMsg().getSend();
+        String username=msg.getMsg().getUserName();
         int res=R.drawable.woman;
         if (msg.getReceive() == Symbol.Receive_Mode) {//接收
             icon=vh.Receive_Icon;
-            account=msg.getMsg().getReceive();
+            username=msg.getMsg().getReceive();
         }
         if (msg.getMsg().getSex()==null||msg.getMsg().getSex().equals("male")) {
             res=R.drawable.man;
@@ -133,7 +134,7 @@ public class RecordAdapter extends BaseAdapter {
 
             //加载头像
             Glide.with(context)
-                    .load("http://192.168.1.157:8080/res/img/" + account)
+                    .load("http://"+ HttpRequest.IP+":8080/res/img/" + username)
                     .asBitmap()
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .error(res)
@@ -143,7 +144,6 @@ public class RecordAdapter extends BaseAdapter {
                         public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
                             return false;
                         }
-
                         @Override
                         public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
                            return false;
