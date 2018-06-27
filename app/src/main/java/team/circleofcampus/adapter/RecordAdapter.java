@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import team.circleofcampus.Interface.MsgLongClickListener;
 import team.circleofcampus.Interface.RecordItemListener;
 import team.circleofcampus.R;
 import team.circleofcampus.view.DialogTextView;
@@ -58,6 +59,11 @@ public class RecordAdapter extends BaseAdapter {
     ByteUtils byteUtils = new ByteUtils();
     IconImageView icon;
     Bitmap bp = null;
+    MsgLongClickListener longClickListener;
+
+    public void setLongClickListener(MsgLongClickListener longClickListener) {
+        this.longClickListener = longClickListener;
+    }
 
     public RecordAdapter(Context context, List<Message> data) {
         this.context = context;
@@ -171,6 +177,15 @@ public class RecordAdapter extends BaseAdapter {
                 if (msg.getReceive() == Symbol.Receive_Mode) {//接收
                     vh.Receive_dialog.setVisibility(View.VISIBLE);
                     vh.Send_dialog.setVisibility(View.GONE);
+                    vh.Receive_dialog.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            if (longClickListener!=null){
+                                longClickListener.clickItem(i);
+                            }
+                            return false;
+                        }
+                    });
 
 
                     if (msg.getMsg().getText() != null) {//接收文本消息
@@ -206,7 +221,15 @@ public class RecordAdapter extends BaseAdapter {
 
                     vh.Send_dialog.setVisibility(View.VISIBLE);
                     vh.Receive_dialog.setVisibility(View.GONE);
-
+                    vh.Send_dialog.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            if (longClickListener!=null){
+                                longClickListener.clickItem(i);
+                            }
+                            return false;
+                        }
+                    });
                     if (msg.getMsg().getText() != null) {
                         vh.Send_Duration.setVisibility(View.GONE);
                         vh.Send_Msg.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);

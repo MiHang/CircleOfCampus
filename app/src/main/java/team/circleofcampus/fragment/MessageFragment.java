@@ -45,7 +45,6 @@ public class MessageFragment extends Fragment {
     List<UserMsg> data=new ArrayList<>();
     TimeUtil timeUtil=new TimeUtil();
     Date date;
-
     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     MyBroadcastReceiver BroadcastReceiver;
     public void bind(MyBroadcastReceiver BroadcastReceiver){
@@ -97,12 +96,8 @@ public class MessageFragment extends Fragment {
                             }
                         }
                     }
-
-
                     Collections.sort(data);
                     adapter.notifyDataSetChanged();
-
-                    Toast.makeText(getContext(), "接收到"+userMsg.getAccount()+":"+userMsg.getMsg(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
