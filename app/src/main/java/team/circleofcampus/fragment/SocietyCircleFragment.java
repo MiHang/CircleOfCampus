@@ -32,6 +32,7 @@ import team.circleofcampus.http.CampusCircleRequest;
 import team.circleofcampus.http.SocietyCircleRequest;
 import team.circleofcampus.model.Circle;
 import team.circleofcampus.service.SingleThreadService;
+import team.circleofcampus.util.DateUtil;
 import team.circleofcampus.util.SharedPreferencesUtil;
 
 public class SocietyCircleFragment extends Fragment {
@@ -167,6 +168,55 @@ public class SocietyCircleFragment extends Fragment {
                             String nowDate = sdf.format(new Date());
                             String[] timeArr = nowDate.split(" ");
 
+                            // 遍历集合，添加时间戳
+                            for (int i = 0; i < circles.size(); i ++) {
+                                if (i == 0 && circles.get(i).getId() != -1) { // 第一条数据
+
+                                    // 将发布时间分割为日期和时间两项
+                                    String[] timeTempArr = circles.get(i).getPublishTime().split(" ");
+
+                                    if (timeArr[0].equals(timeTempArr[0])) { // 今天发布的公告
+                                        String[] temp = timeTempArr[1].split(":");
+                                        Circle circle = new Circle();
+                                        circle.setId(-1);
+                                        circle.setPublishTime(temp[0]+":"+temp[1]);
+                                        circles.add(i, circle);
+                                    } else { // 以前发布的公告，添加日期时间戳
+                                        Circle circle = new Circle();
+                                        circle.setId(-1);
+                                        circle.setPublishTime(timeTempArr[0]);
+                                        circles.add(i, circle);
+                                    }
+
+                                } else if (circles.get(i).getId() != -1
+                                        && circles.get(i-1).getId() != -1) { // 此项不为时间戳并且上一项不为时间戳
+
+                                    // 将发布时间分割为日期和时间两项
+                                    String[] timeTempArr = circles.get(i).getPublishTime().split(" ");
+                                    String[] prevTimeTempArr = circles.get(i-1).getPublishTime().split(" ");
+
+                                    if (timeArr[0].equals(timeTempArr[0])) { // 今天发布的公告
+
+                                        // 上一条公告日期和此公告日期的差值
+                                        int[] temp = DateUtil.DateDifferenceValue(circles.get(i-1).getPublishTime(),
+                                                circles.get(i).getPublishTime());
+                                        if (temp[1] >= 1) { // 差值为一小时极其以上, 添加时间戳
+                                            String[] timesTemp = timeTempArr[1].split(":");
+                                            Circle circle = new Circle();
+                                            circle.setId(-1);
+                                            circle.setPublishTime(timesTemp[0]+":"+timesTemp[1]);
+                                            circles.add(i, circle);
+                                        }
+                                    } else { // 以前发布的公告，按日期归类并添加时间戳
+                                        if (!timeTempArr[0].equals(prevTimeTempArr[0])) {
+                                            Circle circle = new Circle();
+                                            circle.setId(-1);
+                                            circle.setPublishTime(timeTempArr[0]);
+                                            circles.add(i, circle);
+                                        }
+                                    }
+                                }
+                            }
                             handler.sendEmptyMessage(0x0002);
                         } else {
                             handler.sendEmptyMessage(0x0001);
