@@ -142,8 +142,8 @@ public class CircleFragment extends Fragment {
         banner.setImageLoader(new Lunbotu());
         // 设置图片集合
         images.add(R.drawable.banner);
-        images.add(R.drawable.img_campus_kol);
-        images.add(R.drawable.img_54);
+        images.add(R.drawable.banner1);
+        images.add(R.drawable.banner2);
         banner.setImages(images);
         banner.setDelayTime(5000);
         banner.start(); //banner设置方法全部调用完毕时最后调用
