@@ -61,7 +61,7 @@ public class MyService extends Service {
         Log.e(TAG,"---onStartCommand---");
         send=intent.getStringExtra("send");
         try {
-            URI uri = new URI("ws://"+ HttpRequest.IP+":8891");
+            URI uri = new URI("ws://"+ HttpRequest.IP+":8888");
             myClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake handshakedata) {
