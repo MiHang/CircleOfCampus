@@ -142,7 +142,7 @@ public void setData(final String id){
         @Override
         public void run() {
 
-            final String s = helper.queryFriendInfo("jaye");
+            final String s = helper.queryFriendInfo(Account);
             rv.post(new Runnable() {
                 @Override
                 public void run() {

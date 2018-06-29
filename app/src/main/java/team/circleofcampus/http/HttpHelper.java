@@ -286,6 +286,42 @@ public class HttpHelper {
 
         return "";
     }
+    /**
+     * 删除好友
+     * @param user1 user1
+     * @return
+     */
+    public String deleteFriend(String user1,String user2 ) {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        JSONObject js = new JSONObject();
+
+        try {
+            js.put("userAccount", user1);
+            js.put("friendAccount", user2);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        MediaType mediaType = MediaType.parse("application/json;charset=utf8");
+        RequestBody requestBody = RequestBody.create(mediaType, js.toString());
+        Request request = new Request.Builder()
+                .url(url+"coc/removeFriend.do")
+                .post(requestBody)
+                .build();
+        try {
+            Response response = okHttpClient.newCall(request).execute();
+            if(response.isSuccessful()){
+                return response.body().string();
+            }else{
+                return response.code()+"";
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
 
     /**
      * 通过账号获取好友信息

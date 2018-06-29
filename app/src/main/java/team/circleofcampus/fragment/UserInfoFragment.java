@@ -1,5 +1,6 @@
 package team.circleofcampus.fragment;
 
+import android.accounts.Account;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,9 +24,11 @@ import team.circleofcampus.R;
 import team.circleofcampus.activity.ChatActivity;
 import team.circleofcampus.activity.ContactActivity;
 import team.circleofcampus.http.HttpHelper;
+import team.circleofcampus.util.SharedPreferencesUtil;
 import team.circleofcampus.view.FontTextView;
 import com.bigkoo.alertview.AlertView;
 import com.bigkoo.alertview.OnDismissListener;
+import com.xiasuhuei321.loadingdialog.view.LoadingDialog;
 
 /**
  * "我的"界面
@@ -45,7 +48,9 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener ,
     private View view;
     String name;
     private Button delete_btn;
-
+    SharedPreferencesUtil sharedPreferencesUtil;
+    String email;
+    JSONObject jsonObject;
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -184,15 +189,63 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener ,
 
     @Override
     public void onDismiss(Object o) {
-        Toast.makeText(getContext(), "消失了", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onItemClick(Object o, int position) {
         if (position==-1){
-            Toast.makeText(getContext(), "取消", Toast.LENGTH_SHORT).show();
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    sharedPreferencesUtil=new SharedPreferencesUtil();
+                    email=sharedPreferencesUtil.getAccount(getContext());
+                    if (email==null){
+                        return;
+                    }
+                    final LoadingDialog  dialog = new LoadingDialog(getContext());
+                    dialog.setLoadingText("加载中")
+                            .setSuccessText("删除成功")//显示加载成功时的文字
+                            .setFailedText("删除失败")
+                            .setInterceptBack(false)
+                            .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
+                            .show();
+
+                    String s=helper.deleteFriend(email,account.getText().toString());
+                    if (s!=null){
+
+
+                        try {
+                            jsonObject = new JSONObject(s);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        delete_btn.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                    if (jsonObject.getString("result").equals("success")){
+                                        dialog.closeSuccessAnim();
+
+                                         startActivity(new Intent(getActivity(),ContactActivity.class));
+                                         getActivity().finish();
+
+                                    }else  if (jsonObject.getString("result").equals("error")){
+                                           dialog.closeFailedAnim();
+
+                                    }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+
+
+
+                    }
+                }
+            });
         }else if(position==0){
-            Toast.makeText(getContext(), "确认", Toast.LENGTH_SHORT).show();
+
         }
 
     }

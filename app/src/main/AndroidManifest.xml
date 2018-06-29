@@ -58,7 +58,9 @@
 
         <activity
             android:name=".activity.ContactActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
+            android:windowSoftInputMode="adjustPan|stateHidden" >
+
+        </activity>
         <activity android:name=".activity.AddRequestActivity" />
         <activity android:name=".activity.ForgetPwdActivity" />
         <activity

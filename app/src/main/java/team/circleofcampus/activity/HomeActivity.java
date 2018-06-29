@@ -182,7 +182,7 @@ public class HomeActivity extends AppCompatActivity {
         });
         data.add(circleFragment);
 
-        account = sharedPreferencesUtil.getAccount(this);
+        account = SharedPreferencesUtil.getAccount(this);
         if (account!=null){
             broadcastReceiver = new MyBroadcastReceiver();
             IntentFilter intentFilter = new IntentFilter();
