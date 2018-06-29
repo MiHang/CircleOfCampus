@@ -24,6 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +37,8 @@ import me.weyye.hipermission.PermissionItem;
 import team.circleofcampus.Interface.OnItemListPopupClickListener;
 import team.circleofcampus.R;
 import team.circleofcampus.adapter.HistoryAccountListPopupAdapter;
+import team.circleofcampus.dao.MyPublishSocietyCircleDao;
+import team.circleofcampus.dao.UserDao;
 import team.circleofcampus.http.LoginRequest;
 import team.circleofcampus.util.SharedPreferencesUtil;
 
@@ -81,6 +84,20 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     SharedPreferencesUtil.setLandingRecord(LoginActivity.this, jsonArr.toString());
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                // 清除本地相关缓存数据
+                try {
+                    MyPublishSocietyCircleDao myPublishSocietyCircleDao = new MyPublishSocietyCircleDao(LoginActivity.this);
+                    if(myPublishSocietyCircleDao.deleteForAllData() == 1) { // 清空本地数据库数据
+                        Log.e("tag", "清空本地数据库我发布的社团公告表数据");
+                    }
+                    UserDao userDao = new UserDao(LoginActivity.this);
+                    if(userDao.deleteForAllData() == 1) { // 清空本地数据库数据
+                        Log.e("tag", "清空本地数据库用户表数据");
+                    }
+                } catch (SQLException e) {
                     e.printStackTrace();
                 }
 

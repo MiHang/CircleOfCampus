@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -233,8 +234,14 @@ public class AuditedFragment extends Fragment {
                     try {
                         JSONArray jsonArr = new JSONArray(result);
                         Gson gson = new Gson();
+                        if (jsonArr.length() == 0) {
+                            myPublishSocietyCircles.clear();
+                            handler.sendEmptyMessage(0x0002);
+                            return;
+                        }
+
                         JSONObject json = new JSONObject(jsonArr.getString(0));
-                        if (!json.has("result") && jsonArr.length() > 0) {
+                        if (!json.has("result")) {
 
                             // 清除本地相关缓存数据，重新加载
                             MyPublishSocietyCircleDao myPublishSocietyCircleDao = new MyPublishSocietyCircleDao(getContext());
