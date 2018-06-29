@@ -123,6 +123,8 @@ public class MessageFragment extends Fragment {
             public void onItemClick(int position) {
                 Intent intent=new Intent(getActivity(), ChatActivity.class);
                 intent.putExtra("receive",data.get(position).getAccount());
+                intent.putExtra("nickName",data.get(position).getUserName());
+                Toast.makeText(getContext(), ""+data.get(position).getUserName(), Toast.LENGTH_SHORT).show();
                 startActivity(intent);
             }
         });
