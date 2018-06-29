@@ -74,7 +74,6 @@ public class AddFriendsFragment extends Fragment {
         sharedPreferencesUtil=new SharedPreferencesUtil();
         Account= sharedPreferencesUtil.getAccount(getActivity());
 
-
         mMenuAdapter = new FriendSearchAdapter(getContext(), data);
         mMenuAdapter.setItemListener(new OnItemClickListener() {
             @Override
@@ -215,7 +214,7 @@ public class AddFriendsFragment extends Fragment {
                     if (js.has("Account")){
 
                         try {
-                            jxResult = helper.addFriend(Account,js.getString("Account"));
+                            jxResult = helper.addFriend(Account, js.getString("Account"));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
