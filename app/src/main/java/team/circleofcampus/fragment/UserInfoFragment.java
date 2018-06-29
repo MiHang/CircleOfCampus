@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.bigkoo.alertview.OnItemClickListener;
 import com.common.view.CircleImageView;
 
 import org.json.JSONException;
@@ -23,13 +24,15 @@ import team.circleofcampus.activity.ChatActivity;
 import team.circleofcampus.activity.ContactActivity;
 import team.circleofcampus.http.HttpHelper;
 import team.circleofcampus.view.FontTextView;
-
+import com.bigkoo.alertview.AlertView;
+import com.bigkoo.alertview.OnDismissListener;
 
 /**
  * "我的"界面
  */
-public class UserInfoFragment extends Fragment {
+public class UserInfoFragment extends Fragment implements View.OnClickListener , OnItemClickListener, OnDismissListener{
 
+    private AlertView mAlertView;//避免创建重复View，先创建View，然后需要的时候show出来，推荐这个做法
     HttpHelper helper;
     private CircleImageView Icon;
     private FontTextView NickName;
@@ -41,10 +44,11 @@ public class UserInfoFragment extends Fragment {
     private Button send_btn;
     private View view;
     String name;
+    private Button delete_btn;
 
     @Override
     public void onDestroyView() {
-        super .onDestroyView();
+        super.onDestroyView();
         if (null != view) {
             ((ViewGroup) view.getParent()).removeView(view);
         }
@@ -56,8 +60,9 @@ public class UserInfoFragment extends Fragment {
         super.onCreate(savedInstanceState);
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_userinfo, null);
         initView(view);
+        mAlertView = new AlertView("提示", "确认删除?", "取消", new String[]{"确定"}, null, getContext(), AlertView.Style.Alert, this).setCancelable(true).setOnDismissListener((OnDismissListener) this);
 
-        final ContactActivity activity= (ContactActivity) getActivity();
+        final ContactActivity activity = (ContactActivity) getActivity();
 
         activity.contactFragment.setListener(new MoreFragmentListener() {
             @Override
@@ -74,14 +79,14 @@ public class UserInfoFragment extends Fragment {
                         activity.header_left_image.setVisibility(View.VISIBLE);
                     }
                 }, 200);
-                activity.MyViewPager.setCurrentItem(position,true);
+                activity.MyViewPager.setCurrentItem(position, true);
                 send_btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent=new Intent(getActivity(), ChatActivity.class);
+                        Intent intent = new Intent(getActivity(), ChatActivity.class);
 
-                        intent.putExtra("receive",account.getText());
-                        intent.putExtra("nickName",name);
+                        intent.putExtra("receive", account.getText());
+                        intent.putExtra("nickName", name);
                         startActivity(intent);
                     }
                 });
@@ -95,6 +100,7 @@ public class UserInfoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        initView(view);
         return view;
     }
 
@@ -114,17 +120,17 @@ public class UserInfoFragment extends Fragment {
 
                         try {
                             JSONObject jsonObject = new JSONObject(s);
-                            Log.e("tag" ,"yonghu"+s);
+                            Log.e("tag", "yonghu" + s);
 
                             if (jsonObject.getString("result").equals("success")) {
                                 account.setText(jsonObject.getString("email"));
                                 UserName.setText("昵称:" + jsonObject.getString("userName"));
-                                if (jsonObject.getString("userName").equals(str[1])){//未设置备注
+                                if (jsonObject.getString("userName").equals(str[1])) {//未设置备注
                                     NickName.setText("备注:无");
-                                    name=jsonObject.getString("userName");
-                                }else{
-                                    name=str[1];
-                                    NickName.setText("备注:"+str[1]);
+                                    name = jsonObject.getString("userName");
+                                } else {
+                                    name = str[1];
+                                    NickName.setText("备注:" + str[1]);
                                 }
                                 department.setText(jsonObject.getString("facultyName"));
                                 college.setText(jsonObject.getString("campusName"));
@@ -163,6 +169,31 @@ public class UserInfoFragment extends Fragment {
         college = (FontTextView) view.findViewById(R.id.college);
         department = (FontTextView) view.findViewById(R.id.department);
         send_btn = (Button) view.findViewById(R.id.send_btn);
+        delete_btn = (Button) view.findViewById(R.id.delete_btn);
+        delete_btn.setOnClickListener(this);
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.delete_btn:
+                mAlertView.show();
+                break;
+        }
+    }
+
+    @Override
+    public void onDismiss(Object o) {
+        Toast.makeText(getContext(), "消失了", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onItemClick(Object o, int position) {
+        if (position==-1){
+            Toast.makeText(getContext(), "取消", Toast.LENGTH_SHORT).show();
+        }else if(position==0){
+            Toast.makeText(getContext(), "确认", Toast.LENGTH_SHORT).show();
+        }
+
+    }
 }

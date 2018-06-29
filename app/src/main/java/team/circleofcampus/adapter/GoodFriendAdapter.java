@@ -81,6 +81,7 @@ public class GoodFriendAdapter extends SwipeMenuAdapter<GoodFriendAdapter.ViewHo
                 .error(res)
                 .into(holder.UserIcon);
 
+
     }
 
     //获取数据的数量

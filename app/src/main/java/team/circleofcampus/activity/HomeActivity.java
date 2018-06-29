@@ -219,6 +219,7 @@ public class HomeActivity extends AppCompatActivity {
         JSONObject jsonObject=new JSONObject();
         try {
             jsonObject.put("Account",account);
+            Toast.makeText(this, "账号"+account, Toast.LENGTH_SHORT).show();
         } catch (JSONException e) {
             e.printStackTrace();
         }

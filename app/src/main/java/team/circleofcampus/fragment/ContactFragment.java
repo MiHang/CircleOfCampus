@@ -59,8 +59,6 @@ import team.circleofcampus.view.FontTextView;
 
 public class ContactFragment extends Fragment implements com.bigkoo.alertview.OnItemClickListener, OnDismissListener {
 
-
-
     private SwipeMenuRecyclerView rv;
     private ListView IndexList;
     final List<Contact> data = new ArrayList<Contact>();
@@ -72,7 +70,7 @@ public class ContactFragment extends Fragment implements com.bigkoo.alertview.On
     GoodFriendAdapter adapter;
     MoreFragmentListener listener;
     HttpHelper helper;
-    private FontTextView num;
+    FontTextView num;
     LoadingDialog dialog;
     EditText edit;
     List<Contact> list = new ArrayList<Contact>();
@@ -89,7 +87,6 @@ public class ContactFragment extends Fragment implements com.bigkoo.alertview.On
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contact, null);
-
         initView(view);
 
         mAlertViewExt = new AlertView("提示", "请填写您想修改的备注",
@@ -106,6 +103,7 @@ public class ContactFragment extends Fragment implements com.bigkoo.alertview.On
         adapter = new GoodFriendAdapter(getContext(), data);
         rv.setAdapter(adapter);
 
+       //右侧索引
         myAdapter = new MyIndexAdapter(getContext(), d);
         IndexList.setAdapter(myAdapter);
         helper = new HttpHelper(getContext());
@@ -123,8 +121,6 @@ public class ContactFragment extends Fragment implements com.bigkoo.alertview.On
                     .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
                     .show();
             setData(Account);
-
-
 
         ContactActivity activity= (ContactActivity) getActivity();
         activity.addFriendsFragment.setListener(new ListListener() {
@@ -146,7 +142,7 @@ public void setData(final String id){
         @Override
         public void run() {
 
-            final String s = helper.queryFriendInfo(id);
+            final String s = helper.queryFriendInfo("jaye");
             rv.post(new Runnable() {
                 @Override
                 public void run() {
@@ -200,13 +196,11 @@ public void setData(final String id){
                                 if (!data.get(i).getLastName().equals(data.get(i - 1).getLastName())) {
                                     Titles.put(i, data.get(i).getLastName());
                                 }
-
                             }
 
                             itemDecoration = new GoodFriendItemDecoration(getContext());
                             itemDecoration.setTitles(Titles);
                             rv.addItemDecoration(itemDecoration);
-
 
                             rv.setHasFixedSize(true);// 如果Item够简单，高度是确定的，打开FixSize将提高性能。
                             rv.setItemAnimator(new DefaultItemAnimator());// 设置Item默认动画，加也行，不加也行。
@@ -318,6 +312,7 @@ public void setData(final String id){
 
         }
     });
+
 }
 
     private void initView(View view) {

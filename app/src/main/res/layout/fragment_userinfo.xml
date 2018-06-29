@@ -168,9 +168,20 @@
             android:id="@+id/send_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/middle_padding"
+            android:layout_marginLeft="@dimen/middle_padding"
+            android:layout_marginTop="@dimen/middle_padding"
+            android:layout_marginRight="@dimen/middle_padding"
             android:background="@drawable/btn_bg"
             android:text="发送消息"
+            android:textColor="@color/white"
+            android:textSize="@dimen/user_info_textSize" />
+        <Button
+            android:id="@+id/delete_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/middle_padding"
+            android:background="@drawable/btn_bg"
+            android:text="删除好友"
             android:textColor="@color/white"
             android:textSize="@dimen/user_info_textSize" />
     </LinearLayout>
