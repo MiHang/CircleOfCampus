@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xiasuhuei321.loadingdialog.view.LoadingDialog;
+import com.yalantis.ucrop.UCrop;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,8 +51,6 @@ public class PublishActivity extends AppCompatActivity {
 
     private static final int GALLERY_REQUSET_CODE = 138;
     private static final int GALLERY_REQUSET_CODE_KITKAT = 139;
-    private static final int CROP_REQUEST_CODE = 140;
-    private static final int LOG_IN_REQUSET_CODE = 141;
 
     @BindView(R.id.header_title)
     protected TextView headerTitle;
@@ -88,20 +87,7 @@ public class PublishActivity extends AppCompatActivity {
                         loadingDialog.loadSuccess();
                     }
                     SharedPreferencesUtil.setPublishedNewCircle(PublishActivity.this, true);
-                    new Thread(){
-                        @Override
-                        public void run() {
-                            try {
-                                // 删除临时图片文件
-                                File file = new File(StorageUtil.getUploadImgTempPath() + "uploadTempImage");
-                                if (file.exists()) file.delete();
-                                sleep(1000);
-                                handler.sendEmptyMessage(0x0004);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }.start();
+                    handler.sendEmptyMessage(0x0004);
                 } break;
                 case 0x0003 : { // 发布失败
                     if (loadingDialog != null) {
@@ -121,6 +107,7 @@ public class PublishActivity extends AppCompatActivity {
         if (loadingDialog != null) {
             loadingDialog.close();
         }
+        deleteTempImage();
         finish();
     }
 
@@ -230,27 +217,18 @@ public class PublishActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case LOG_IN_REQUSET_CODE:
-                if(resultCode == RESULT_OK) {
-                    // ......
-                } else {
-                    finish();
-                }
-                break;
             case GALLERY_REQUSET_CODE:
                 handleGalleryResult(resultCode, data);
                 break;
             case GALLERY_REQUSET_CODE_KITKAT:
                 handleGalleryKitKatResult(resultCode, data);
                 break;
-            case CROP_REQUEST_CODE:
-                // 此处crop正常返回resultCode也不为RESULT_OK
-                if(data == null) return;
-                Bundle bundle = data.getExtras();
-                if(bundle != null) {
-                    Bitmap bitmap = bundle.getParcelable("data");
+            case UCrop.REQUEST_CROP:
+                Log.e("tag", "公告配图剪裁成功....");
+                String filePath = StorageUtil.getUploadImgTempPath() + "uploadTempImage";
+                Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+                if (bitmap != null) {
                     displayImageView.setImageBitmap(bitmap);
-                    saveBitmapFile(bitmap); // 将图片保存到手机内存卡
                 }
                 break;
             default:
@@ -259,31 +237,10 @@ public class PublishActivity extends AppCompatActivity {
     }
 
     /**
-     * 将剪裁过的图片保存为临时文件
-     * @param bitmap
+     * 获取图片URI，适用于Android 4.4 之前的版本
+     * @param resultCode
+     * @param data
      */
-    public void saveBitmapFile(Bitmap bitmap){
-
-        // 保存校园圈临时数据的根路径
-        String path = StorageUtil.getUploadImgTempPath();
-        File file = new File(path);
-        if (!file.exists() && !file.isDirectory()) {
-            file.mkdirs();
-            System.out.println("创建路径：" + path);
-        }
-
-        Log.e("tag", "path = " + path);
-        File imageFile = new File(path + "uploadTempImage");//将要保存图片的路径
-        try {
-            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(imageFile));
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-            bos.flush();
-            bos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void handleGalleryResult(int resultCode, Intent data) {
         if(resultCode != RESULT_OK) return;
         String path = data.getData().getPath();
@@ -299,7 +256,11 @@ public class PublishActivity extends AppCompatActivity {
         routeToCrop(fileUri);
     }
 
-    // Result uri is "content://" after Android 4.4
+    /**
+     * 获取图片URI，适用于Android 4.4 之后的版本
+     * @param resultCode
+     * @param data
+     */
     private void handleGalleryKitKatResult(int resultCode, Intent data) {
         if(resultCode != RESULT_OK) return;
         Uri contentUri = data.getData();
@@ -331,22 +292,45 @@ public class PublishActivity extends AppCompatActivity {
      * @param uri
      */
     private void routeToCrop(Uri uri) {
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
 
-        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        // 获取上传图片的临时路径
+        String path = StorageUtil.getUploadImgTempPath();
+        File file = new File(path);
+        if (!file.exists() || !file.isDirectory()) {
+            file.mkdirs();
+            Log.e("tag", "创建路径：" + path);
+        }
 
-        intent.putExtra("crop", false);
-        intent.putExtra("aspectX", 1.82);
-        intent.putExtra("aspectY", 1);
-        intent.putExtra("outputX", 416);
-        intent.putExtra("outputY", 228);
-        intent.putExtra("scale", true);
-        intent.putExtra("return-data", true);
-        startActivityForResult(intent, CROP_REQUEST_CODE);
+        // 初始化UCROP设置，原图uri，剪裁后的图片保存路径
+        UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(path + "uploadTempImage")));
+        uCrop.withAspectRatio(1.824f, 1); // 剪裁比例 1.824 ：1
+        uCrop.withMaxResultSize(1248, 684); // 最大长宽 1248 * 684
+
+        // 图片保存为jpg格式
+        UCrop.Options options = new UCrop.Options();
+        options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
+        options.setCompressionQuality(80); // 设置剪裁图片的质量
+        uCrop.withOptions(options);
+
+        // 开始剪裁
+        uCrop.start(PublishActivity.this);
     }
 
+    /**
+     * 删除临时图片
+     */
+    private void deleteTempImage() {
+        // 删除临时图片文件
+        File file = new File(StorageUtil.getUploadImgTempPath() + "uploadTempImage");
+        if (file.exists()) file.delete();
+    }
+
+    /**
+     * 保存bitmap
+     * @param bitmap
+     * @return
+     * @throws IOException
+     */
     private File saveBitmap(Bitmap bitmap) throws IOException {
         File file = new File(getExternalCacheDir(), "face-cache");
         if (!file.exists()) file.createNewFile();

@@ -163,6 +163,36 @@ public class MineFragment extends Fragment {
         return view;
     }
 
+    /**
+     * 初始化控件
+     * @param view
+     */
+    private void initView(View view) {
+
+        Icon = (CircleImageView) view.findViewById(R.id.Icon);
+        Log_out = (Button) view.findViewById(R.id.Log_out);
+        account = (TextView) view.findViewById(R.id.account);
+        sex = (TextView) view.findViewById(R.id.sex);
+        college = (TextView) view.findViewById(R.id.college);
+        department = (TextView) view.findViewById(R.id.department);
+        userName = (EditText) view.findViewById(R.id.userName);
+        userName.setEnabled(false);
+        QR = (TextView) view.findViewById(R.id.QR);
+        QR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Account!=null){
+                    if (switchListener!=null){
+                        switchListener.displayThisFragment(true);
+                    }
+                }else{
+                    Toast.makeText(getContext(),"您暂未登录",Toast.LENGTH_LONG).show();
+                }
+            }
+
+        });
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -205,6 +235,22 @@ public class MineFragment extends Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (view!=null){
+            ((ViewGroup) view.getParent()).removeView(view);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (dialog != null) {
+            dialog.close();
+        }
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
@@ -222,7 +268,7 @@ public class MineFragment extends Fragment {
                     // 初始化UCROP设置，原图uri，剪裁后的图片保存路径
                     UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(path + "headIcon")));
                     uCrop.withAspectRatio(1, 1); // 剪裁比例 1 ：1
-                    //uCrop.withMaxResultSize(500, 500); // 最大长宽 200 * 200
+                    uCrop.withMaxResultSize(500, 500); // 最大长宽 500 * 500
 
                     // 图片保存为jpg格式
                     UCrop.Options options = new UCrop.Options();
@@ -296,48 +342,6 @@ public class MineFragment extends Fragment {
     private void showImage(String imaePath){
         Bitmap bm = BitmapFactory.decodeFile(imaePath);
         Icon.setImageBitmap(bm);
-    }
-
-    private void initView(View view) {
-
-        Icon = (CircleImageView) view.findViewById(R.id.Icon);
-        Log_out = (Button) view.findViewById(R.id.Log_out);
-        account = (TextView) view.findViewById(R.id.account);
-        sex = (TextView) view.findViewById(R.id.sex);
-        college = (TextView) view.findViewById(R.id.college);
-        department = (TextView) view.findViewById(R.id.department);
-        userName = (EditText) view.findViewById(R.id.userName);
-        userName.setEnabled(false);
-        QR = (TextView) view.findViewById(R.id.QR);
-        QR.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (Account!=null){
-                    if (switchListener!=null){
-                        switchListener.displayThisFragment(true);
-                    }
-                }else{
-                    Toast.makeText(getContext(),"您暂未登录",Toast.LENGTH_LONG).show();
-                }
-            }
-
-        });
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (view!=null){
-            ((ViewGroup) view.getParent()).removeView(view);
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (dialog != null) {
-            dialog.close();
-        }
     }
 
     /**
