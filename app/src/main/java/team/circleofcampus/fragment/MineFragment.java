@@ -33,6 +33,7 @@ import com.bumptech.glide.request.target.Target;
 import com.common.utils.ByteUtils;
 import com.lcodecore.tkrefreshlayout.utils.LogUtil;
 import com.xiasuhuei321.loadingdialog.view.LoadingDialog;
+import com.yalantis.ucrop.UCrop;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,6 +58,8 @@ import team.circleofcampus.util.SharedPreferencesUtil;
 import team.circleofcampus.util.StorageUtil;
 import team.circleofcampus.view.CircleImageView;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by 惠普 on 2018-05-11.
  */
@@ -74,8 +77,9 @@ public class MineFragment extends Fragment {
     private TextView QR;
 
     String Account;
-    int res;
     LoadingDialog dialog;
+    private boolean isStartCropAvatar = false;
+    private boolean isCropAvatar = false;
 
     FragmentSwitchListener switchListener;
     public void setSwitchListener(FragmentSwitchListener switchListener) {
@@ -100,9 +104,11 @@ public class MineFragment extends Fragment {
                 case 0x0003 : { // 头像修改成功
                     if (dialog != null) dialog.loadSuccess();
                     showImage((String)msg.obj);
+                    deleteTempAvatar();
                 } break;
                 case 0x0004 : { // 头像修改失败
                     if (dialog != null) dialog.loadFailed();
+                    deleteTempAvatar();
                 } break;
             }
         }
@@ -158,80 +164,135 @@ public class MineFragment extends Fragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        //获取图片路径
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK && data != null) {
-            try {
-                Uri uri = data.getData();
-                final String absolutePath = getAbsolutePath(getContext(), uri);
-                dialog = new LoadingDialog(getContext());
-                dialog.setLoadingText("头像修改中")
-                        .setSuccessText("头像修改成功")
-                        .setFailedText("头像修改失败")
-                        .closeSuccessAnim()
-                        .setShowTime(1000)
-                        .setInterceptBack(false)
-                        .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
-                        .show();
-                AsyncTask.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            JSONObject json = new JSONObject();
-                            json.put("uId", SharedPreferencesUtil.getUID(getContext()));
-                            File file=new File(absolutePath);
-                            String result = helper.upload(json.toString(),file);
-                            if (result != null) {
-                                JSONObject jsonObject = new JSONObject(result);
-                                if (jsonObject.getString("result").equals("success")) {
-                                    downloadImageSingleThreadExecutor = SingleThreadService.newSingleThreadExecutor();
-                                    downloadImageSingleThreadExecutor.execute(ImageRequest.downloadImage(jsonObject.getString("url")));
-                                    Message message = new Message();
-                                    message.obj = absolutePath;
-                                    message.what = 0x0003;
-                                    handler.sendMessage(message);
-                                }
-                            } else {
-                                handler.sendEmptyMessage(0x0004);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+    public void onResume() {
+        super.onResume();
+        Log.e("tag", "MineFragment onResume.....");
+        if (isStartCropAvatar) {
+            isStartCropAvatar = false;
+            isCropAvatar = true;
+            return;
+        }
+        if (isCropAvatar) {
+            isCropAvatar = false;
+            dialog = new LoadingDialog(getContext());
+            dialog.setLoadingText("头像修改中")
+                    .setSuccessText("头像修改成功")
+                    .setFailedText("头像修改失败")
+                    .closeSuccessAnim()
+                    .setShowTime(1000)
+                    .setInterceptBack(false)
+                    .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
+                    .show();
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        sleep(1000);
+                        String path = StorageUtil.getUploadImgTempPath();
+                        File file = new File(path + "headIcon");
+                        if (file.exists()) {
+                            uploadAvatar(path + "headIcon");
+                        } else {
+                            Log.e("tag", "头像剪裁失败。。。");
+                            handler.sendEmptyMessage(0x0004);
                         }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
+                }
+            }.start();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case 1: {
+                    Uri uri = data.getData();
+
+                    // 获取上传图片的临时路径
+                    String path = StorageUtil.getUploadImgTempPath();
+                    File file = new File(path);
+                    if (!file.exists() || !file.isDirectory()) {
+                        file.mkdirs();
+                        Log.e("tag", "创建路径：" + path);
+                    }
+
+                    // 初始化UCROP设置，原图uri，剪裁后的图片保存路径
+                    UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(path + "headIcon")));
+                    uCrop.withAspectRatio(1, 1); // 剪裁比例 1 ：1
+                    //uCrop.withMaxResultSize(500, 500); // 最大长宽 200 * 200
+
+                    // 图片保存为jpg格式
+                    UCrop.Options options = new UCrop.Options();
+                    options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
+                    options.setCompressionQuality(80); // 设置剪裁图片的质量
+                    uCrop.withOptions(options);
+
+                    // 开始剪裁
+                    uCrop.start(getActivity());
+                    isStartCropAvatar = true;
+                };break;
+                case UCrop.REQUEST_CROP : {
+                    Log.e("tag", "头像剪裁成功...");
+                }; break;
             }
         }
     }
 
-    public String getAbsolutePath(final Context context, final Uri uri) {
-        if (null == uri) return null;
-        final String scheme = uri.getScheme();
-        String data = null;
-        if (scheme == null)
-            data = uri.getPath();
-        else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
-            data = uri.getPath();
-        } else if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
-            Cursor cursor = context.getContentResolver().query(uri,
-                    new String[]{MediaStore.Images.ImageColumns.DATA},
-                    null, null, null);
-            if (null != cursor) {
-                if (cursor.moveToFirst()) {
-                    int index = cursor.getColumnIndex(
-                            MediaStore.Images.ImageColumns.DATA);
-                    if (index > -1) {
-                        data = cursor.getString(index);
+    /**
+     * 修改头像
+     */
+    private void uploadAvatar(final String filePath) {
+        Log.e("tag", "alter avatar...");
+        try {
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        JSONObject json = new JSONObject();
+                        json.put("uId", SharedPreferencesUtil.getUID(getContext()));
+                        File file=new File(filePath);
+                        String result = helper.upload(json.toString(), file);
+                        if (result != null) {
+                            JSONObject jsonObject = new JSONObject(result);
+                            if (jsonObject.getString("result").equals("success")) {
+                                downloadImageSingleThreadExecutor = SingleThreadService.newSingleThreadExecutor();
+                                downloadImageSingleThreadExecutor.execute(ImageRequest.downloadImage(jsonObject.getString("url")));
+                                Message message = new Message();
+                                message.obj = filePath;
+                                message.what = 0x0003;
+                                handler.sendMessage(message);
+                            }
+                        } else {
+                            handler.sendEmptyMessage(0x0004);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
                 }
-                cursor.close();
-            }
-        }     return data;
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    //加载图片
+    /**
+     * 删除临时头像
+     */
+    private void deleteTempAvatar() {
+        String path = StorageUtil.getUploadImgTempPath();
+        File file = new File(path + "headIcon");
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+
+    /**
+     * 设置头像
+     * @param imaePath
+     */
     private void showImage(String imaePath){
         Bitmap bm = BitmapFactory.decodeFile(imaePath);
         Icon.setImageBitmap(bm);

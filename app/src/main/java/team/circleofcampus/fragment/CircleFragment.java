@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -125,8 +126,11 @@ public class CircleFragment extends Fragment {
 
         // 设置下拉刷新部分的HeadView
         SinaRefreshView sinaRefreshView = new SinaRefreshView(getContext());
-        sinaRefreshView.setBackgroundColor(Color.parseColor("#FF494949"));
+        sinaRefreshView.setBackgroundResource(R.drawable.bg);
         sinaRefreshView.setTextColor(Color.WHITE);
+        sinaRefreshView.setArrowResource(R.drawable.ico_arrow_down);
+        ImageView loadView = sinaRefreshView.findViewById(com.lcodecore.tkrefreshlayout.R.id.iv_loading);
+        loadView.setImageResource(R.drawable.anim_loading);
         refreshLayout.setHeaderView(sinaRefreshView);
 
         // 设置下拉刷新控件相关参数

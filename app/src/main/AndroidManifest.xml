@@ -38,8 +38,10 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepaths" />
+                android:resource="@xml/filepaths"/>
         </provider>
+
+        <service android:name=".service.MyService" />
 
         <activity android:name=".activity.MainActivity">
             <intent-filter>
@@ -50,27 +52,17 @@
         </activity>
         <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.RegisterActivity" />
-        <activity
-            android:name=".activity.HomeActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
-
-        <service android:name=".service.MyService" />
-
-        <activity
-            android:name=".activity.ContactActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden" >
-
-        </activity>
+        <activity android:name=".activity.HomeActivity" android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity android:name=".activity.ContactActivity" android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name=".activity.AddRequestActivity" />
         <activity android:name=".activity.ForgetPwdActivity" />
-        <activity
-            android:name=".activity.ChatActivity"
-            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".activity.ChatActivity" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".activity.AlterUserInfoActivity" />
         <activity android:name=".activity.DetailCircleActivity" />
         <activity android:name=".activity.PublishActivity" />
         <activity android:name=".activity.ApplySocietyAuthorityActivity" />
-        <activity android:name=".activity.DecoderActivity"></activity>
+        <activity android:name=".activity.DecoderActivity"/>
+        <activity android:name="com.yalantis.ucrop.UCropActivity" android:theme="@style/CropAppTheme"/>
     </application>
 
 </manifest>
