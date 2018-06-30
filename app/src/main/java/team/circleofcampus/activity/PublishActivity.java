@@ -304,7 +304,7 @@ public class PublishActivity extends AppCompatActivity {
         // 初始化UCROP设置，原图uri，剪裁后的图片保存路径
         UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(path + "uploadTempImage")));
         uCrop.withAspectRatio(1.824f, 1); // 剪裁比例 1.824 ：1
-        uCrop.withMaxResultSize(1248, 684); // 最大长宽 1248 * 684
+        uCrop.withMaxResultSize(832, 456); // 最大长宽 832 * 456
 
         // 图片保存为jpg格式
         UCrop.Options options = new UCrop.Options();

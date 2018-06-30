@@ -156,7 +156,8 @@ public class AuditedFragment extends Fragment {
             isLoaded = false;
             SharedPreferencesUtil.setPublishedNewCircle(getContext(), false);
             loadData(); // 加载数据
-        } else if (!isLoaded && isNetworkAvailable) { // 显示加载对话框
+        }
+        if (!isLoaded && isNetworkAvailable) { // 显示加载对话框
             loadingDialog = new LoadingDialog(getContext());
             loadingDialog.setLoadingText("数据加载中")
                     .setSuccessText("加载成功")
@@ -229,7 +230,7 @@ public class AuditedFragment extends Fragment {
             @Override
             public void run() {
                 int size = SharedPreferencesUtil.getMyPublishSocietyCircleCount(getContext());
-                String result = SocietyCircleRequest.getMyPublishSocietyCircle(userId, 0, size);
+                String result = SocietyCircleRequest.getMyPublishSocietyCircle(userId, 0, size + 1);
                 if (null != result) {
                     try {
                         JSONArray jsonArr = new JSONArray(result);
@@ -250,7 +251,7 @@ public class AuditedFragment extends Fragment {
                             }
 
                             // 将数据保存到本地数据库
-                            for (int i =0; i < jsonArr.length(); i ++) {
+                            for (int i = 0; i < jsonArr.length(); i ++) {
                                 MyPublishSocietyCircle myPublishSocietyCircle = gson.fromJson(
                                         jsonArr.getString(i), MyPublishSocietyCircle.class);
                                 myPublishSocietyCircleDao.insertData(myPublishSocietyCircle);

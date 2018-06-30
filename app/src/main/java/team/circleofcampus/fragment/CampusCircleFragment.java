@@ -36,6 +36,7 @@ import team.circleofcampus.model.Circle;
 import team.circleofcampus.service.SingleThreadService;
 import team.circleofcampus.util.DateUtil;
 import team.circleofcampus.util.SharedPreferencesUtil;
+import team.circleofcampus.view.MyListView;
 
 public class CampusCircleFragment extends Fragment {
 
@@ -96,7 +97,7 @@ public class CampusCircleFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (circles != null) {
+        if (circles.size() > 0) {
             circles.clear();
             moreCircleListAdapter.notifyDataSetChanged();
         }
@@ -133,7 +134,7 @@ public class CampusCircleFragment extends Fragment {
                 .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
                 .show();
         if (singleThreadExecutor == null) { // 数据加载单例线程池
-            singleThreadExecutor = SingleThreadService.getSingleThreadPool();
+            singleThreadExecutor = SingleThreadService.newSingleThreadExecutor();
         }
         singleThreadExecutor.execute(loadingCampusCircle()); // 加载校园公告数据
     }

@@ -52,6 +52,30 @@ public class MoreCircleListAdapter extends BaseAdapter {
         return circles != null ? circles.get(position).getId() : position;
     }
 
+    /**
+     * ItemView 的类型，与 getViewTypeCount 方法一起，防止滑动时item错位<br/>
+     * 适用于 listview 中有2种及2种以上不同的 item 的情况
+     * @param position
+     * @return
+     */
+    @Override
+    public int getItemViewType(int position) {
+        if (circles.get(position).getId() == -1) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
+
+    /**
+     * ItemView 的类型数量，与 getItemViewType 方法一起，防止滑动时item错位
+     * @return
+     */
+    @Override
+    public int getViewTypeCount() {
+        return 2;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -69,9 +93,10 @@ public class MoreCircleListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        if (circles.get(position).getId() == -1) {
+        if (circles.get(position).getId() == -1 && holder.timestamp != null) {
             holder.timestamp.setText(circles.get(position).getPublishTime());
-        } else {
+        } else if (circles.get(position).getId() != -1 && holder.cover != null && holder.title != null
+                && holder.activityTime != null && holder.venue != null) {
             loadImage(holder.cover, circles.get(position).getImagesUrl());
             holder.title.setText(circles.get(position).getTitle());
             holder.activityTime.setText("时 间：" + circles.get(position).getActivityTime());
