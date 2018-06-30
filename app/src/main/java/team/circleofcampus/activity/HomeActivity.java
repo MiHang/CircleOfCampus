@@ -90,6 +90,7 @@ public class HomeActivity extends AppCompatActivity {
 
     // 当前activity可见
     private boolean isResume = true;
+    private boolean isShowHint = true;
 
     /**
      * 用户ID
@@ -101,8 +102,12 @@ public class HomeActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0x0001 : {
-                    if (isResume) {
+                    if (isResume && isShowHint) {
                         Toast.makeText(HomeActivity.this, "无法与服务器通信，请检查您的网络连接", Toast.LENGTH_SHORT).show();
+                    }
+                    if ((CircleFragment)data.get(0) != null) { // 如果有刷新动画，则关闭
+                        isShowHint = false;
+                        ((CircleFragment)data.get(0)).closeRefreshAnimation();
                     }
                 } break;
                 case 0x0002 : { // 社团权限信息
@@ -127,6 +132,7 @@ public class HomeActivity extends AppCompatActivity {
                 } break;
                 case 0x0006 : { // 网络重新连接
                     if (selectedPageId == 0) {
+                        isShowHint = true;
                         singleThreadExecutor.execute(loadingSocietyAuthority()); // 加载社团发布权限
                         singleThreadExecutor.execute(loadingCampusCircleCount()); // 获取校园圈的数量
                         singleThreadExecutor.execute(loadingSocietyCircleCount()); // 获取社团圈的数量

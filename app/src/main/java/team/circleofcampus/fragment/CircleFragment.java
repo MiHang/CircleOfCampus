@@ -1,6 +1,7 @@
 package team.circleofcampus.fragment;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,8 +14,10 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.lcodecore.tkrefreshlayout.IHeaderView;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+import com.lcodecore.tkrefreshlayout.header.SinaRefreshView;
 import com.lcodecore.tkrefreshlayout.header.bezierlayout.BezierLayout;
 import com.youth.banner.Banner;
 
@@ -87,15 +90,17 @@ public class CircleFragment extends Fragment {
     private int userId = 0; // 用户ID
     private boolean isRefreshing = false; // 当前是否正在刷新
     private boolean isResume = true; // 当前Fragment是否可见
+    private boolean isShowHint = true;
 
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0x0001: {
-                    if (isResume) {
+                    if (isResume && isShowHint) {
                         Toast.makeText(getContext(), "无法与服务器通信，请检查您的网络连接", Toast.LENGTH_SHORT).show();
                     }
+                    closeRefreshAnimation();
                 } break;
                 case 0x0002: { // 校园圈与社团圈数据加载完毕
                     campusCircleListViewAdapter.notifyDataSetChanged();
@@ -105,6 +110,9 @@ public class CircleFragment extends Fragment {
                         refreshLayout.finishRefreshing();
                     }
                 } break;
+                case 0x0003: { // 关闭刷新动画
+                    closeRefreshAnimation();
+                }
             }
         }
     };
@@ -116,8 +124,10 @@ public class CircleFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         // 设置下拉刷新部分的HeadView
-        BezierLayout headerView = new BezierLayout(getContext());
-        refreshLayout.setHeaderView(headerView);
+        SinaRefreshView sinaRefreshView = new SinaRefreshView(getContext());
+        sinaRefreshView.setBackgroundColor(Color.parseColor("#FF494949"));
+        sinaRefreshView.setTextColor(Color.WHITE);
+        refreshLayout.setHeaderView(sinaRefreshView);
 
         // 设置下拉刷新控件相关参数
         refreshLayout.setMaxHeadHeight(100);
@@ -228,10 +238,22 @@ public class CircleFragment extends Fragment {
     }
 
     /**
+     * 关闭刷新动画
+     */
+    public void closeRefreshAnimation() {
+        if (isRefreshing && refreshLayout != null) {
+            isRefreshing = false;
+            isShowHint = false;
+            refreshLayout.finishRefreshing();
+        }
+    }
+
+    /**
      * 数据加载
      */
     public void loadData() {
         Log.e("tag", "CircleFragment reload data...");
+        isShowHint = true;
         // 图片下载单例线程池
         downloadImageSingleThreadExecutor = SingleThreadService.newSingleThreadExecutor();
         if (singleThreadExecutor == null) { // 数据加载单例线程池
@@ -304,6 +326,8 @@ public class CircleFragment extends Fragment {
                                 }
                                 Thread.sleep(1000);
                             }
+                        } else {
+                            handler.sendEmptyMessage(0x0003);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -342,10 +366,6 @@ public class CircleFragment extends Fragment {
                                 Log.e("tag", "清空本地数据库校园公告表数据");
                             }
 
-//                           // 清除本地缓存图片
-//                           String storagePath = StorageUtil.getStorageDirectory(); // 获取内置存储卡路径
-//                           StorageUtil.delAllFile(storagePath + "coc/campus_circle/");
-
                             // 将数据保存到本地数据库
                             for (int i =0; i < jsonArr.length(); i ++) {
                                 CampusCircle campusCircle = gson.fromJson(jsonArr.getString(i), CampusCircle.class);
@@ -370,6 +390,8 @@ public class CircleFragment extends Fragment {
                                     campusCircles.remove(i+1);
                                 }
                             }
+                        } else {
+                            handler.sendEmptyMessage(0x0003);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
