@@ -13,6 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -89,7 +92,7 @@ public class DetailCircleActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         headerTitle.setText("公告详情");
 
-        singleThreadExecutor = SingleThreadService.getSingleThreadPool();
+        singleThreadExecutor = SingleThreadService.newSingleThreadExecutor();
 
         // 获取参数
         Bundle bundle = getIntent().getExtras();
@@ -97,6 +100,7 @@ public class DetailCircleActivity extends AppCompatActivity {
         isCampusCircle = bundle.getBoolean("isCampusCircle");
         if (id != 0) {
             singleThreadExecutor.execute(loadingCircleDetail());
+            singleThreadExecutor.shutdown();
         }
     }
 
@@ -117,23 +121,34 @@ public class DetailCircleActivity extends AppCompatActivity {
      */
     private void update() {
         if (circleDetail != null) {
-            // 加载相关图片
-            loadImage(circleIcon, HttpRequest.URL + circleDetail.getPublisherIco());
-            try {
-                JSONArray jsonArray = new JSONArray(circleDetail.getImagesUrl());
-                if (jsonArray.length() > 0) {
-                    JSONObject json = new JSONObject(jsonArray.getString(0));
-                    loadImage(circleImage, HttpRequest.URL + json.getString("url"));
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
 
             // 相关数据
             circleName.setText(circleDetail.getPublisher());
             circlePublishTime.setText(circleDetail.getPublishTime());
             circleTitle.setText(circleDetail.getTitle());
             circleContent.setText(circleDetail.getContent());
+
+            // 加载相关图片
+            Glide.with(DetailCircleActivity.this)
+                    .load(HttpRequest.URL + circleDetail.getPublisherIco())
+                    .placeholder(R.drawable.img_loading_failed)
+                    .error(R.drawable.img_loading_failed)
+                    .into(circleIcon);
+            //loadImage(circleIcon, HttpRequest.URL + circleDetail.getPublisherIco());
+            try {
+                JSONArray jsonArray = new JSONArray(circleDetail.getImagesUrl());
+                if (jsonArray.length() > 0) {
+                    JSONObject json = new JSONObject(jsonArray.getString(0));
+                    Glide.with(DetailCircleActivity.this)
+                            .load(HttpRequest.URL + json.getString("url"))
+                            .placeholder(R.drawable.img_loading_failed)
+                            .error(R.drawable.img_loading_failed)
+                            .into(circleImage);
+                    //loadImage(circleImage, HttpRequest.URL + json.getString("url"));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 
