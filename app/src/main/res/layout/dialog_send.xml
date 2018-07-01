@@ -4,7 +4,7 @@
     android:id="@+id/Send_dialog"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:visibility="gone"
+    android:visibility="visible"
     android:layout_gravity="right">
 
     <LinearLayout
@@ -36,12 +36,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/send_bg"
-                android:drawableRight="@drawable/send_audio"
-                android:ellipsize="end"
+                android:layout_weight="1"
+                android:inputType="textMultiLine"
+                android:singleLine="false"
+                android:scrollHorizontally="false"
+                android:background="@drawable/send_bg_1"
+                android:drawableLeft="@drawable/send_audio"
                 android:maxHeight="@dimen/max_textView_height"
                 android:maxWidth="@dimen/max_textView_width"
                 android:src="@drawable/send_audio"
+                android:textColor="#ffffff"
+                android:gravity="center|left"
                 android:textSize="@dimen/chat_textSize" />
 
         </LinearLayout>

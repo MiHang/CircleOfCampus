@@ -3,6 +3,8 @@ package team.circleofcampus.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
@@ -193,7 +195,7 @@ public class RecordAdapter extends BaseAdapter {
                     vh.Time.setText(msg.getMsg().getDate());
                 }
 
-                if (msg.getReceive() == Symbol.Receive_Mode) {//接收
+                if (msg.getReceive() == Symbol.Receive_Mode) {// 接收
                     vh.Receive_dialog.setVisibility(View.VISIBLE);
                     vh.Send_dialog.setVisibility(View.GONE);
                     vh.Receive_dialog.setOnLongClickListener(new View.OnLongClickListener() {
@@ -211,6 +213,7 @@ public class RecordAdapter extends BaseAdapter {
                         vh.Receive_Msg.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                         if (!convertNormalStringToSpannableString(msg.getMsg().getText(), vh.Receive_Msg)) {
                             vh.Receive_Msg.setText(msg.getMsg().getText());
+                            setBackgroundAndKeepPadding(vh.Receive_Msg, R.drawable.receive_bg_1);
                         }
 
                     }else  if (msg.getMsg().getAudioPath()!= null) { // 接收语音消息
@@ -252,6 +255,7 @@ public class RecordAdapter extends BaseAdapter {
                         vh.Send_Msg.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                         if (!convertNormalStringToSpannableString(msg.getMsg().getText(), vh.Send_Msg)) {
                             vh.Send_Msg.setText(msg.getMsg().getText());
+                            setBackgroundAndKeepPadding(vh.Send_Msg, R.drawable.send_bg_1);
                         }
 
                     }else
@@ -280,9 +284,26 @@ public class RecordAdapter extends BaseAdapter {
             }
         },200);
 
-
-
         return view;
+    }
+
+    protected void setBackgroundAndKeepPadding(View view, int backgroundResId) {
+        Drawable backgroundDrawable = view.getContext().getResources().getDrawable(backgroundResId);
+        Rect drawablePadding = new Rect();
+        backgroundDrawable.getPadding(drawablePadding);
+        Rect viewPadding;
+        if (view.getTag() == null) {
+            viewPadding = new Rect(view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(), view.getPaddingBottom());
+            view.setTag(viewPadding);
+        } else {
+            viewPadding = (Rect) view.getTag();
+        }
+        int top = viewPadding.top + drawablePadding.top;
+        int left = viewPadding.left + drawablePadding.left;
+        int right = viewPadding.right + drawablePadding.right;
+        int bottom = viewPadding.bottom + drawablePadding.bottom;
+        view.setBackgroundDrawable(backgroundDrawable);
+        view.setPadding(left, top, right, bottom);
     }
 
     public boolean DisPlayTime(String t1, String t2) {

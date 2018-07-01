@@ -75,7 +75,7 @@
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:text="你好"
-                    android:textSize="12dp" />
+                    android:textSize="14dp" />
 
                 <team.circleofcampus.view.FontTextView
                     android:id="@+id/amount"

@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/Receive_dialog"
     android:layout_width="wrap_content"
-    android:visibility="gone"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:visibility="visible">
 
     <team.circleofcampus.view.IconImageView
         android:id="@+id/Receive_Icon"
@@ -35,12 +35,16 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:background="@drawable/receive_bg"
+                android:inputType="textMultiLine"
+                android:singleLine="false"
+                android:scrollHorizontally="false"
+                android:background="@drawable/receive_bg_1"
                 android:drawableLeft="@drawable/receive_audio"
-                android:ellipsize="end"
                 android:maxHeight="@dimen/max_textView_height"
                 android:maxWidth="@dimen/max_textView_width"
                 android:src="@drawable/send_audio"
+                android:textColor="#5b5b5b"
+                android:gravity="center|left"
                 android:textSize="@dimen/chat_textSize" />
 
             <team.circleofcampus.view.FontTextView
@@ -55,22 +59,18 @@
                 android:text="1" />
         </LinearLayout>
 
-
-
-            <team.circleofcampus.view.RoundRectImageView
-                android:id="@+id/Receive_Img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
-                android:adjustViewBounds="true"
-                android:clickable="true"
-                android:maxHeight="@dimen/maxImg"
-                android:maxWidth="@dimen/maxImg"
-                android:visibility="gone"
-                android:src="@drawable/bg"
-                />
+        <team.circleofcampus.view.RoundRectImageView
+            android:id="@+id/Receive_Img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:clickable="true"
+            android:maxHeight="@dimen/maxImg"
+            android:maxWidth="@dimen/maxImg"
+            android:src="@drawable/bg"
+            android:visibility="gone"/>
 
     </LinearLayout>
-
 
 </LinearLayout>

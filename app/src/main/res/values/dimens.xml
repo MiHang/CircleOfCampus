@@ -33,7 +33,7 @@
     <dimen name="max_textView_width">200dp</dimen>
     <!--聊天文本最大高度-->
     <dimen name="max_textView_height">400dp</dimen>
-    <dimen name="chat_textSize">20dp</dimen>
+    <dimen name="chat_textSize">18dp</dimen>
     <dimen name="icon_padding">2dp</dimen>
     <dimen name="Icon">45dp</dimen>
     <dimen name="maxImg">160dp</dimen>
