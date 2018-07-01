@@ -47,6 +47,7 @@ import team.circleofcampus.Interface.FragmentSwitchListener;
 import team.circleofcampus.R;
 import team.circleofcampus.activity.ChatActivity;
 import team.circleofcampus.activity.LoginActivity;
+import team.circleofcampus.dao.MyPublishSocietyCircleDao;
 import team.circleofcampus.dao.UserDao;
 import team.circleofcampus.http.HttpHelper;
 import team.circleofcampus.http.HttpRequest;
@@ -148,6 +149,23 @@ public class MineFragment extends Fragment {
                 SharedPreferencesUtil.setUID(getContext(), 0);
                 SharedPreferencesUtil.setAccount(getContext(), "");
                 SharedPreferencesUtil.setLoginTime(getContext(), 0);
+
+                // 清除本地相关缓存数据
+                try {
+                    MyPublishSocietyCircleDao myPublishSocietyCircleDao = new MyPublishSocietyCircleDao(getContext());
+                    if(myPublishSocietyCircleDao.deleteForAllData() == 1) { // 清空本地数据库数据
+                        Log.e("tag", "清空本地数据库我发布的社团公告表数据");
+                    }
+                    UserDao userDao = new UserDao(getContext());
+                    if(userDao.deleteForAllData() == 1) { // 清空本地数据库数据
+                        Log.e("tag", "清空本地数据库用户表数据");
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                // 删除用户头像数据
+                StorageUtil.delAllFile(StorageUtil.getStorageDirectory() + "res/img/");
 
                 // 跳转到登陆页面
                 Intent intent = new Intent(getActivity(), LoginActivity.class);

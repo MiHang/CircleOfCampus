@@ -50,9 +50,6 @@ public class ContactActivity extends AppCompatActivity {
         header_title.setText("好友列表");
         header_right_text.setText("添加好友");
 
-
-
-
         //返回点击监听
         header_left_image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,8 +85,8 @@ public class ContactActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
      if (MyViewPager.getCurrentItem()==1){
-              finish();
-        }else {
+         finish();
+     }else {
          header_title.setText("好友列表");
          header_right_text.setVisibility(View.VISIBLE);
          header_left_image.setVisibility(View.GONE);

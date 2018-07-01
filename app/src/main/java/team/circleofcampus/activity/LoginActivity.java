@@ -87,20 +87,6 @@ public class LoginActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                // 清除本地相关缓存数据
-                try {
-                    MyPublishSocietyCircleDao myPublishSocietyCircleDao = new MyPublishSocietyCircleDao(LoginActivity.this);
-                    if(myPublishSocietyCircleDao.deleteForAllData() == 1) { // 清空本地数据库数据
-                        Log.e("tag", "清空本地数据库我发布的社团公告表数据");
-                    }
-                    UserDao userDao = new UserDao(LoginActivity.this);
-                    if(userDao.deleteForAllData() == 1) { // 清空本地数据库数据
-                        Log.e("tag", "清空本地数据库用户表数据");
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-
                 toHome();
             } else if (msg.what == 0x0003) { // 登陆失败
                 loadingDialog.setFailedText("用户名或密码错误");

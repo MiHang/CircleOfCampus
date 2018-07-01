@@ -167,6 +167,7 @@ public void setData(final String id){
                                 contact.setUserName(js.getString("nickName"));
                                 contact.setSex(js.getString("sex"));
                                 contact.setAccount(js.getString("account"));
+                                contact.setName(js.getString("username"));
                                 list.add(contact);
                             }
 
@@ -184,6 +185,7 @@ public void setData(final String id){
                                     contact.setUserIcon(list.get(i).getUserIcon());
                                     contact.setUserName(list.get(i).getUserName());
                                     contact.setAccount(list.get(i).getAccount());
+                                    contact.setName(list.get(i).getName());
                                     data.add(contact);
                                 }
                             }

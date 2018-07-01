@@ -1,190 +1,189 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg"
-    android:clipToPadding="true"
-    android:fitsSystemWindows="true"
+    android:background="#eaeaea"
     android:orientation="vertical">
 
-    <LinearLayout
+    <!-- 好友头像、昵称、备注 -->
+    <team.circleofcampus.view.MyLinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#eaeaea"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/user_info_textSize"
+        android:layout_marginTop="@dimen/user_info_textSize"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:gravity="center">
 
-        <team.circleofcampus.view.MyLinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/user_info_textSize"
-            android:layout_marginTop="@dimen/user_info_textSize"
-            android:background="@color/white"
-            android:orientation="horizontal">
-
-            <com.common.view.CircleImageView
-                android:id="@+id/Icon"
-                android:layout_width="@dimen/icon"
-                android:layout_height="@dimen/icon"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/middle_padding"
-                android:src="@drawable/man" />
-
-            <team.circleofcampus.view.MyLinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignRight="@id/Icon"
-                android:orientation="vertical">
-
-                <team.circleofcampus.view.FontTextView
-                    android:id="@+id/NickName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="bottom|center_vertical"
-                    android:maxLines="1"
-                    android:text="备注:无"
-                    android:textSize="@dimen/userInfo_text_size" />
-
-                <team.circleofcampus.view.FontTextView
-                    android:id="@+id/UserName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="昵称:"
-                    android:textSize="@dimen/userInfo_text_size" />
-            </team.circleofcampus.view.MyLinearLayout>
-
-        </team.circleofcampus.view.MyLinearLayout>
-
-        <team.circleofcampus.view.MyLinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/mine_column_height">
-
-            <team.circleofcampus.view.FontTextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:gravity="center"
-                android:text="用户ID："
-                android:textColor="@color/black"
-                android:textSize="@dimen/user_info_textSize" />
-
-            <team.circleofcampus.view.FontTextView
-                android:id="@+id/account"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center|left"
-                android:text="服务器暂无数据"
-                android:textSize="@dimen/userInfo_text_size" />
-        </team.circleofcampus.view.MyLinearLayout>
-
-        <View android:layout_width="match_parent"
-            android:layout_height="@dimen/divide_line_height"
-            android:background="@color/divide_color" />
-
-        <team.circleofcampus.view.MyLinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/mine_column_height">
-
-            <team.circleofcampus.view.FontTextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:gravity="center"
-                android:text="性别："
-                android:textColor="@color/black"
-                android:textSize="@dimen/user_info_textSize" />
-
-            <team.circleofcampus.view.FontTextView
-                android:id="@+id/sex"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center|left"
-                android:text="该用户太懒了,暂未设置"
-                android:textSize="@dimen/userInfo_text_size" />
-        </team.circleofcampus.view.MyLinearLayout>
-
-        <View android:layout_width="match_parent"
-            android:layout_height="@dimen/divide_line_height"
-            android:background="@color/divide_color" />
-
-        <team.circleofcampus.view.MyLinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/mine_column_height">
-
-            <team.circleofcampus.view.FontTextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:gravity="center"
-                android:text="学校："
-                android:textColor="@color/black"
-                android:textSize="@dimen/user_info_textSize" />
-
-            <team.circleofcampus.view.FontTextView
-                android:id="@+id/college"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="服务器暂无数据"
-                android:gravity="center|left"
-                android:textSize="@dimen/userInfo_text_size" />
-        </team.circleofcampus.view.MyLinearLayout>
-
-        <View android:layout_width="match_parent"
-            android:layout_height="@dimen/divide_line_height"
-            android:background="@color/divide_color" />
-
-        <team.circleofcampus.view.MyLinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/mine_column_height">
-
-            <team.circleofcampus.view.FontTextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:gravity="center"
-                android:text="院系："
-                android:textColor="@color/black"
-                android:textSize="@dimen/user_info_textSize" />
-
-            <team.circleofcampus.view.FontTextView
-                android:id="@+id/department"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="服务器暂无数据"
-                android:gravity="center|left"
-                android:textSize="@dimen/userInfo_text_size"/>
-        </team.circleofcampus.view.MyLinearLayout>
-
-        <View android:layout_width="match_parent"
-            android:layout_height="@dimen/divide_line_height"
-            android:background="@color/divide_color" />
-
-        <Button
-            android:id="@+id/send_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/middle_padding"
-            android:layout_marginTop="@dimen/middle_padding"
-            android:layout_marginRight="@dimen/middle_padding"
-            android:background="@drawable/btn_bg"
-            android:text="发送消息"
-            android:textColor="@color/white"
-            android:textSize="@dimen/user_info_textSize" />
-        <Button
-            android:id="@+id/delete_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <!-- 头像 -->
+        <com.common.view.CircleImageView
+            android:id="@+id/Icon"
+            android:layout_width="@dimen/icon"
+            android:layout_height="@dimen/icon"
+            android:layout_gravity="center"
             android:layout_margin="@dimen/middle_padding"
-            android:background="@drawable/btn_bg"
-            android:text="删除好友"
-            android:textColor="@color/white"
+            android:src="@drawable/man" />
+
+        <team.circleofcampus.view.MyLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/Icon"
+            android:orientation="vertical">
+
+            <team.circleofcampus.view.FontTextView
+                android:id="@+id/UserName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="昵称"
+                android:textColor="@color/black"
+                android:textSize="18dp" />
+
+            <team.circleofcampus.view.FontTextView
+                android:id="@+id/NickName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="备注：无"
+                android:textSize="14dp" />
+
+        </team.circleofcampus.view.MyLinearLayout>
+
+    </team.circleofcampus.view.MyLinearLayout>
+
+    <!-- 好友ID -->
+    <team.circleofcampus.view.MyLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/mine_column_height">
+
+        <team.circleofcampus.view.FontTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:text="用户ID："
+            android:textColor="@color/black"
             android:textSize="@dimen/user_info_textSize" />
-    </LinearLayout>
+
+        <team.circleofcampus.view.FontTextView
+            android:id="@+id/account"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center|left"
+            android:text="服务器暂无数据"
+            android:textSize="@dimen/userInfo_text_size" />
+    </team.circleofcampus.view.MyLinearLayout>
+    <!-- 分割线 -->
+    <View android:layout_width="match_parent"
+        android:layout_height="@dimen/divide_line_height"
+        android:background="@color/divide_color" />
+
+    <!-- 好友性别 -->
+    <team.circleofcampus.view.MyLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/mine_column_height">
+
+        <team.circleofcampus.view.FontTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:text="性    别："
+            android:textColor="@color/black"
+            android:textSize="@dimen/user_info_textSize" />
+
+        <team.circleofcampus.view.FontTextView
+            android:id="@+id/sex"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center|left"
+            android:text="该用户太懒了,暂未设置"
+            android:textSize="@dimen/userInfo_text_size" />
+    </team.circleofcampus.view.MyLinearLayout>
+    <!-- 分割线 -->
+    <View android:layout_width="match_parent"
+        android:layout_height="@dimen/divide_line_height"
+        android:background="@color/divide_color" />
+
+    <!-- 好友所在学校 -->
+    <team.circleofcampus.view.MyLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/mine_column_height">
+
+        <team.circleofcampus.view.FontTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:text="学    校："
+            android:textColor="@color/black"
+            android:textSize="@dimen/user_info_textSize" />
+
+        <team.circleofcampus.view.FontTextView
+            android:id="@+id/college"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="服务器暂无数据"
+            android:gravity="center|left"
+            android:textSize="@dimen/userInfo_text_size" />
+    </team.circleofcampus.view.MyLinearLayout>
+    <!-- 分割线 -->
+    <View android:layout_width="match_parent"
+        android:layout_height="@dimen/divide_line_height"
+        android:background="@color/divide_color" />
+
+    <!-- 好友所在的院系 -->
+    <team.circleofcampus.view.MyLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/mine_column_height">
+
+        <team.circleofcampus.view.FontTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:text="院    系："
+            android:textColor="@color/black"
+            android:textSize="@dimen/user_info_textSize" />
+
+        <team.circleofcampus.view.FontTextView
+            android:id="@+id/department"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="服务器暂无数据"
+            android:gravity="center|left"
+            android:textSize="@dimen/userInfo_text_size"/>
+    </team.circleofcampus.view.MyLinearLayout>
+    <!-- 分割线 -->
+    <View android:layout_width="match_parent"
+        android:layout_height="@dimen/divide_line_height"
+        android:background="@color/divide_color" />
+
+    <team.circleofcampus.view.FontButton
+        android:id="@+id/send_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/middle_padding"
+        android:layout_marginTop="@dimen/middle_padding"
+        android:layout_marginRight="@dimen/middle_padding"
+        android:background="@drawable/btn_bg"
+        android:text="发送消息"
+        android:textColor="@color/white"
+        android:textSize="18dp" />
+
+    <team.circleofcampus.view.FontButton
+        android:id="@+id/delete_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/middle_padding"
+        android:background="@drawable/btn_bg"
+        android:text="删除好友"
+        android:textColor="@color/white"
+        android:textSize="18dp" />
 
 </LinearLayout>
 

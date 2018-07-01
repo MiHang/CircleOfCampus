@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.bigkoo.alertview.OnItemClickListener;
+import com.bumptech.glide.Glide;
 import com.common.view.CircleImageView;
 
 import org.json.JSONException;
@@ -24,6 +25,7 @@ import team.circleofcampus.R;
 import team.circleofcampus.activity.ChatActivity;
 import team.circleofcampus.activity.ContactActivity;
 import team.circleofcampus.http.HttpHelper;
+import team.circleofcampus.http.HttpRequest;
 import team.circleofcampus.util.SharedPreferencesUtil;
 import team.circleofcampus.view.FontTextView;
 import com.bigkoo.alertview.AlertView;
@@ -58,7 +60,6 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener ,
             ((ViewGroup) view.getParent()).removeView(view);
         }
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -122,31 +123,38 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener ,
                 account.post(new Runnable() {
                     @Override
                     public void run() {
-
                         try {
                             JSONObject jsonObject = new JSONObject(s);
                             Log.e("tag", "yonghu" + s);
 
                             if (jsonObject.getString("result").equals("success")) {
                                 account.setText(jsonObject.getString("email"));
-                                UserName.setText("昵称:" + jsonObject.getString("userName"));
-                                if (jsonObject.getString("userName").equals(str[1])) {//未设置备注
-                                    NickName.setText("备注:无");
+                                if (jsonObject.getString("userName").equals(str[1])) {// 未设置备注
+                                    UserName.setText(jsonObject.getString("userName"));
+                                    NickName.setText("备注：无");
                                     name = jsonObject.getString("userName");
                                 } else {
+                                    UserName.setText(str[1]);
+                                    NickName.setText("昵称：" + jsonObject.getString("userName"));
                                     name = str[1];
-                                    NickName.setText("备注:" + str[1]);
                                 }
                                 department.setText(jsonObject.getString("facultyName"));
                                 college.setText(jsonObject.getString("campusName"));
 
+                                int res = R.drawable.woman;
                                 if (jsonObject.has("gender")) {
                                     if (jsonObject.getString("gender").equals("male")) {
                                         sex.setText("男");
+                                        res = R.drawable.man;
                                     } else {
                                         sex.setText("女");
                                     }
                                 }
+                                Glide.with(getContext())
+                                        .load(HttpRequest.URL + "/res/img/" + jsonObject.getString("userName"))
+                                        .asBitmap()
+                                        .error(res)
+                                        .into(Icon);
                             } else {
                                 Toast.makeText(getContext(), "查询失败", Toast.LENGTH_LONG).show();
                             }
@@ -154,10 +162,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener ,
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-
                     }
-
                 });
             }
         });
@@ -238,8 +243,6 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener ,
                                     }
                                 }
                             });
-
-
 
                     }
                 }

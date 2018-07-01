@@ -1,6 +1,7 @@
 package team.circleofcampus.adapter;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -69,19 +70,35 @@ public class GoodFriendAdapter extends SwipeMenuAdapter<GoodFriendAdapter.ViewHo
             }
         });
         holder.Column.setTag(position);
-            //加载头像 查询服务器是否有头像图片，若无则按性别加载
-        int res=R.drawable.woman;
 
+        // 加载头像 查询服务器是否有头像图片，若无则按性别加载
+        int res=R.drawable.woman;
         if (data.get(position).getSex()==null||data.get(position).getSex().equals("male")) {
             res=R.drawable.man;
-
         };
-        Glide.with(context)
-                .load(http.getPath()+"/res/img/"+data.get(position).getAccount())
-                .error(res)
-                .into(holder.UserIcon);
+        holder.UserIcon.setImageResource(res);
+        loadAvatar(holder.UserIcon, data.get(position).getName(), res);
+    }
 
-
+    /**
+     * 异步加载图片
+     */
+    private void loadAvatar(final ImageView imageView, final String url, final int errorImg) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                imageView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Glide.with(context)
+                                .load(http.getPath() + "/res/img/" + url)
+                                .asBitmap()
+                                .error(errorImg)
+                                .into(imageView);
+                    }
+                });
+            }
+        });
     }
 
     //获取数据的数量
@@ -89,8 +106,6 @@ public class GoodFriendAdapter extends SwipeMenuAdapter<GoodFriendAdapter.ViewHo
     public int getItemCount() {
         return data.size();
     }
-
-
 
     class ViewHolder extends RecyclerView.ViewHolder {
         public CircleImageView UserIcon;

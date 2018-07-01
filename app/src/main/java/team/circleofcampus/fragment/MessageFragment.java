@@ -60,13 +60,10 @@ public class MessageFragment extends Fragment {
     }
 
     @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-
-            view = getActivity().getLayoutInflater().inflate(R.layout.fragment_msg, null);
-           initView(view);
-
-
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        view = getActivity().getLayoutInflater().inflate(R.layout.fragment_msg, null);
+        initView(view);
 
         if (BroadcastReceiver!=null){//添加广播回调监听，从而更新消息列表
             BroadcastReceiver.setMessageListener(new MsgBroadcastReceiverListener() {
@@ -192,9 +189,6 @@ public class MessageFragment extends Fragment {
 
             // MATCH_PARENT 自适应高度，保持和内容一样高；也可以指定菜单具体高度，也可以用WRAP_CONTENT。
             int height =getResources().getDimensionPixelSize(R.dimen.column_height);
-
-
-
 
             SwipeMenuItem closeItem = new SwipeMenuItem(getContext())
                     .setBackgroundDrawable(R.drawable.zd_selector)

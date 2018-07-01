@@ -20,7 +20,7 @@
     <dimen name="icon">60dp</dimen>
     <dimen name="contact_icon">50dp</dimen>
     <dimen name="tab_text_size">16dp</dimen>
-    <dimen name="userInfo_text_size">18dp</dimen>
+    <dimen name="userInfo_text_size">16dp</dimen>
 
     <dimen name="mine_icon">90dp</dimen>
     <dimen name="icon_border_width">2dp</dimen>

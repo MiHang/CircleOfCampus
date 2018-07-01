@@ -11,12 +11,20 @@ import java.util.Locale;
  */
 
 public class Contact implements Serializable,Comparable<Contact> {
-    private String Account;//账号
-    private String LastName;//姓氏首字母
+    private String Account; // 账号
+    private String LastName; // 姓氏首字母
     private String UserIcon;
     private String UserName;
     private String Sex;
+    private String name;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getAccount() {
         return Account;
