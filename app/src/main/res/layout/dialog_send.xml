@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/Send_dialog"
     android:layout_width="wrap_content"
-    android:visibility="gone"
     android:layout_height="wrap_content"
+    android:visibility="gone"
     android:layout_gravity="right">
-
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -47,19 +46,17 @@
 
         </LinearLayout>
 
-
-
-            <team.circleofcampus.view.RoundRectImageView
-                android:id="@+id/Send_Img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
-                android:adjustViewBounds="true"
-                android:clickable="true"
-                android:visibility="gone"
-                android:maxHeight="@dimen/maxImg"
-                android:maxWidth="@dimen/maxImg"
-                android:src="@drawable/bg" />
+        <team.circleofcampus.view.RoundRectImageView
+            android:id="@+id/Send_Img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:clickable="true"
+            android:visibility="gone"
+            android:maxHeight="@dimen/maxImg"
+            android:maxWidth="@dimen/maxImg"
+            android:src="@drawable/bg" />
 
     </LinearLayout>
 
@@ -70,7 +67,5 @@
         android:layout_margin="@dimen/min_padding"
         android:layout_height="@dimen/Icon"
         android:clickable="true" />
-
-
 
 </LinearLayout>

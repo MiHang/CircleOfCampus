@@ -35,7 +35,7 @@
     <dimen name="max_textView_height">400dp</dimen>
     <dimen name="chat_textSize">20dp</dimen>
     <dimen name="icon_padding">2dp</dimen>
-    <dimen name="Icon">60dp</dimen>
+    <dimen name="Icon">45dp</dimen>
     <dimen name="maxImg">160dp</dimen>
     <dimen name="edittext_radius">10dp</dimen>
     <dimen name="edittext_line">1dp</dimen>
