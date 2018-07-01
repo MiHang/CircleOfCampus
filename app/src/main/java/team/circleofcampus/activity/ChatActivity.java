@@ -60,12 +60,12 @@ import team.circleofcampus.view.FontTextView;
 
 public class ChatActivity extends AppCompatActivity implements View.OnClickListener {
 
-
     List<Message> data = new ArrayList<>();
     RecordAdapter myAdapter;
     String send;
     String receive;
     String nickName;
+    String username;
     SharedPreferencesUtil sharedPreferencesUtil;
     Data_Dao dao;
     WebSocketClient myClient;
@@ -100,6 +100,15 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private ViewPager FaceViewPager;
 
     @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(ChatActivity.this, HomeActivity.class);
+        intent.putExtra("selectedPageId", 1);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
+        finish();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
@@ -112,6 +121,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = getIntent();
         receive = intent.getStringExtra("receive");
         nickName = intent.getStringExtra("nickName");
+        username = intent.getStringExtra("username");
         if (receive == null || receive.equals("")) {
             finish();
         }
@@ -405,8 +415,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
-
     /**
      * 事件分发机制
      * 点击软键盘区域以外自动关闭软键盘,
@@ -497,7 +505,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
     private void initView() {
         header_left_text = (FontTextView) findViewById(R.id.header_left_text);
         header_left_image = (ImageView) findViewById(R.id.header_left_image);
@@ -515,12 +522,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         MsgText.setOnClickListener(this);
         Video.setOnClickListener(this);
 
-
         header_left_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();
-
             }
         });
     }

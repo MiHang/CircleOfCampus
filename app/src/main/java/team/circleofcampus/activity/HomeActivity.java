@@ -295,6 +295,12 @@ public class HomeActivity extends AppCompatActivity {
             SharedPreferencesUtil.setUserInfoUpdate(HomeActivity.this, false);
             loadData();
         }
+
+        Intent intent = getIntent();
+        int selectedPageId = intent.getIntExtra("selectedPageId", -1);
+        if (selectedPageId != -1) {
+            HomeViewPager.setCurrentItem(selectedPageId);
+        }
     }
 
     @Override

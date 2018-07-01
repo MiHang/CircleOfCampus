@@ -49,6 +49,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener ,
     private Button send_btn;
     private View view;
     String name;
+    String username;
     private Button delete_btn;
     SharedPreferencesUtil sharedPreferencesUtil;
     String email;
@@ -90,9 +91,9 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener ,
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(getActivity(), ChatActivity.class);
-
                         intent.putExtra("receive", account.getText());
                         intent.putExtra("nickName", name);
+                        intent.putExtra("username", username);
                         startActivity(intent);
                     }
                 });
@@ -126,16 +127,16 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener ,
                         try {
                             JSONObject jsonObject = new JSONObject(s);
                             Log.e("tag", "yonghu" + s);
-
                             if (jsonObject.getString("result").equals("success")) {
                                 account.setText(jsonObject.getString("email"));
+                                username = jsonObject.getString("userName");
                                 if (jsonObject.getString("userName").equals(str[1])) {// 未设置备注
                                     UserName.setText(jsonObject.getString("userName"));
                                     NickName.setText("备注：无");
                                     name = jsonObject.getString("userName");
                                 } else {
                                     UserName.setText(str[1]);
-                                    NickName.setText("昵称：" + jsonObject.getString("userName"));
+                                    NickName.setText("用户名：" + jsonObject.getString("userName"));
                                     name = str[1];
                                 }
                                 department.setText(jsonObject.getString("facultyName"));
