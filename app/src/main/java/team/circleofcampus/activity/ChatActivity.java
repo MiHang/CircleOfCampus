@@ -184,8 +184,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                        for(Message m :msg){
                            data.add(m);
                        }
-                        myAdapter.notifyDataSetChanged();
                         ChatRecord.smoothScrollToPosition(data.size());
+                        myAdapter.notifyDataSetChanged();
+
                     }
                 });
 
@@ -212,8 +213,15 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     Message message = new Message();
                     message.setMsg(dataMsg);
                     message.setReceive(0);
-                    data.add(message);
+
                     dao.setData(message);
+                    data.clear();
+                    List<Message> msg=dao.getMessage(receive, send);
+                    for(Message m :msg){
+                        data.add(m);
+                    }
+
+                    ChatRecord.smoothScrollToPosition(data.size());
                     myAdapter.notifyDataSetChanged();
                 } else {
                     Toast.makeText(getApplicationContext(), "未连接到服务器", Toast.LENGTH_SHORT).show();
@@ -282,6 +290,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
                     }
                 }
+
             }
 
         });

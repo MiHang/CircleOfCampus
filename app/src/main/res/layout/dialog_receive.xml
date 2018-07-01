@@ -4,7 +4,7 @@
     android:id="@+id/Receive_dialog"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:visibility="visible">
+    android:visibility="gone">
 
     <team.circleofcampus.view.IconImageView
         android:id="@+id/Receive_Icon"
