@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -38,9 +39,12 @@ import com.example.library.Interface.PictureClickListener;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import org.java_websocket.client.WebSocketClient;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,6 +56,10 @@ import team.circleofcampus.Interface.RecordItemListener;
 import team.circleofcampus.R;
 import team.circleofcampus.adapter.MyFragmentPagerAdapter;
 import team.circleofcampus.adapter.RecordAdapter;
+import team.circleofcampus.dao.UserDao;
+import team.circleofcampus.http.HttpHelper;
+import team.circleofcampus.http.ImageRequest;
+import team.circleofcampus.pojo.User;
 import team.circleofcampus.service.MyService;
 import team.circleofcampus.util.SharedPreferencesUtil;
 import team.circleofcampus.view.FontButton;
@@ -97,7 +105,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private FontEditText MsgText;
     private ImageView Face;
     private ViewPager FaceViewPager;
-
+   HttpHelper helper;
+   String sex;
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(ChatActivity.this, HomeActivity.class);
@@ -117,6 +126,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         tintManager.setTintResource(R.drawable.bg);
 
         initView();
+
+
         Intent intent = getIntent();
         receive = intent.getStringExtra("receive");
         nickName = intent.getStringExtra("nickName");
@@ -129,6 +140,27 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         init();
         setAdapter();
         header_title.setText(nickName);
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    helper=new HttpHelper(getApplicationContext());
+                    String result = helper.getUserInfoByAccount(send);
+                    JSONObject jsonObject = new JSONObject(result);
+                    if (jsonObject.getString("result").equals("success")) {
+
+                        sex=jsonObject.getString("gender");
+
+
+                    } else { // 查询失败
+                        handler.sendEmptyMessage(0x0002);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
 
         Intent intent2 = new Intent(this, myService.getClass());
 
@@ -172,6 +204,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     Bitmap bitmap = BitmapFactory.decodeResource(getResources(), res);
                     Msg dataMsg = new Msg();
                     dataMsg.setSend(send);
+                    dataMsg.setSex(sex);
                     dataMsg.setReceive(receive);
                     dataMsg.setImg(utils.BitmapToBytes(bitmap));
                     myClient.send(utils.toByteArray(dataMsg));
@@ -211,7 +244,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         myAdapter.setListener(new RecordItemListener() {
             @Override
             public void ClickIcon(View v, int position) {
-
+                Message msg = data.get(position);
+                Toast.makeText(getApplicationContext(), "用户:" + msg.getMsg().getSend()+"性别"+msg.getMsg().getSex(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -220,6 +254,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 //                if (msg.getMsg().getText() != null) {
 //                    Toast.makeText(getApplicationContext(), "文本" + msg.getMsg().getText(), Toast.LENGTH_SHORT).show();
 //                }
+
 
                 if (msg.getReceive() == Symbol.Receive_Mode) {//接收
 
@@ -277,6 +312,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                                 Msg msg = new Msg();
                                 msg.setSend(send);
                                 msg.setReceive(receive);
+                                msg.setSex(sex);
                                 msg.setText(MsgText.getText().toString());
 
                                 myClient.send(utils.toByteArray(msg));

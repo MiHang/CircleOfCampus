@@ -41,7 +41,7 @@
             android:imeOptions="actionSend"
             android:inputType="textMultiLine"
             android:padding="@dimen/min_padding"
-            android:text="你好"
+            android:text=""
             android:textColor="@color/EditText_color" />
     </FrameLayout>
 

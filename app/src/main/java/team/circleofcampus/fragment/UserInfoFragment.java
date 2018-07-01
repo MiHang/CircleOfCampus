@@ -199,22 +199,16 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener ,
 
     @Override
     public void onItemClick(Object o, int position) {
-        if (position==-1){
-            AsyncTask.execute(new Runnable() {
+    if(position==0){
+        sharedPreferencesUtil=new SharedPreferencesUtil();
+        email=sharedPreferencesUtil.getAccount(getContext());
+        if (email==null){
+            return;
+        }
+                        AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
-                    sharedPreferencesUtil=new SharedPreferencesUtil();
-                    email=sharedPreferencesUtil.getAccount(getContext());
-                    if (email==null){
-                        return;
-                    }
-                    final LoadingDialog  dialog = new LoadingDialog(getContext());
-                    dialog.setLoadingText("加载中")
-                            .setSuccessText("删除成功")//显示加载成功时的文字
-                            .setFailedText("删除失败")
-                            .setInterceptBack(false)
-                            .setLoadSpeed(LoadingDialog.Speed.SPEED_TWO)
-                            .show();
+
 
                     String s=helper.deleteFriend(email,account.getText().toString());
                     if (s!=null){
@@ -230,13 +224,12 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener ,
                                 public void run() {
                                     try {
                                     if (jsonObject.getString("result").equals("success")){
-                                        dialog.closeSuccessAnim();
+                                      Toast.makeText(getContext(), "删除成功", Toast.LENGTH_SHORT).show();
+                                        getActivity().finish();
 
-                                         startActivity(new Intent(getActivity(),ContactActivity.class));
-                                         getActivity().finish();
 
                                     }else  if (jsonObject.getString("result").equals("error")){
-                                           dialog.closeFailedAnim();
+                                        Toast.makeText(getContext(), "删除失败", Toast.LENGTH_SHORT).show();
 
                                     }
                                     } catch (JSONException e) {
@@ -248,8 +241,6 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener ,
                     }
                 }
             });
-        }else if(position==0){
-
         }
 
     }
