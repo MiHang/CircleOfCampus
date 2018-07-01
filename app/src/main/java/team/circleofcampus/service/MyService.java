@@ -94,8 +94,9 @@ public class MyService extends Service {
 
                     Log.d(TAG,"消息"+ msg.getSend()+":"+msg.getText());
                     Message message = new Message();
-
                     message.setMsg(msg);
+                    Log.e("tag","用户"+message.getMsg().getSend()+"性别"+message.getMsg().getSex());
+
                     dao.setData(message);//储存聊天信息
 
                     if (listener!=null){
