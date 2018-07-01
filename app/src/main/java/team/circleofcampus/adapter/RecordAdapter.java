@@ -117,6 +117,20 @@ public class RecordAdapter extends BaseAdapter {
     }
 
     @Override
+    public int getItemViewType(int position) {
+        if (data.get(position).getReceive() == Symbol.Receive_Mode) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 2;
+    }
+
+    @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
         final ViewHolder vh;
 
