@@ -65,42 +65,20 @@ public class MyMessageAdapter extends SwipeMenuAdapter<MyMessageAdapter.ViewHold
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         Log.e("tag",data.get(position).getAccount()+data.get(position).getUserName()+data.get(position).getSex());
-        if (holder.icon.getDrawable() == null) {
-            //加载头像 查询服务器是否有头像图片，若无则按性别加载
-            Glide.with(context)
-                    .load(http.getPath()+"/res/img/"+data.get(position).getUserName())
-                    .override(scale,scale)
-                    .crossFade()
-                    .listener(new RequestListener<String, GlideDrawable>() {
-                        @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            if(data.get(position).getSex().equals("male")){
-                                Glide.with(context)
-                                        .load(R.drawable.man)
-                                        .override(scale,scale)
-                                        .crossFade()
-                                        .into(holder.icon);
-                            }else{
-                                Glide.with(context)
-                                        .load(R.drawable.woman)
-                                        .override(scale,scale)
-                                        .crossFade()
-                                        .into(holder.icon);
-                            }
 
-                            return false;
-                        }
-                        @Override
-                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            return false;
-                        }
-                    })
-                    .into(holder.icon);
-        }
+        // 查询网络头像
+        int res = R.drawable.woman;
+        if (data.get(position).getSex().equals("male")) res = R.drawable.man;
+        Glide.with(context)
+                .load(http.getPath() + "/res/img/" + data.get(position).getUserName())
+                .asBitmap()
+                .placeholder(res)
+                .error(res)
+                .into(holder.icon);
 
         holder.name.setText(data.get(position).getUserName());
         holder.msg.setText(data.get(position).getMsg());
-        holder.Amount.setText(data.get(position).getAmount()+"条消息");
+        holder.Amount.setText(String.valueOf(data.get(position).getAmount()));
         holder.time.setText(data.get(position).getDate());
         holder.itemView.setOnClickListener(this);
         holder.itemView.setTag(position);

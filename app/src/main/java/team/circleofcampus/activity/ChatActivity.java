@@ -162,10 +162,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         };
-
         bindService(intent2, conn, Context.BIND_AUTO_CREATE);
-
-
     }
 
     public void setAdapter() {
@@ -529,6 +526,5 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
-
 
 }
