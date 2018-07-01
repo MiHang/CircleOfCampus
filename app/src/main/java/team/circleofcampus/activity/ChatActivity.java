@@ -65,7 +65,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     String send;
     String receive;
     String nickName;
-    String username;
     SharedPreferencesUtil sharedPreferencesUtil;
     Data_Dao dao;
     WebSocketClient myClient;
@@ -121,7 +120,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = getIntent();
         receive = intent.getStringExtra("receive");
         nickName = intent.getStringExtra("nickName");
-        username = intent.getStringExtra("username");
         if (receive == null || receive.equals("")) {
             finish();
         }
@@ -156,7 +154,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                        }
                         myAdapter.notifyDataSetChanged();
                         ChatRecord.smoothScrollToPosition(data.size());
-
                     }
                 });
 

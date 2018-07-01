@@ -2,6 +2,7 @@ package team.circleofcampus.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
@@ -29,6 +30,7 @@ import com.example.library.disPlayGif.AnimatedGifDrawable;
 import com.example.library.disPlayGif.AnimatedImageSpan;
 
 
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,7 +43,11 @@ import java.util.regex.Pattern;
 import team.circleofcampus.Interface.MsgLongClickListener;
 import team.circleofcampus.Interface.RecordItemListener;
 import team.circleofcampus.R;
+import team.circleofcampus.dao.UserDao;
 import team.circleofcampus.http.HttpRequest;
+import team.circleofcampus.pojo.User;
+import team.circleofcampus.util.SharedPreferencesUtil;
+import team.circleofcampus.util.StorageUtil;
 import team.circleofcampus.view.DialogTextView;
 import team.circleofcampus.view.FontTextView;
 import team.circleofcampus.view.IconImageView;
@@ -61,6 +67,8 @@ public class RecordAdapter extends BaseAdapter {
     IconImageView icon;
     Bitmap bp = null;
     MsgLongClickListener longClickListener;
+    UserDao userDao;
+    Bitmap localUserAvatar;
 
     public void setLongClickListener(MsgLongClickListener longClickListener) {
         this.longClickListener = longClickListener;
@@ -75,7 +83,17 @@ public class RecordAdapter extends BaseAdapter {
             Map<String, Integer> m = new HashMap<>();
             m.put(entry.getKey(), entry.getValue());
             emojis.add(m);
-
+        }
+        try {
+            userDao = new UserDao(context);
+            User user = userDao.queryData(SharedPreferencesUtil.getUID(context));
+            if (user != null) {
+                // 加载用户头像
+                String filePath = StorageUtil.getStorageDirectory() + user.getHeadIcon();
+                localUserAvatar = BitmapFactory.decodeFile(filePath);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -85,20 +103,18 @@ public class RecordAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return data.size();
+        return data != null ? data.size() : 0;
     }
 
     @Override
     public Object getItem(int i) {
-        return data.get(i);
+        return data != null ? data.get(i) : null;
     }
 
     @Override
     public long getItemId(int i) {
         return i;
     }
-
-
 
     @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
@@ -112,51 +128,40 @@ public class RecordAdapter extends BaseAdapter {
         } else {
             vh = (ViewHolder) view.getTag();
         }
+
         final Message msg = data.get(i);
-
-
 
         if (msg.getMsg().getImg() != null) {//图片不为空
             bp = byteUtils.BytesToBitmap(msg.getMsg().getImg());
         }
-        icon=vh.Send_Icon;
-        String username=msg.getMsg().getUserName();
-        int res=R.drawable.woman;
-        if (msg.getReceive() == Symbol.Receive_Mode) {//接收
-            icon=vh.Receive_Icon;
-            username=msg.getMsg().getReceive();
-        }
+
+        // 加载头像
+        int res = R.drawable.woman;
         if (msg.getMsg().getSex()==null||msg.getMsg().getSex().equals("male")) {
-            res=R.drawable.man;
-
+            res = R.drawable.man;
         }
-        if (icon.getDrawable()==null) {
-
-            //加载头像
+        if (msg.getReceive() == Symbol.Receive_Mode) { // 好友
+            icon = vh.Receive_Icon;
+            String username = msg.getMsg().getUserName();
             Glide.with(context)
                     .load("http://"+ HttpRequest.IP+":8080/res/img/" + username)
                     .asBitmap()
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .error(res)
-                    .placeholder(R.drawable.man)
-                    .listener(new RequestListener<String, Bitmap>() {
-                        @Override
-                        public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
-                            return false;
-                        }
-                        @Override
-                        public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                           return false;
-                        }
-                    })
+                    .placeholder(res)
                     .into(icon);
-
-
+        } else {
+            icon = vh.Send_Icon;
+            if (localUserAvatar != null) {
+                icon.setImageBitmap(localUserAvatar);
+            } else {
+                icon.setImageResource(res);
+            }
         }
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                //判断是否显示时间
+                // 判断是否显示时间
                 if (i != 0) {
                     if (msg.getMsg().getDate() == null || data.get(i - 1).getMsg().getDate() == null) {
                         vh.Time.setText(msg.getMsg().getDate());
@@ -169,11 +174,11 @@ public class RecordAdapter extends BaseAdapter {
                             vh.Time.setVisibility(View.GONE);
                         }
                     }
-
                 } else {
                     vh.Time.setVisibility(View.VISIBLE);
                     vh.Time.setText(msg.getMsg().getDate());
                 }
+
                 if (msg.getReceive() == Symbol.Receive_Mode) {//接收
                     vh.Receive_dialog.setVisibility(View.VISIBLE);
                     vh.Send_dialog.setVisibility(View.GONE);
@@ -187,15 +192,14 @@ public class RecordAdapter extends BaseAdapter {
                         }
                     });
 
-
-                    if (msg.getMsg().getText() != null) {//接收文本消息
+                    if (msg.getMsg().getText() != null) { // 接收文本消息
                         vh.Receive_Duration.setVisibility(View.GONE);
                         vh.Receive_Msg.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                         if (!convertNormalStringToSpannableString(msg.getMsg().getText(), vh.Receive_Msg)) {
                             vh.Receive_Msg.setText(msg.getMsg().getText());
                         }
 
-                    }else  if (msg.getMsg().getAudioPath()!= null) {//接收语音消息
+                    }else  if (msg.getMsg().getAudioPath()!= null) { // 接收语音消息
                         vh.Receive_Msg.setText("");
                         vh.Receive_Msg.setVisibility(View.GONE);
                         vh.Receive_Msg.setVisibility(View.VISIBLE);
@@ -216,8 +220,7 @@ public class RecordAdapter extends BaseAdapter {
                     }
                     vh.Receive_Msg.setOnClickListener(new ClickListener(i, ""));
                     vh.Receive_Icon.setOnClickListener(new ClickListener(i, "Icon"));
-                } else {//发送
-
+                } else { // 发送
 
                     vh.Send_dialog.setVisibility(View.VISIBLE);
                     vh.Receive_dialog.setVisibility(View.GONE);
@@ -292,7 +295,6 @@ public class RecordAdapter extends BaseAdapter {
             } else if (days >= 1) {
                 return true;
             }
-
 
             System.out.println("" + days + "天" + hours + "小时" + minutes + "分");
         } catch (Exception e) {

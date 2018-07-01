@@ -61,7 +61,7 @@ public class MoreCircleListAdapter extends BaseAdapter {
     @Override
     public int getItemViewType(int position) {
         if (circles.get(position).getId() == -1) {
-            return -1;
+            return 0;
         } else {
             return 1;
         }
