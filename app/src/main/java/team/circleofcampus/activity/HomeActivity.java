@@ -1,10 +1,15 @@
 package team.circleofcampus.activity;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -14,23 +19,20 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.common.model.UserMsg;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import team.circleofcampus.Interface.MessageListener;
 import team.circleofcampus.dao.UserDao;
 import team.circleofcampus.pojo.User;
-import team.circleofcampus.receiver.MyBroadcastReceiver;
 import team.circleofcampus.Interface.FragmentSwitchListener;
 import team.circleofcampus.Interface.NetworkStateChangeListener;
 import team.circleofcampus.R;
@@ -38,7 +40,6 @@ import team.circleofcampus.adapter.MyFragmentPagerAdapter;
 import team.circleofcampus.http.CampusCircleRequest;
 import team.circleofcampus.http.SocietyCircleRequest;
 import team.circleofcampus.receiver.NetworkConnectChangedReceiver;
-import team.circleofcampus.service.MyService;
 import team.circleofcampus.fragment.CampusCircleFragment;
 import team.circleofcampus.fragment.CircleFragment;
 import team.circleofcampus.fragment.MessageFragment;
@@ -47,6 +48,7 @@ import team.circleofcampus.fragment.MineFragment;
 import team.circleofcampus.fragment.QRFragment;
 import team.circleofcampus.fragment.SocietyCircleFragment;
 import team.circleofcampus.http.SocietyAuthorityRequest;
+import team.circleofcampus.service.MyService;
 import team.circleofcampus.service.SingleThreadService;
 import team.circleofcampus.util.SharedPreferencesUtil;
 import team.circleofcampus.view.NoPreloadViewPager;
@@ -77,12 +79,32 @@ public class HomeActivity extends AppCompatActivity {
     protected ImageView headerLeftImage;
     @BindView(R.id.header_title)
     protected TextView title;
-    MyBroadcastReceiver broadcastReceiver;
+
     List<Fragment> data = new ArrayList<>();
     private int selectedPageId = 0;
     SharedPreferencesUtil sharedPreferencesUtil;
     String account;
+    public MyService myService;
 
+     ServiceConnection conn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder binder) {
+            MyService.MsgBinder myBinder = (MyService.MsgBinder) binder;
+            myService=myBinder.getService();
+            myService.setMessageListener(new MessageListener() {
+                @Override
+                public void update(UserMsg msg, boolean isUpdate) {
+                    Log.e("tag", "------ 新消息------");
+                }
+            });
+            Log.e("tag", "------ HomeActivity onServiceConnected ------");
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            Log.e("tag", "------ HomeActivity onServiceDisconnected ------");
+        }
+    };
     // 单例线程池
     private ExecutorService singleThreadExecutor;
     // 网络连接状态改变广播
@@ -91,6 +113,7 @@ public class HomeActivity extends AppCompatActivity {
     // 当前activity可见
     private boolean isResume = true;
     private boolean isShowHint = true;
+
 
     /**
      * 用户ID
@@ -164,6 +187,8 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
 
+        account = SharedPreferencesUtil.getAccount(this);
+
         // 获取用户ID
         userId = SharedPreferencesUtil.getUID(HomeActivity.this);
         // 记录本次登陆时间
@@ -188,20 +213,9 @@ public class HomeActivity extends AppCompatActivity {
         });
         data.add(circleFragment);
 
-        account = SharedPreferencesUtil.getAccount(this);
-        if (account!=null){
-            broadcastReceiver = new MyBroadcastReceiver();
-            IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction("coc.team.home.activity");
-            registerReceiver(broadcastReceiver, intentFilter);
-            Intent intent = new Intent(this, MyService.class);
-            intent.putExtra("send", account);
-            startService(intent);
-        }
-
         // 消息
         MessageFragment bFragment = new MessageFragment();
-        bFragment.bind(broadcastReceiver);
+
         data.add(bFragment);
 
         // 我的发布
@@ -261,6 +275,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // 获取单例线程池
         singleThreadExecutor = SingleThreadService.getSingleThreadPool();
+
         // 注册网络连接状态改变广播
         IntentFilter netWorkIntentFilter = new IntentFilter();
         netWorkIntentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -280,6 +295,13 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+
+        Intent intent = new Intent(this, MyService.class);
+        SharedPreferences preferences=getSharedPreferences("user", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor=preferences.edit();
+        editor.putString("send", "test2");
+        editor.commit();
+      bindService(intent, conn, BIND_AUTO_CREATE);
     }
 
     @Override
@@ -311,9 +333,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (broadcastReceiver!=null){
-            unregisterReceiver(broadcastReceiver);
-        }
+
         if (networkConnectChangedReceiver != null) {
             Log.e("tag", "HomeActivity unregister networkConnectChangedReceiver...");
             unregisterReceiver(networkConnectChangedReceiver);
@@ -322,6 +342,8 @@ public class HomeActivity extends AppCompatActivity {
             singleThreadExecutor.shutdownNow();
             SingleThreadService.destroySingleThreadPool();
         }
+
+        unbindService(conn);
     }
 
     /**

@@ -1,16 +1,19 @@
 package team.circleofcampus.fragment;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import com.common.model.UserMsg;
 import com.common.utils.TimeUtil;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
 import com.yanzhenjie.recyclerview.swipe.OnSwipeMenuItemClickListener;
@@ -18,21 +21,20 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-
-import team.circleofcampus.receiver.MyBroadcastReceiver;
-import team.circleofcampus.Interface.MsgBroadcastReceiverListener;
+import team.circleofcampus.Interface.MessageListener;
 import team.circleofcampus.Interface.OnItemClickListener;
 import team.circleofcampus.R;
 import team.circleofcampus.activity.ChatActivity;
 import team.circleofcampus.adapter.MyMessageAdapter;
-import team.circleofcampus.model.UserMsg;
+import team.circleofcampus.service.MyService;
+
+import static android.content.Context.BIND_AUTO_CREATE;
 
 /**
  * 消息列表界面
@@ -46,11 +48,57 @@ public class MessageFragment extends Fragment {
     TimeUtil timeUtil=new TimeUtil();
     Date date;
     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    MyBroadcastReceiver BroadcastReceiver;
-    public void bind(MyBroadcastReceiver BroadcastReceiver){
-        this.BroadcastReceiver=BroadcastReceiver;
-    }
+    MyService myService;
+    ServiceConnection conn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder binder) {
+            MyService.MsgBinder myBinder = (MyService.MsgBinder) binder;
+            myService=myBinder.getService();
+            myService.setMessageListener(new MessageListener() {
+                @Override
+                public void update(final UserMsg userMsg, boolean isUpdate) {
+                    recycler_view.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            boolean isFlag=true;
+                            for(UserMsg m:data){
+                                if (m.getAccount().equals(userMsg.getAccount())){
+                                    isFlag=false;
+                                }
+                            }
+                            try {
+                                date=sdf.parse(userMsg.getDate());
+                                userMsg.setDate(timeUtil.getTimeFormatText(date));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            if (isFlag){
+                                userMsg.setAmount(1);
+                                data.add(userMsg);
+                            }else{
+                                for (UserMsg u:data){
+                                    if (u.getAccount().equals(userMsg.getAccount())){
+                                        u.setMsg(userMsg.getMsg());
+                                        u.setDate(timeUtil.getTimeFormatText(date));
+                                        u.setAmount(u.getAmount()+1);
+                                    }
+                                }
+                            }
+                            Collections.sort(data);
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
 
+                }
+            });
+            Log.e("tag", "------ HomeActivity onServiceConnected ------");
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            Log.e("tag", "------ HomeActivity onServiceDisconnected ------");
+        }
+    };
     @Override
     public void onDestroyView() {
         super .onDestroyView();
@@ -64,50 +112,10 @@ public class MessageFragment extends Fragment {
         super.onCreate(savedInstanceState);
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_msg, null);
         initView(view);
-
-        if (BroadcastReceiver!=null){//添加广播回调监听，从而更新消息列表
-            BroadcastReceiver.setMessageListener(new MsgBroadcastReceiverListener() {
-                @Override
-                public void sendMessageListener(UserMsg userMsg) {
-                    boolean isFlag=true;
-                    for(UserMsg msg:data){
-                        if (msg.getAccount().equals(userMsg.getAccount())){
-                            isFlag=false;
-                        }
-                    }
-                    try {
-                        date=sdf.parse(userMsg.getDate());
-                        userMsg.setDate(timeUtil.getTimeFormatText(date));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    if (isFlag){
-                        userMsg.setAmount(1);
-                        data.add(userMsg);
-                    }else{
-                        for (UserMsg u:data){
-                            if (u.getAccount().equals(userMsg.getAccount())){
-                                u.setMsg(userMsg.getMsg());
-                                u.setDate(timeUtil.getTimeFormatText(date));
-                                u.setAmount(u.getAmount()+1);
-                            }
-                        }
-                    }
-                    Collections.sort(data);
-                    adapter.notifyDataSetChanged();
-                }
-            });
-        }
-
+        Intent intent = new Intent(getContext(), MyService.class);
+        getActivity().bindService(intent, conn, BIND_AUTO_CREATE);
         recycler_view.setLayoutManager(new LinearLayoutManager(getContext()));// 布局管理器。
         recycler_view.setHasFixedSize(true);// 如果Item够简单，高度是确定的，打开FixSize将提高性能。
-        recycler_view.setItemAnimator(new DefaultItemAnimator());// 设置Item默认动画，加也行，不加也行。
-//        mSwipeMenuRecyclerView.addItemDecoration(new ListViewDecoration());// 添加分割线。
-//        // 添加滚动监听。
-//        mSwipeMenuRecyclerView.addOnScrollListener(mOnScrollListener);
-
-        // 为SwipeRecyclerView的Item创建菜单就两句话，不错就是这么简单：
-        // 设置菜单创建器。
         recycler_view.setSwipeMenuCreator(swipeMenuCreator);
         // 设置菜单Item点击监听。
         recycler_view.setSwipeMenuItemClickListener(menuItemClickListener);
@@ -121,15 +129,65 @@ public class MessageFragment extends Fragment {
                 Intent intent=new Intent(getActivity(), ChatActivity.class);
                 intent.putExtra("receive",data.get(position).getAccount());
                 intent.putExtra("nickName",data.get(position).getUserName());
-                Toast.makeText(getContext(), ""+data.get(position).getUserName(), Toast.LENGTH_SHORT).show();
                 startActivity(intent);
             }
         });
+//        HomeActivity homeActivity= (HomeActivity) getActivity();
+//        myService=homeActivity.myService;
+//        if (myService!=null){
+//            Toast.makeText(homeActivity, "设置监听", Toast.LENGTH_SHORT).show();
+//            myService.setMessageListener(new MessageListener() {
+//                @Override
+//                public void update(final UserMsg userMsg, boolean isUpdate) {
+//                    Log.e("tag","有信息");
+//                    recycler_view.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            boolean isFlag=true;
+//                            for(UserMsg m:data){
+//                                if (m.getAccount().equals(userMsg.getAccount())){
+//                                    isFlag=false;
+//                                }
+//                            }
+//                            try {
+//                                date=sdf.parse(userMsg.getDate());
+//                                userMsg.setDate(timeUtil.getTimeFormatText(date));
+//                            } catch (ParseException e) {
+//                                e.printStackTrace();
+//                            }
+//                            if (isFlag){
+//                                userMsg.setAmount(1);
+//                                data.add(userMsg);
+//                            }else{
+//                                for (UserMsg u:data){
+//                                    if (u.getAccount().equals(userMsg.getAccount())){
+//                                        u.setMsg(userMsg.getMsg());
+//                                        u.setDate(timeUtil.getTimeFormatText(date));
+//                                        u.setAmount(u.getAmount()+1);
+//                                    }
+//                                }
+//                            }
+//                            Collections.sort(data);
+//                            adapter.notifyDataSetChanged();
+//                        }
+//                    });
+//
+//
+//
+//
+//
+//
+//                }
+//
+//
+//            });
+//        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        initView( view);
         return view;
     }
 
@@ -145,7 +203,7 @@ public class MessageFragment extends Fragment {
             Intent intentNotifi = new Intent(getActivity(), ChatActivity.class);
 
             getActivity().startActivity(intentNotifi);
-            Toast.makeText(getContext(), "我是第" + position + "条。", Toast.LENGTH_SHORT).show();
+
         }
     };
 
@@ -164,11 +222,11 @@ public class MessageFragment extends Fragment {
         public void onItemClick(Closeable closeable, int adapterPosition, int menuPosition, int direction) {
             closeable.smoothCloseMenu();// 关闭被点击的菜单。
 
-            if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
-                Toast.makeText(getContext(), "list第" + adapterPosition + "; 右侧菜单第" + menuPosition, Toast.LENGTH_SHORT).show();
-            } else if (direction == SwipeMenuRecyclerView.LEFT_DIRECTION) {
-                Toast.makeText(getContext(), "list第" + adapterPosition + "; 左侧菜单第" + menuPosition, Toast.LENGTH_SHORT).show();
-            }
+//            if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
+//                Toast.makeText(getContext(), "list第" + adapterPosition + "; 右侧菜单第" + menuPosition, Toast.LENGTH_SHORT).show();
+//            } else if (direction == SwipeMenuRecyclerView.LEFT_DIRECTION) {
+//                Toast.makeText(getContext(), "list第" + adapterPosition + "; 左侧菜单第" + menuPosition, Toast.LENGTH_SHORT).show();
+//            }
 
             // TODO 推荐调用Adapter.notifyItemRemoved(position)，也可以Adapter.notifyDataSetChanged();
             if (menuPosition == 1) {// 删除按钮被点击。

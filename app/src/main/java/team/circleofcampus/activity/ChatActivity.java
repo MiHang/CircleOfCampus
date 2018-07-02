@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.common.dao.Data_Dao;
 import com.common.model.Message;
 import com.common.model.Msg;
+import com.common.model.UserMsg;
 import com.common.utils.AudioUtils;
 import com.common.utils.ByteUtils;
 import com.common.utils.Symbol;
@@ -44,7 +45,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,10 +56,7 @@ import team.circleofcampus.Interface.RecordItemListener;
 import team.circleofcampus.R;
 import team.circleofcampus.adapter.MyFragmentPagerAdapter;
 import team.circleofcampus.adapter.RecordAdapter;
-import team.circleofcampus.dao.UserDao;
 import team.circleofcampus.http.HttpHelper;
-import team.circleofcampus.http.ImageRequest;
-import team.circleofcampus.pojo.User;
 import team.circleofcampus.service.MyService;
 import team.circleofcampus.util.SharedPreferencesUtil;
 import team.circleofcampus.view.FontButton;
@@ -178,7 +175,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
                 myService.setMessageListener(new MessageListener() {
                     @Override
-                    public void update(boolean isUpdate) {
+                    public void update(UserMsg bytes, boolean isUpdate) {
                         data.clear();
                         List<Message> msg=dao.getMessage(receive, send);
                        for(Message m :msg){
