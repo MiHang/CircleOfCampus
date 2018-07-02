@@ -37,6 +37,11 @@ import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,6 +51,7 @@ import team.circleofcampus.http.LoginRequest;
 import team.circleofcampus.http.SocietyRequest;
 import team.circleofcampus.util.SharedPreferencesUtil;
 import team.circleofcampus.util.StorageUtil;
+import team.circleofcampus.view.CustomDatePicker;
 
 public class PublishActivity extends AppCompatActivity {
 
@@ -68,6 +74,8 @@ public class PublishActivity extends AppCompatActivity {
     protected EditText activityVenue;
     @BindView(R.id.publish_content_edit)
     protected EditText content;
+
+    private CustomDatePicker customDatePicker; // 日期选择器
 
     // 加载框
     private LoadingDialog loadingDialog;
@@ -118,6 +126,42 @@ public class PublishActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         headerTitle.setText("社团公告发布");
         rightText.setText("发布");
+
+        // 初始化日期时间选择器
+        initDatePicker();
+    }
+
+    private void initDatePicker() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
+        String now = sdf.format(new Date()); // 当前时间
+
+        // 预设活动时间为今天
+        activityTime.setText(now.split(" ")[0]);
+
+        // 设置可选日期范围，今天 - 2 个月之内
+        Calendar calendar = Calendar.getInstance();  // 日期处理类
+        try {
+            calendar.setTime(sdf.parse(now));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        calendar.add(Calendar.MONTH, 5);
+        customDatePicker = new CustomDatePicker(this, new CustomDatePicker.ResultHandler() {
+            @Override
+            public void handle(String time) { // 回调接口，获得选中的时间
+                activityTime.setText(time);
+            }
+        }, now, sdf.format(calendar.getTime())); // 初始化日期格式请用：yyyy-MM-dd HH:mm，否则不能正常运行
+        customDatePicker.showSpecificTime(true); // 显示时和分
+        customDatePicker.setIsLoop(true); // 不允许循环滚动
+    }
+
+    /**
+     * 点击选择活动时间
+     */
+    @OnClick({R.id.publish_activity_time_root, R.id.publish_activity_time_edit})
+    public void onClickSelectActivityTime() {
+        customDatePicker.show(activityTime.getText().toString());
     }
 
     /**
@@ -130,19 +174,20 @@ public class PublishActivity extends AppCompatActivity {
         } else if (title.getText().toString().trim().length() > 45) {
             Toast.makeText(PublishActivity.this, "公告标题超出45字，当前字数为"
                     + title.getText().toString().trim().length() + "字", Toast.LENGTH_SHORT).show();
-        } else if (activityTime.getText().toString().trim().equals("")) {
-            Toast.makeText(PublishActivity.this, "活动时间不能为空", Toast.LENGTH_SHORT).show();
-        } else if (activityTime.getText().toString().trim().length() > 23) {
-            Toast.makeText(PublishActivity.this, "活动时间内容过长", Toast.LENGTH_SHORT).show();
-        } else if (activityVenue.getText().toString().trim().equals("")) {
-            Toast.makeText(PublishActivity.this, "活动地点不能为空", Toast.LENGTH_SHORT).show();
-        } else if (activityVenue.getText().toString().trim().length() > 45) {
-            Toast.makeText(PublishActivity.this, "活动地点内容过长(45字以内)", Toast.LENGTH_SHORT).show();
-        } else if (content.getText().toString().trim().equals("")) {
+        }  else if (content.getText().toString().trim().equals("")) {
             Toast.makeText(PublishActivity.this, "公告内容不能为空", Toast.LENGTH_SHORT).show();
         } else if (content.getText().toString().trim().length() > 240) {
             Toast.makeText(PublishActivity.this, "公告内容过长(240字以内), 当前字数为"
                     +content.getText().toString().trim().length() + "字", Toast.LENGTH_SHORT).show();
+        } else if (activityTime.getText().toString().trim().equals("")) {
+            Toast.makeText(PublishActivity.this, "活动时间不能为空", Toast.LENGTH_SHORT).show();
+        } else if (activityTime.getText().toString().equals(
+                new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(new Date()))) {
+            Toast.makeText(PublishActivity.this, "请选择活动时间", Toast.LENGTH_SHORT).show();
+        } else if (activityVenue.getText().toString().trim().equals("")) {
+            Toast.makeText(PublishActivity.this, "活动地点不能为空", Toast.LENGTH_SHORT).show();
+        } else if (activityVenue.getText().toString().trim().length() > 45) {
+            Toast.makeText(PublishActivity.this, "活动地点内容过长(45字以内)", Toast.LENGTH_SHORT).show();
         } else if (!new File(StorageUtil.getUploadImgTempPath() + "uploadTempImage").exists()) {
             Toast.makeText(PublishActivity.this, "请添加一张图片", Toast.LENGTH_SHORT).show();
         } else {

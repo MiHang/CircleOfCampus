@@ -83,6 +83,9 @@
 
                 <!-- 活动时间 -->
                 <LinearLayout
+                    android:id="@+id/publish_activity_time_root"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
@@ -96,10 +99,16 @@
                         android:textSize="14dp"
                         android:text="活动时间："/>
 
+                    <!-- 设置点击监听
+                    android:clickable="true"
+                    android:focusableInTouchMode="false"
+                    -->
                     <team.circleofcampus.view.FontEditText
                         android:id="@+id/publish_activity_time_edit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusableInTouchMode="false"
                         android:padding="10dp"
                         android:layout_weight="1"
                         android:maxLines="1"

@@ -24,8 +24,7 @@
     <color name="delete_normal">#fc5c57</color>
     <color name="delete_pressed">#f7837f</color>
 
-
-        <color name="icon_border_color">#eaeaea</color>
+    <color name="icon_border_color">#eaeaea</color>
 
     <!--控件点击时颜色-->
     <color name="click_overlay_color">#d7d7db</color>
@@ -34,4 +33,11 @@
     <!--分割线颜色-->
     <color name="dividerColor">#d6d7dc</color>
     <color name="EditText_color">#000000</color>
+
+    <!-- 时间选择器 -->
+    <color name="background">#FFFFFF</color>
+    <color name="split_line">#d6d7dc</color>
+    <color name="text1">#fc7d5e</color>
+    <color name="text2">#333333</color>
+
 </resources>
