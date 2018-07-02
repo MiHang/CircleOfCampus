@@ -196,8 +196,8 @@ public class RecordAdapter extends BaseAdapter {
                 }
 
                 if (msg.getReceive() == Symbol.Receive_Mode) {// 接收
-                    vh.Receive_dialog.setVisibility(View.VISIBLE);
                     vh.Send_dialog.setVisibility(View.GONE);
+                    vh.Receive_dialog.setVisibility(View.VISIBLE);
                     vh.Receive_dialog.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View view) {
@@ -239,8 +239,8 @@ public class RecordAdapter extends BaseAdapter {
                     vh.Receive_Icon.setOnClickListener(new ClickListener(i, "Icon"));
                 } else { // 发送
 
-                    vh.Send_dialog.setVisibility(View.VISIBLE);
                     vh.Receive_dialog.setVisibility(View.GONE);
+                    vh.Send_dialog.setVisibility(View.VISIBLE);
                     vh.Send_dialog.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View view) {
@@ -261,8 +261,9 @@ public class RecordAdapter extends BaseAdapter {
                     }else
                     if (msg.getMsg().getAudioPath() != null) {//发送语音消息
                         vh.Send_Msg.setText("");
-                        vh.Send_Layout.setVisibility(View.VISIBLE);
                         vh.Send_Img.setVisibility(View.GONE);
+                        vh.Send_Layout.setVisibility(View.VISIBLE);
+
                         if (msg.getNew() == Symbol.NewMode) {
                             vh.Send_Duration.setVisibility(View.VISIBLE);
                         } else {
@@ -273,10 +274,9 @@ public class RecordAdapter extends BaseAdapter {
 
                     }else
                     if (msg.getMsg().getImg() != null) {
-                        vh.Send_Img.setImageBitmap(bp);
                         vh.Send_Layout.setVisibility(View.GONE);
                         vh.Send_Img.setVisibility(View.VISIBLE);
-
+                        vh.Send_Img.setImageBitmap(bp);
                     }
                     vh.Send_Msg.setOnClickListener(new ClickListener(i, ""));
                     vh.Send_Icon.setOnClickListener(new ClickListener(i, "Icon"));
