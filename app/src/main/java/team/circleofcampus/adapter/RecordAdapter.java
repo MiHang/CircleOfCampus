@@ -258,8 +258,7 @@ public class RecordAdapter extends BaseAdapter {
                             setBackgroundAndKeepPadding(vh.Send_Msg, R.drawable.send_bg_1);
                         }
 
-                    }else
-                    if (msg.getMsg().getAudioPath() != null) {//发送语音消息
+                    }else if (msg.getMsg().getAudioPath() != null) {//发送语音消息
                         vh.Send_Msg.setText("");
                         vh.Send_Img.setVisibility(View.GONE);
                         vh.Send_Layout.setVisibility(View.VISIBLE);
@@ -272,8 +271,7 @@ public class RecordAdapter extends BaseAdapter {
                         vh.Send_Msg.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.send_audio, 0);
                         vh.Send_Duration.setText(msg.getMsg().getDuration());
 
-                    }else
-                    if (msg.getMsg().getImg() != null) {
+                    }else if (msg.getMsg().getImg() != null) {
                         vh.Send_Layout.setVisibility(View.GONE);
                         vh.Send_Img.setVisibility(View.VISIBLE);
                         vh.Send_Img.setImageBitmap(bp);

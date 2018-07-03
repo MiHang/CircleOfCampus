@@ -44,6 +44,7 @@ import java.sql.SQLException;
 import java.util.concurrent.ExecutorService;
 
 import team.circleofcampus.Interface.FragmentSwitchListener;
+import team.circleofcampus.Interface.OfflineListener;
 import team.circleofcampus.R;
 import team.circleofcampus.activity.ChatActivity;
 import team.circleofcampus.activity.LoginActivity;
@@ -76,7 +77,7 @@ public class MineFragment extends Fragment {
     private TextView department;
     private EditText userName;
     private TextView QR;
-
+    OfflineListener listener;
     String Account;
     LoadingDialog dialog;
     private boolean isStartCropAvatar = false;
@@ -85,6 +86,10 @@ public class MineFragment extends Fragment {
     FragmentSwitchListener switchListener;
     public void setSwitchListener(FragmentSwitchListener switchListener) {
         this.switchListener = switchListener;
+    }
+
+    public void setListener(OfflineListener listener) {
+        this.listener = listener;
     }
 
     // 单例线程池
@@ -144,7 +149,9 @@ public class MineFragment extends Fragment {
         Log_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+            if (listener!=null){
+                listener.Offline(true);
+            }
                 // 清空保存的登陆相关信息
                 SharedPreferencesUtil.setUID(getContext(), 0);
                 SharedPreferencesUtil.setAccount(getContext(), "");

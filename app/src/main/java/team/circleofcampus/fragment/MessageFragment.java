@@ -31,6 +31,7 @@ import team.circleofcampus.Interface.MessageListener;
 import team.circleofcampus.Interface.OnItemClickListener;
 import team.circleofcampus.R;
 import team.circleofcampus.activity.ChatActivity;
+import team.circleofcampus.activity.HomeActivity;
 import team.circleofcampus.adapter.MyMessageAdapter;
 import team.circleofcampus.service.MyService;
 
@@ -44,61 +45,14 @@ public class MessageFragment extends Fragment {
     private View view;
     private SwipeMenuRecyclerView recycler_view;
     MyMessageAdapter adapter;
-    List<UserMsg> data=new ArrayList<>();
-    TimeUtil timeUtil=new TimeUtil();
-    Date date;
-    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    MyService myService;
-    ServiceConnection conn = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder binder) {
-            MyService.MsgBinder myBinder = (MyService.MsgBinder) binder;
-            myService=myBinder.getService();
-            myService.setMessageListener(new MessageListener() {
-                @Override
-                public void update(final UserMsg userMsg, boolean isUpdate) {
-                    recycler_view.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            boolean isFlag=true;
-                            for(UserMsg m:data){
-                                if (m.getAccount().equals(userMsg.getAccount())){
-                                    isFlag=false;
-                                }
-                            }
-                            try {
-                                date=sdf.parse(userMsg.getDate());
-                                userMsg.setDate(timeUtil.getTimeFormatText(date));
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            if (isFlag){
-                                userMsg.setAmount(1);
-                                data.add(userMsg);
-                            }else{
-                                for (UserMsg u:data){
-                                    if (u.getAccount().equals(userMsg.getAccount())){
-                                        u.setMsg(userMsg.getMsg());
-                                        u.setDate(timeUtil.getTimeFormatText(date));
-                                        u.setAmount(u.getAmount()+1);
-                                    }
-                                }
-                            }
-                            Collections.sort(data);
-                            adapter.notifyDataSetChanged();
-                        }
-                    });
+    List<UserMsg> data;
 
-                }
-            });
-            Log.e("tag", "------ HomeActivity onServiceConnected ------");
-        }
+    public void setAdapter(MyMessageAdapter adapter) {
+        this.adapter = adapter;
+    }
 
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            Log.e("tag", "------ HomeActivity onServiceDisconnected ------");
-        }
-    };
+
+
     @Override
     public void onDestroyView() {
         super .onDestroyView();
@@ -112,26 +66,30 @@ public class MessageFragment extends Fragment {
         super.onCreate(savedInstanceState);
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_msg, null);
         initView(view);
-        Intent intent = new Intent(getContext(), MyService.class);
-        getActivity().bindService(intent, conn, BIND_AUTO_CREATE);
+
+
         recycler_view.setLayoutManager(new LinearLayoutManager(getContext()));// 布局管理器。
         recycler_view.setHasFixedSize(true);// 如果Item够简单，高度是确定的，打开FixSize将提高性能。
         recycler_view.setSwipeMenuCreator(swipeMenuCreator);
         // 设置菜单Item点击监听。
         recycler_view.setSwipeMenuItemClickListener(menuItemClickListener);
 
-        adapter = new MyMessageAdapter(getContext(),data);
-        adapter.setOnItemClickListener(onItemClickListener);
-        recycler_view.setAdapter(adapter);
-        adapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                Intent intent=new Intent(getActivity(), ChatActivity.class);
-                intent.putExtra("receive",data.get(position).getAccount());
-                intent.putExtra("nickName",data.get(position).getUserName());
-                startActivity(intent);
-            }
-        });
+
+//        adapter = new MyMessageAdapter(getContext(),data);
+        if (adapter!=null){
+            adapter.setOnItemClickListener(onItemClickListener);
+            recycler_view.setAdapter(adapter);
+            adapter.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                    Intent intent=new Intent(getActivity(), ChatActivity.class);
+                    intent.putExtra("receive",data.get(position).getAccount());
+                    intent.putExtra("nickName",data.get(position).getUserName());
+                    startActivity(intent);
+                }
+            });
+        }
+
 //        HomeActivity homeActivity= (HomeActivity) getActivity();
 //        myService=homeActivity.myService;
 //        if (myService!=null){
