@@ -28,10 +28,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.common.dao.Data_Dao;
 import com.common.model.Message;
 import com.common.model.Msg;
-import com.common.model.UserMsg;
 import com.common.utils.AudioUtils;
 import com.common.utils.ByteUtils;
 import com.common.utils.Symbol;
@@ -45,6 +43,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,6 +55,7 @@ import team.circleofcampus.Interface.RecordItemListener;
 import team.circleofcampus.R;
 import team.circleofcampus.adapter.MyFragmentPagerAdapter;
 import team.circleofcampus.adapter.RecordAdapter;
+import team.circleofcampus.dao.Data_Dao;
 import team.circleofcampus.http.HttpHelper;
 import team.circleofcampus.service.MyService;
 import team.circleofcampus.util.SharedPreferencesUtil;
@@ -177,8 +177,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void update( String account, boolean isUpdate) {
                         data.clear();
-                        List<Message> msg=dao.getMessage(receive, send);
-                       for(Message m :msg){
+                        List<Message> msg= null;
+                        try {
+                            msg = dao.getMessage(receive, send);
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                        for(Message m :msg){
                            data.add(m);
                        }
                         ChatRecord.smoothScrollToPosition(data.size());
@@ -213,7 +218,12 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
                     dao.setData(message);
                     data.clear();
-                    List<Message> msg=dao.getMessage(receive, send);
+                    List<Message> msg= null;
+                    try {
+                        msg = dao.getMessage(receive, send);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                     for(Message m :msg){
                         data.add(m);
                     }
@@ -295,7 +305,11 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void init() {
-        dao = new Data_Dao(this);
+        try {
+            dao = new Data_Dao(this);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         sm = new AudioUtils(this);
 
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
@@ -349,7 +363,11 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         });
 
 
-        data = dao.getMessage(receive, send);
+        try {
+            data = dao.getMessage(receive, send);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         for (Message m : data) {
             Log.e("tag", m.toString());
         }

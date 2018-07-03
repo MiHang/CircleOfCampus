@@ -3,6 +3,8 @@ package team.circleofcampus.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.common.model.Message;
+import com.common.model.UserMsg;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
@@ -52,6 +54,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             // 创建"t_my_publish_society_circle"我发布的社团公告表
             TableUtils.createTable(connectionSource, MyPublishSocietyCircle.class);
 
+//            TableUtils.createTable(connectionSource,Message.class);
+            TableUtils.createTable(connectionSource,UserMsg.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }

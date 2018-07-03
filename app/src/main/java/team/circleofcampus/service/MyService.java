@@ -9,7 +9,6 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.common.dao.Data_Dao;
 import com.common.model.Message;
 import com.common.model.Msg;
 import com.common.model.UserMsg;
@@ -22,9 +21,12 @@ import org.json.JSONObject;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
+import java.sql.SQLException;
 import java.util.List;
 
 import team.circleofcampus.Interface.MessageListener;
+import team.circleofcampus.dao.Data_Dao;
+import team.circleofcampus.dao.UserMsg_Dao;
 import team.circleofcampus.http.HttpRequest;
 
 
@@ -37,7 +39,8 @@ public class MyService extends Service {
     MsgBinder binder=new MsgBinder();
     WebSocketClient myClient;
     String send;
-    Data_Dao dao = new Data_Dao(this);
+    Data_Dao dao;
+    UserMsg_Dao userMsg_dao;
     MessageListener listener;
 
 
@@ -55,6 +58,12 @@ public class MyService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.e(TAG,"---onCreate---");
+        try {
+//            dao = new Data_Dao(this);
+            userMsg_dao=new UserMsg_Dao(this);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         SharedPreferences preferences=getSharedPreferences("user", Context.MODE_PRIVATE);
         String name=preferences.getString("send", null);
         if (name!=null){
@@ -95,7 +104,7 @@ private void getCon(final String send){
                 Message message = new Message();
                 message.setMsg(msg);
                 Log.e("tag","用户"+message.getMsg().getSend()+"性别"+message.getMsg().getSex());
-                dao.setData(message);//储存聊天信息
+//                dao.setData(message);//储存聊天信息
 
                 UserMsg userMsg=new UserMsg();
                 userMsg.setAccount(msg.getSend());
@@ -111,14 +120,25 @@ private void getCon(final String send){
                     userMsg.setMsg("图片消息");
                 }
                 userMsg.setDate(msg.getDate());
-                List<UserMsg> m=dao.queryMsgBySearch(userMsg.getAccount());//判断是否已有记录,有则更新
+                List<UserMsg> m=userMsg_dao.queryMsgBySearch(userMsg.getAccount());//判断是否已有记录,有则更新
                 if (m!=null&&m.size()>0){
                     UserMsg user=m.get(0);
                     user.setMsg(userMsg.getMsg());
                     user.setAmount(user.getAmount()+1);
-                    dao.update(user);
+                    user.setDate(msg.getDate());
+                    userMsg_dao.update(user);
+                    if(msg.getText()!=null){
+                        user.setMsg(msg.getText());
+                    }
+                    if(msg.getAudio()!=null){
+                        user.setMsg("语音消息");
+                    }
+                    if(msg.getImg()!=null){
+                        user.setMsg("图片消息");
+                    }
+                    Log.e("tag","----更新表___");
                 }else{
-                    dao.add(userMsg);
+                    userMsg_dao.add(userMsg);
                 }
                 if (listener!=null){
                     listener.update(userMsg.getAccount(),true);

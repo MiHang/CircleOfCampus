@@ -1,6 +1,7 @@
 package team.circleofcampus.fragment;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
@@ -14,7 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.common.dao.Data_Dao;
+
+import com.common.model.Msg;
 import com.common.model.UserMsg;
 import com.common.utils.TimeUtil;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
@@ -23,11 +25,14 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
+
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import team.circleofcampus.Interface.MessageListener;
 import team.circleofcampus.Interface.OnItemClickListener;
@@ -35,6 +40,8 @@ import team.circleofcampus.R;
 import team.circleofcampus.activity.ChatActivity;
 import team.circleofcampus.activity.HomeActivity;
 import team.circleofcampus.adapter.MyMessageAdapter;
+import team.circleofcampus.dao.Data_Dao;
+import team.circleofcampus.dao.UserMsg_Dao;
 import team.circleofcampus.service.MyService;
 
 import static android.content.Context.BIND_AUTO_CREATE;
@@ -48,7 +55,7 @@ public class MessageFragment extends Fragment {
     private SwipeMenuRecyclerView recycler_view;
     MyMessageAdapter adapter;
     List<UserMsg> data = new ArrayList<UserMsg>();
-
+    UserMsg_Dao dao = null;
     TimeUtil timeUtil = new TimeUtil();
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -82,11 +89,20 @@ public class MessageFragment extends Fragment {
                 @Override
                 public void onItemClick(int position) {
 
-                    Intent intent=new Intent(getActivity(), ChatActivity.class);
-                    intent.putExtra("receive",data.get(position).getAccount());
-                    intent.putExtra("nickName",data.get(position).getUserName());
-                    startActivity(intent);
+//                    Intent intent=new Intent(getActivity(), ChatActivity.class);
+//                    intent.putExtra("receive",data.get(position).getAccount());
+//                    intent.putExtra("nickName",data.get(position).getUserName());
+//                    startActivity(intent);
                     data.get(position).setVisible(false);
+                    if (dao!=null){
+                        List<UserMsg> m=dao.queryMsgBySearch(data.get(0).getAccount());//判断是否已有记录,有则更新
+                        if (m!=null&&m.size()>0){
+                            UserMsg user=m.get(0);
+                            user.setMsg(user.getMsg());
+                            user.setAmount(0);
+                            dao.update(user);
+                        }
+                    }
                     adapter.notifyDataSetChanged();
                 }
             });
@@ -101,11 +117,23 @@ public class MessageFragment extends Fragment {
     }
 
 
-    public void updateMsgList(UserMsg userMsg) throws ParseException {
+    public void updateMsgList(Context context,String Account) throws ParseException {
 
+
+        try {
+            dao = new UserMsg_Dao(context);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        List<UserMsg> list = dao.queryMsgBySearch(Account);
+        if (list == null || list.size()==0){
+          return;
+        }
+        UserMsg userMsg=list.get(0);
+        Log.e("tag","数据库数据"+userMsg.getAccount()+userMsg.getMsg()+userMsg.getDate()+userMsg.isVisible());
         boolean isFlag = true;
         for(UserMsg m : data){
-            if (m.getAccount().equals(userMsg.getAccount())&&m.isVisible()){
+            if (m.getAccount().equals(userMsg.getAccount())){
                 isFlag = false;
             }
         }
@@ -113,25 +141,34 @@ public class MessageFragment extends Fragment {
         Date date = sdf.parse(userMsg.getDate());
         userMsg.setDate(timeUtil.getTimeFormatText(date));
 
-        if (isFlag){
+        if (isFlag){//新增
             userMsg.setAmount(1);
+            userMsg.setVisible(true);
+
             data.add(userMsg);
-        }else{
-            int i = 0;
-            for (UserMsg u : data){
-                if (u.getAccount().equals(userMsg.getAccount())){
-                    u.setMsg(userMsg.getMsg());
-                    u.setDate(timeUtil.getTimeFormatText(date));
-                    u.setAmount(u.getAmount()+1);
-                    Log.e("tag","data list: msg = " + data.get(i).getMsg() + ";");
-                }
-                i ++;
+            Log.e("tag","新增____");
+        }else{//修改
+            Iterator<UserMsg> iterator = data.iterator();
+            while(iterator.hasNext())
+            {
+                UserMsg msg=iterator.next();
+               if (msg.getAccount().equals(userMsg.getAccount())){
+                   data.remove(msg);
+                   data.add(userMsg);
+                   Log.e("tag","需该____");
+                   break;
+
+               }
+
             }
+
         }
         Collections.sort(data);
-        if (adapter != null) {
+        if (adapter!=null){
             adapter.notifyDataSetChanged();
+
         }
+
     }
 
     private OnItemClickListener onItemClickListener = new OnItemClickListener() {

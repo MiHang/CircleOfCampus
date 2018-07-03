@@ -19,8 +19,6 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.common.dao.Data_Dao;
 import com.common.model.UserMsg;
 import com.common.utils.TimeUtil;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
@@ -32,7 +30,6 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -41,7 +38,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import team.circleofcampus.Interface.MessageListener;
 import team.circleofcampus.Interface.OfflineListener;
-import team.circleofcampus.adapter.MyMessageAdapter;
+import team.circleofcampus.dao.Data_Dao;
 import team.circleofcampus.dao.UserDao;
 import team.circleofcampus.pojo.User;
 import team.circleofcampus.Interface.FragmentSwitchListener;
@@ -121,19 +118,15 @@ public class HomeActivity extends AppCompatActivity {
 
                             MessageFragment messageFragment = ((MessageFragment)data.get(1));
                             if (messageFragment != null) {
-                                try {
-                                    Data_Dao dao = new Data_Dao(HomeActivity.this);
-                                    if (dao == null) Log.e("tag", "dao is null");
-                                    List<UserMsg> list = dao.getAllMsg();
-                                    if (list != null && list.size()>=0){
-                                        UserMsg userMsg=list.get(0);
-                                        Log.e("tag","数据库数据"+userMsg.getAccount()+userMsg.getMsg()+userMsg.getDate());
-                                        messageFragment.updateMsgList(userMsg);
+
+                                    try {
+                                        messageFragment.updateMsgList(HomeActivity.this,account);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
                                     }
 
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
+
+
                             }
 
                         }
@@ -232,7 +225,11 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
-        dao= new Data_Dao(this);
+        try {
+            dao= new Data_Dao(this);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         account = SharedPreferencesUtil.getAccount(this);
 
         // 获取用户ID
@@ -291,7 +288,7 @@ public class HomeActivity extends AppCompatActivity {
                         myClient.send(js.toString());
                     }
                 }
-                Toast.makeText(HomeActivity.this, "下线", Toast.LENGTH_SHORT).show();
+
             }
         });
         data.add(mineFragment);
