@@ -12,7 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.common.dao.Data_Dao;
 import com.common.model.UserMsg;
 import com.common.utils.TimeUtil;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
@@ -45,13 +47,10 @@ public class MessageFragment extends Fragment {
     private View view;
     private SwipeMenuRecyclerView recycler_view;
     MyMessageAdapter adapter;
-    List<UserMsg> data;
+    List<UserMsg> data = new ArrayList<UserMsg>();
 
-    public void setAdapter(MyMessageAdapter adapter) {
-        this.adapter = adapter;
-    }
-
-
+    TimeUtil timeUtil = new TimeUtil();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public void onDestroyView() {
@@ -65,99 +64,80 @@ public class MessageFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_msg, null);
-        initView(view);
 
+        recycler_view = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
 
         recycler_view.setLayoutManager(new LinearLayoutManager(getContext()));// 布局管理器。
         recycler_view.setHasFixedSize(true);// 如果Item够简单，高度是确定的，打开FixSize将提高性能。
         recycler_view.setSwipeMenuCreator(swipeMenuCreator);
+
         // 设置菜单Item点击监听。
         recycler_view.setSwipeMenuItemClickListener(menuItemClickListener);
 
-
-//        adapter = new MyMessageAdapter(getContext(),data);
+        adapter = new MyMessageAdapter(getContext(),data);
         if (adapter!=null){
             adapter.setOnItemClickListener(onItemClickListener);
             recycler_view.setAdapter(adapter);
             adapter.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(int position) {
+
                     Intent intent=new Intent(getActivity(), ChatActivity.class);
                     intent.putExtra("receive",data.get(position).getAccount());
                     intent.putExtra("nickName",data.get(position).getUserName());
                     startActivity(intent);
+                    data.get(position).setVisible(false);
+                    adapter.notifyDataSetChanged();
                 }
             });
         }
-
-//        HomeActivity homeActivity= (HomeActivity) getActivity();
-//        myService=homeActivity.myService;
-//        if (myService!=null){
-//            Toast.makeText(homeActivity, "设置监听", Toast.LENGTH_SHORT).show();
-//            myService.setMessageListener(new MessageListener() {
-//                @Override
-//                public void update(final UserMsg userMsg, boolean isUpdate) {
-//                    Log.e("tag","有信息");
-//                    recycler_view.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            boolean isFlag=true;
-//                            for(UserMsg m:data){
-//                                if (m.getAccount().equals(userMsg.getAccount())){
-//                                    isFlag=false;
-//                                }
-//                            }
-//                            try {
-//                                date=sdf.parse(userMsg.getDate());
-//                                userMsg.setDate(timeUtil.getTimeFormatText(date));
-//                            } catch (ParseException e) {
-//                                e.printStackTrace();
-//                            }
-//                            if (isFlag){
-//                                userMsg.setAmount(1);
-//                                data.add(userMsg);
-//                            }else{
-//                                for (UserMsg u:data){
-//                                    if (u.getAccount().equals(userMsg.getAccount())){
-//                                        u.setMsg(userMsg.getMsg());
-//                                        u.setDate(timeUtil.getTimeFormatText(date));
-//                                        u.setAmount(u.getAmount()+1);
-//                                    }
-//                                }
-//                            }
-//                            Collections.sort(data);
-//                            adapter.notifyDataSetChanged();
-//                        }
-//                    });
-//
-//
-//
-//
-//
-//
-//                }
-//
-//
-//            });
-//        }
+        Log.e("tag", "MessageFragemnt onCreate....");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        initView( view);
         return view;
     }
 
-    private void initView(View view) {
 
-        recycler_view = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
+    public void updateMsgList(UserMsg userMsg) throws ParseException {
+
+        boolean isFlag = true;
+        for(UserMsg m : data){
+            if (m.getAccount().equals(userMsg.getAccount())&&m.isVisible()){
+                isFlag = false;
+            }
+        }
+
+        Date date = sdf.parse(userMsg.getDate());
+        userMsg.setDate(timeUtil.getTimeFormatText(date));
+
+        if (isFlag){
+            userMsg.setAmount(1);
+            data.add(userMsg);
+        }else{
+            int i = 0;
+            for (UserMsg u : data){
+                if (u.getAccount().equals(userMsg.getAccount())){
+                    u.setMsg(userMsg.getMsg());
+                    u.setDate(timeUtil.getTimeFormatText(date));
+                    u.setAmount(u.getAmount()+1);
+                    Log.e("tag","data list: msg = " + data.get(i).getMsg() + ";");
+                }
+                i ++;
+            }
+        }
+        Collections.sort(data);
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private OnItemClickListener onItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            //打开自定义的Activity
+            // 打开自定义的Activity
             Intent intentNotifi = new Intent(getActivity(), ChatActivity.class);
 
             getActivity().startActivity(intentNotifi);

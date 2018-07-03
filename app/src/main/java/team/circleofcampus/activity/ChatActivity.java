@@ -175,7 +175,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
                 myService.setMessageListener(new MessageListener() {
                     @Override
-                    public void update(UserMsg bytes, boolean isUpdate) {
+                    public void update( String account, boolean isUpdate) {
                         data.clear();
                         List<Message> msg=dao.getMessage(receive, send);
                        for(Message m :msg){
@@ -295,7 +295,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void init() {
-        dao = new Data_Dao(this, "12.db");
+        dao = new Data_Dao(this);
         sm = new AudioUtils(this);
 
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();

@@ -19,6 +19,8 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.common.dao.Data_Dao;
 import com.common.model.UserMsg;
 import com.common.utils.TimeUtil;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
@@ -94,67 +96,48 @@ public class HomeActivity extends AppCompatActivity {
     QRFragment qrFragment = new QRFragment();
     List<Fragment> data = new ArrayList<>();
     private int selectedPageId = 0;
-
+    Data_Dao dao ;
     String account;
     WebSocketClient myClient;
 
     List<UserMsg> UserMsg_data=new ArrayList<>();
+    MessageFragment bFragment = new MessageFragment();
     TimeUtil timeUtil=new TimeUtil();
-    MessageFragment bFragment=new MessageFragment();
     Date date;
     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-
 
     ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             MyService.MsgBinder myBinder = (MyService.MsgBinder) binder;
             myClient=myBinder.getService().getMyClient();
+
             myBinder.getService().setMessageListener(new MessageListener() {
                 @Override
-                public void update(final UserMsg userMsg, boolean isUpdate) {
+                public void update(final String account, boolean isUpdate) {
                     HomeViewPager.post(new Runnable() {
                         @Override
                         public void run() {
-                            boolean isFlag=true;
-                            for(UserMsg m:UserMsg_data){
-                                if (m.getAccount().equals(userMsg.getAccount())){
-                                    isFlag=false;
-                                }
-                            }
-                            try {
-                                date=sdf.parse(userMsg.getDate());
-                                userMsg.setDate(timeUtil.getTimeFormatText(date));
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            if (isFlag){
-                                userMsg.setAmount(1);
-                                UserMsg_data.add(userMsg);
-                            }else{
-                                for (UserMsg u:UserMsg_data){
-                                    if (u.getAccount().equals(userMsg.getAccount())){
-                                        u.setMsg(userMsg.getMsg());
-                                        u.setDate(timeUtil.getTimeFormatText(date));
-                                        u.setAmount(u.getAmount()+1);
-                                    }
-                                }
-                            }
-                            Collections.sort(UserMsg_data);
-                            data.clear();
-                            bFragment.setAdapter(new MyMessageAdapter(getBaseContext(),UserMsg_data));
-                            data.add(circleFragment);
-                            data.add(bFragment);
-                            // 我的发布
-                            data.add(publishFragment);
-                            data.add(mineFragment);
 
-                            adapter.notifyDataSetChanged();
+                            MessageFragment messageFragment = ((MessageFragment)data.get(1));
+                            if (messageFragment != null) {
+                                try {
+                                    Data_Dao dao = new Data_Dao(HomeActivity.this);
+                                    if (dao == null) Log.e("tag", "dao is null");
+                                    List<UserMsg> list = dao.getAllMsg();
+                                    if (list != null && list.size()>=0){
+                                        UserMsg userMsg=list.get(0);
+                                        Log.e("tag","数据库数据"+userMsg.getAccount()+userMsg.getMsg()+userMsg.getDate());
+                                        messageFragment.updateMsgList(userMsg);
+                                    }
+
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
                         }
                     });
-
-
 
                     Log.e("tag", "------ 新消息------");
                 }
@@ -167,6 +150,7 @@ public class HomeActivity extends AppCompatActivity {
             Log.e("tag", "------ HomeActivity onServiceDisconnected ------");
         }
     };
+
     // 单例线程池
     private ExecutorService singleThreadExecutor;
     // 网络连接状态改变广播
@@ -248,7 +232,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
-
+        dao= new Data_Dao(this);
         account = SharedPreferencesUtil.getAccount(this);
 
         // 获取用户ID
@@ -281,7 +265,6 @@ public class HomeActivity extends AppCompatActivity {
         data.add(publishFragment);
 
         // 我的
-
         mineFragment.setSwitchListener(new FragmentSwitchListener() {
             @Override
             public void displayThisFragment(boolean display) {

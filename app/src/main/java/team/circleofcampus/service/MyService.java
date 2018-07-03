@@ -22,6 +22,7 @@ import org.json.JSONObject;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
+import java.util.List;
 
 import team.circleofcampus.Interface.MessageListener;
 import team.circleofcampus.http.HttpRequest;
@@ -36,7 +37,7 @@ public class MyService extends Service {
     MsgBinder binder=new MsgBinder();
     WebSocketClient myClient;
     String send;
-    Data_Dao dao = new Data_Dao(this, "12.db");
+    Data_Dao dao = new Data_Dao(this);
     MessageListener listener;
 
 
@@ -96,22 +97,31 @@ private void getCon(final String send){
                 Log.e("tag","用户"+message.getMsg().getSend()+"性别"+message.getMsg().getSex());
                 dao.setData(message);//储存聊天信息
 
+                UserMsg userMsg=new UserMsg();
+                userMsg.setAccount(msg.getSend());
+                userMsg.setUserName(msg.getUserName());
+                userMsg.setSex(msg.getSex());
+                if(msg.getText()!=null){
+                    userMsg.setMsg(msg.getText());
+                }
+                if(msg.getAudio()!=null){
+                    userMsg.setMsg("语音消息");
+                }
+                if(msg.getImg()!=null){
+                    userMsg.setMsg("图片消息");
+                }
+                userMsg.setDate(msg.getDate());
+                List<UserMsg> m=dao.queryMsgBySearch(userMsg.getAccount());//判断是否已有记录,有则更新
+                if (m!=null&&m.size()>0){
+                    UserMsg user=m.get(0);
+                    user.setMsg(userMsg.getMsg());
+                    user.setAmount(user.getAmount()+1);
+                    dao.update(user);
+                }else{
+                    dao.add(userMsg);
+                }
                 if (listener!=null){
-                    UserMsg userMsg=new UserMsg();
-                    userMsg.setAccount(msg.getSend());
-                    userMsg.setUserName(msg.getUserName());
-                    userMsg.setSex(msg.getSex());
-                    if(msg.getText()!=null){
-                        userMsg.setMsg(msg.getText());
-                    }
-                    if(msg.getAudio()!=null){
-                        userMsg.setMsg("语音消息");
-                    }
-                    if(msg.getImg()!=null){
-                        userMsg.setMsg("图片消息");
-                    }
-                    userMsg.setDate(msg.getDate());
-                    listener.update(userMsg,true);
+                    listener.update(userMsg.getAccount(),true);
                     Log.e("tag","监听");
                 }
 

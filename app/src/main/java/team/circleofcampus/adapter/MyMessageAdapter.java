@@ -77,6 +77,11 @@ public class MyMessageAdapter extends SwipeMenuAdapter<MyMessageAdapter.ViewHold
         holder.time.setText(data.get(position).getDate());
         holder.itemView.setOnClickListener(this);
         holder.itemView.setTag(position);
+        if (data.get(position).isVisible()){
+            holder.Amount.setVisibility(View.VISIBLE);
+        }else{
+            holder.Amount.setVisibility(View.GONE);
+        }
     }
 
     @Override
