@@ -5,9 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Handler;
-import android.support.annotation.RequiresApi;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.util.Log;
@@ -15,14 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
-
 import com.common.model.Message;
 import com.common.utils.ByteUtils;
 import com.common.utils.ImgUtils;
@@ -30,7 +24,6 @@ import com.common.utils.Symbol;
 import com.example.library.Utils.EmojiData;
 import com.example.library.disPlayGif.AnimatedGifDrawable;
 import com.example.library.disPlayGif.AnimatedImageSpan;
-
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -54,6 +47,7 @@ import team.circleofcampus.view.DialogTextView;
 import team.circleofcampus.view.FontTextView;
 import team.circleofcampus.view.IconImageView;
 import team.circleofcampus.view.RoundRectImageView;
+import team.circleofcampus.view.SendLayout;
 
 /**
  * 聊天列表适配器
@@ -66,11 +60,12 @@ public class RecordAdapter extends BaseAdapter {
     ImgUtils utils;
     RecordItemListener listener;
     ByteUtils byteUtils = new ByteUtils();
-    IconImageView icon;
+
     Bitmap bp = null;
     MsgLongClickListener longClickListener;
     UserDao userDao;
     Bitmap localUserAvatar;
+
 
     public void setLongClickListener(MsgLongClickListener longClickListener) {
         this.longClickListener = longClickListener;
@@ -120,7 +115,7 @@ public class RecordAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        if (data.get(position).getReceive() == Symbol.Receive_Mode) {
+        if (data.get(position).getMsg_Receive() == Symbol.Msg_Send) {
             return 0;
         } else {
             return 1;
@@ -133,157 +128,101 @@ public class RecordAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int i, View view, ViewGroup viewGroup) {
-        final ViewHolder vh;
+    public View getView(final int i, View convertView, ViewGroup viewGroup) {
 
-        if (view == null) {
-            view = LayoutInflater.from(context)
-                    .inflate(R.layout.dialog_msg, null);
-            vh = new ViewHolder(view);
-            view.setTag(vh);
+        ViewHolder vh;
+        Message msg = data.get(i);
+
+        // 加载布局
+        int itemType = getItemViewType(i);
+        if (convertView == null) {
+            convertView = LayoutInflater.from(context).inflate(itemType==0?R.layout.dialog_send:R.layout.dialog_receive, null);
+            vh = new ViewHolder(convertView);
+            convertView.setTag(vh);
         } else {
-            vh = (ViewHolder) view.getTag();
-        }
-
-        final Message msg = data.get(i);
-
-        if (msg.getMsg().getImg() != null) {//图片不为空
-            bp = byteUtils.BytesToBitmap(msg.getMsg().getImg());
+            vh = (ViewHolder) convertView.getTag();
         }
 
         // 加载头像
         int res = R.drawable.woman;
-        if (msg.getMsg().getSex()==null||msg.getMsg().getSex().equals("male")) {
+        if (msg.getSex() == null || msg.getSex().equals("male")) {
             res = R.drawable.man;
         }
-        if (msg.getReceive() == Symbol.Receive_Mode) { // 好友
-            icon = vh.Receive_Icon;
-            String username = msg.getMsg().getUserName();
-            Glide.with(context)
-                    .load("http://"+ HttpRequest.IP+":8080/res/img/" + username)
-                    .asBitmap()
-                    .error(res)
-                    .placeholder(res)
-                    .into(icon);
-        } else {
-            icon = vh.Send_Icon;
-            if (localUserAvatar != null) {
-                icon.setImageBitmap(localUserAvatar);
+        String username = msg.getUserName();
+
+        Glide.with(context)
+                .load("http://" + HttpRequest.IP + ":8080/res/img/" + username)
+                .asBitmap()
+                .error(res)
+                .into(vh.Icon);
+
+        // 判断是否显示时间
+        if (i != 0) {
+            if (msg.getDate() == null || data.get(i - 1).getDate() == null) {
+                vh.Time.setText(msg.getDate());
+                vh.Time.setVisibility(View.VISIBLE);
             } else {
-                icon.setImageResource(res);
+                if (DisPlayTime(msg.getDate(), data.get(i - 1).getDate())) {
+                    vh.Time.setText(msg.getDate());
+                    vh.Time.setVisibility(View.VISIBLE);
+                } else {
+                    vh.Time.setVisibility(View.GONE);
+                }
             }
+        } else {
+            vh.Time.setVisibility(View.VISIBLE);
+            vh.Time.setText(msg.getDate());
         }
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // 判断是否显示时间
-                if (i != 0) {
-                    if (msg.getMsg().getDate() == null || data.get(i - 1).getMsg().getDate() == null) {
-                        vh.Time.setText(msg.getMsg().getDate());
-                        vh.Time.setVisibility(View.VISIBLE);
-                    } else {
-                        if (DisPlayTime(msg.getMsg().getDate(), data.get(i - 1).getMsg().getDate())) {
-                            vh.Time.setText(msg.getMsg().getDate());
-                            vh.Time.setVisibility(View.VISIBLE);
-                        } else {
-                            vh.Time.setVisibility(View.GONE);
-                        }
-                    }
-                } else {
-                    vh.Time.setVisibility(View.VISIBLE);
-                    vh.Time.setText(msg.getMsg().getDate());
-                }
-
-                if (msg.getReceive() == Symbol.Receive_Mode) {// 接收
-                    vh.Send_dialog.setVisibility(View.GONE);
-                    vh.Receive_dialog.setVisibility(View.VISIBLE);
-                    vh.Receive_dialog.setOnLongClickListener(new View.OnLongClickListener() {
-                        @Override
-                        public boolean onLongClick(View view) {
-                            if (longClickListener!=null){
-                                longClickListener.clickItem(i);
-                            }
-                            return false;
-                        }
-                    });
-
-                    if (msg.getMsg().getText() != null) { // 接收文本消息
-                        vh.Receive_Duration.setVisibility(View.GONE);
-                        vh.Receive_Msg.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                        if (!convertNormalStringToSpannableString(msg.getMsg().getText(), vh.Receive_Msg)) {
-                            vh.Receive_Msg.setText(msg.getMsg().getText());
-                            setBackgroundAndKeepPadding(vh.Receive_Msg, R.drawable.receive_bg_1);
-                        }
-
-                    }else  if (msg.getMsg().getAudioPath()!= null) { // 接收语音消息
-                        vh.Receive_Msg.setText("");
-                        vh.Receive_Msg.setVisibility(View.GONE);
-                        vh.Receive_Msg.setVisibility(View.VISIBLE);
-                        if (msg.getNew() == Symbol.NewMode) {
-                            vh.Receive_Duration.setVisibility(View.VISIBLE);
-                        } else {
-                            vh.Receive_Duration.setVisibility(View.GONE);
-                        }
-
-                        vh.Receive_Msg.setCompoundDrawablesWithIntrinsicBounds(R.drawable.receive_audio, 0, 0, 0);
-                        vh.Receive_Duration.setText(msg.getMsg().getDuration());
-
-                    }  else if (msg.getMsg().getImg() != null) {
-                        vh.Receive_Img.setImageBitmap(bp);
-                        vh.Receive_Layout.setVisibility(View.GONE);
-                        vh.Receive_Img.setVisibility(View.VISIBLE);
-
-                    }
-                    vh.Receive_Msg.setOnClickListener(new ClickListener(i, ""));
-                    vh.Receive_Icon.setOnClickListener(new ClickListener(i, "Icon"));
-                } else { // 发送
-
-                    vh.Receive_dialog.setVisibility(View.GONE);
-                    vh.Send_dialog.setVisibility(View.VISIBLE);
-                    vh.Send_dialog.setOnLongClickListener(new View.OnLongClickListener() {
-                        @Override
-                        public boolean onLongClick(View view) {
-                            if (longClickListener!=null){
-                                longClickListener.clickItem(i);
-                            }
-                            return false;
-                        }
-                    });
-                    if (msg.getMsg().getText() != null) {
-                        vh.Send_Duration.setVisibility(View.GONE);
-                        vh.Send_Msg.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                        if (!convertNormalStringToSpannableString(msg.getMsg().getText(), vh.Send_Msg)) {
-                            vh.Send_Msg.setText(msg.getMsg().getText());
-                            setBackgroundAndKeepPadding(vh.Send_Msg, R.drawable.send_bg_1);
-                        }
-
-                    }else if (msg.getMsg().getAudioPath() != null) {//发送语音消息
-                        vh.Send_Msg.setText("");
-                        vh.Send_Img.setVisibility(View.GONE);
-                        vh.Send_Layout.setVisibility(View.VISIBLE);
-
-                        if (msg.getNew() == Symbol.NewMode) {
-                            vh.Send_Duration.setVisibility(View.VISIBLE);
-                        } else {
-                            vh.Send_Duration.setVisibility(View.GONE);
-                        }
-                        vh.Send_Msg.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.send_audio, 0);
-                        vh.Send_Duration.setText(msg.getMsg().getDuration());
-
-                    }else if (msg.getMsg().getImg() != null) {
-                        vh.Send_Layout.setVisibility(View.GONE);
-                        vh.Send_Img.setVisibility(View.VISIBLE);
-                        vh.Send_Img.setImageBitmap(bp);
-                    }
-                    vh.Send_Msg.setOnClickListener(new ClickListener(i, ""));
-                    vh.Send_Icon.setOnClickListener(new ClickListener(i, "Icon"));
-                }
+        //消息处理
+        if (msg.getImg() != null) {//图片不为空
+            bp = byteUtils.BytesToBitmap(msg.getImg());
+        }
+        if (msg.getText() != null) { // 接收文本消息
+            vh.Duration.setVisibility(View.GONE);
+            vh.Msg.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            if (!convertNormalStringToSpannableString(msg.getText(), vh.Msg)) {
+                vh.Msg.setText(msg.getText());
+                setBackgroundAndKeepPadding(vh.Msg, itemType==0?R.drawable.send_bg_1:R.drawable.receive_bg_1);
             }
-        },200);
 
-        return view;
+        } else if (msg.getAudioPath() != null) {//接收语音信息
+
+            vh.Msg.setText("");
+            if (msg.getMsg_New() == Symbol.Msg_New) {//新消息 显示小点
+                vh.Duration.setVisibility(View.VISIBLE);
+            } else {
+                vh.Duration.setVisibility(View.GONE);
+            }
+            if (itemType==0){//发送
+                vh.Msg.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.send_audio,0);
+            }else  if (itemType==1){//接收
+                vh.Msg.setCompoundDrawablesWithIntrinsicBounds(R.drawable.receive_audio,0,0,0);
+            }
+            vh.Duration.setText(msg.getDuration());//语音时长
+        } else if (msg.getImg() != null) {//接收图片信息
+            vh.Img.setImageBitmap(bp);
+            vh.Duration.setVisibility(View.GONE);
+            vh.Msg.setVisibility(View.GONE);
+            vh.Img.setVisibility(View.VISIBLE);//显示图片
+        }
+        vh.Msg.setOnLongClickListener(new View.OnLongClickListener() {//长按监听
+            @Override
+            public boolean onLongClick(View view) {
+                if (longClickListener != null) {
+                    longClickListener.clickItem(i);
+                }
+                return false;
+            }
+        });
+        vh.Msg.setOnClickListener(new ClickListener(i, ""));
+        vh.Icon.setOnClickListener(new ClickListener(i, "Icon"));
+
+
+
+        return convertView;
     }
+
 
     protected void setBackgroundAndKeepPadding(View view, int backgroundResId) {
         Drawable backgroundDrawable = view.getContext().getResources().getDrawable(backgroundResId);
@@ -393,7 +332,7 @@ public class RecordAdapter extends BaseAdapter {
                                         public void update() {//update the textview
                                             tv.postInvalidate();
                                         }
-                                    },context));
+                                    }, context));
                                     value.setSpan(localImageSpanRef, s, e, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                                 }
                             }
@@ -408,39 +347,22 @@ public class RecordAdapter extends BaseAdapter {
 
     }
 
+    public class ViewHolder {
 
-    class ViewHolder {
         public View rootView;
         public FontTextView Time;
-        public IconImageView Receive_Icon;
-        public DialogTextView Receive_Msg;
-        public FontTextView Receive_Duration;
-        public LinearLayout Receive_Layout;
-        public RoundRectImageView Receive_Img;
-
-        public LinearLayout Receive_dialog;
-        public FontTextView Send_Duration;
-        public DialogTextView Send_Msg;
-        public LinearLayout Send_Layout;
-        public RoundRectImageView Send_Img;
-        public IconImageView Send_Icon;
-        public LinearLayout Send_dialog;
+        public IconImageView Icon;
+        public DialogTextView Msg;
+        public FontTextView Duration;
+        public RoundRectImageView Img;
 
         public ViewHolder(View rootView) {
             this.rootView = rootView;
             this.Time = (FontTextView) rootView.findViewById(R.id.Time);
-            this.Receive_Icon = (IconImageView) rootView.findViewById(R.id.Receive_Icon);
-            this.Receive_Msg = (DialogTextView) rootView.findViewById(R.id.Receive_Msg);
-            this.Receive_Duration = (FontTextView) rootView.findViewById(R.id.Receive_Duration);
-            this.Receive_Layout = (LinearLayout) rootView.findViewById(R.id.Receive_Layout);
-            this.Receive_Img = (RoundRectImageView) rootView.findViewById(R.id.Receive_Img);
-            this.Receive_dialog = (LinearLayout) rootView.findViewById(R.id.Receive_dialog);
-            this.Send_Duration = (FontTextView) rootView.findViewById(R.id.Send_Duration);
-            this.Send_Msg = (DialogTextView) rootView.findViewById(R.id.Send_Msg);
-            this.Send_Layout = (LinearLayout) rootView.findViewById(R.id.Send_Layout);
-            this.Send_Img = (RoundRectImageView) rootView.findViewById(R.id.Send_Img);
-            this.Send_Icon = (IconImageView) rootView.findViewById(R.id.Send_Icon);
-            this.Send_dialog = (LinearLayout) rootView.findViewById(R.id.Send_dialog);
+            this.Icon = (IconImageView) rootView.findViewById(R.id.Icon);
+            this.Msg = (DialogTextView) rootView.findViewById(R.id.Msg);
+            this.Duration = (FontTextView) rootView.findViewById(R.id.Duration);
+            this.Img = (RoundRectImageView) rootView.findViewById(R.id.Img);
         }
 
     }

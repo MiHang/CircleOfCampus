@@ -20,16 +20,11 @@ import team.circleofcampus.db.DatabaseHelper;
 
 public class UserMsg_Dao {
     DatabaseHelper helper;
-
     Dao<UserMsg,Integer> userMsg_dao;
 
     public UserMsg_Dao(Context context) throws SQLException {
         helper = new DatabaseHelper(context);
-
         userMsg_dao=helper.getDao(UserMsg.class);
-
-
-
     }
     public List<UserMsg> getAllMsg(){
         List<UserMsg> data=new ArrayList<>();

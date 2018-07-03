@@ -54,7 +54,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             // 创建"t_my_publish_society_circle"我发布的社团公告表
             TableUtils.createTable(connectionSource, MyPublishSocietyCircle.class);
 
-//            TableUtils.createTable(connectionSource,Message.class);
+            TableUtils.createTable(connectionSource, Message.class);
             TableUtils.createTable(connectionSource,UserMsg.class);
         } catch (SQLException e) {
             e.printStackTrace();

@@ -9,12 +9,14 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <!-- 存储相关权限 -->
-    <uses-permission android:name="android.permission.MOUNT_FORMAT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.MOUNT_FORMAT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_MEDIA_STORAGE" tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.WRITE_MEDIA_STORAGE"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
 
     <!-- 媒体相关权限 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -38,7 +40,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepaths"/>
+                android:resource="@xml/filepaths" />
         </provider>
 
         <service android:name=".service.MyService" />
@@ -52,22 +54,28 @@
         </activity>
         <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.RegisterActivity" />
-        <activity android:name=".activity.HomeActivity"
+        <activity
+            android:name=".activity.HomeActivity"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
-        <activity android:name=".activity.ContactActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".activity.ContactActivity"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name=".activity.AddRequestActivity" />
         <activity android:name=".activity.ForgetPwdActivity" />
-        <activity android:name=".activity.ChatActivity"
-            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activity.ChatActivity"
+            android:windowSoftInputMode="adjustResize" >
+
+        </activity>
         <activity android:name=".activity.AlterUserInfoActivity" />
         <activity android:name=".activity.DetailCircleActivity" />
         <activity android:name=".activity.PublishActivity" />
         <activity android:name=".activity.ApplySocietyAuthorityActivity" />
-        <activity android:name=".activity.DecoderActivity"/>
-        <activity android:name="com.yalantis.ucrop.UCropActivity"
-            android:theme="@style/CropAppTheme"/>
+        <activity android:name=".activity.DecoderActivity" />
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:theme="@style/CropAppTheme" />
     </application>
 
 </manifest>

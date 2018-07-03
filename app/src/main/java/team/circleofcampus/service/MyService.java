@@ -8,22 +8,20 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
-
 import com.common.model.Message;
-import com.common.model.Msg;
 import com.common.model.UserMsg;
 import com.common.utils.ByteUtils;
+import com.common.utils.Symbol;
+
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.sql.SQLException;
 import java.util.List;
-
 import team.circleofcampus.Interface.MessageListener;
 import team.circleofcampus.dao.Data_Dao;
 import team.circleofcampus.dao.UserMsg_Dao;
@@ -53,13 +51,12 @@ public class MyService extends Service {
     }
 
 
-
     @Override
     public void onCreate() {
         super.onCreate();
         Log.e(TAG,"---onCreate---");
         try {
-//            dao = new Data_Dao(this);
+            dao = new Data_Dao(this);
             userMsg_dao=new UserMsg_Dao(this);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -70,6 +67,7 @@ public class MyService extends Service {
             getCon(name);
         }
     }
+
 private void getCon(final String send){
     try {
         URI uri = new URI("ws://"+ HttpRequest.IP+":8888");
@@ -94,17 +92,20 @@ private void getCon(final String send){
             @Override
             public void onMessage(ByteBuffer bytes) {
 
+                ByteUtils utils = new ByteUtils();
+                Message msg = utils.toT(bytes.array());
 
-                Log.d(TAG, "接收到"+bytes.toString());
+                msg.setMsg_Receive(Symbol.Msg_Receive);//消息接收
+                Log.d(TAG,"来下哦消息"+ msg.getSend()+":"+msg.getText()+msg.getDate());
 
-                ByteUtils utils=new ByteUtils();
-                Msg msg =utils.toT(bytes.array());
+                try {
+                    dao.save(msg);
+                    Log.e("tag", "sqlite save method execute。。。。");
+                } catch (SQLException e) {
+                    Log.e("tag", "SQLException method execute。。。。");
+                    e.printStackTrace();
+                }
 
-                Log.d(TAG,"消息"+ msg.getSend()+":"+msg.getText());
-                Message message = new Message();
-                message.setMsg(msg);
-                Log.e("tag","用户"+message.getMsg().getSend()+"性别"+message.getMsg().getSex());
-//                dao.setData(message);//储存聊天信息
 
                 UserMsg userMsg=new UserMsg();
                 userMsg.setAccount(msg.getSend());
@@ -210,4 +211,6 @@ private void getCon(final String send){
             return MyService.this;
         }
     }
-    }
+
+
+}

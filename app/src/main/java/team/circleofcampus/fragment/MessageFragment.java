@@ -1,22 +1,17 @@
 package team.circleofcampus.fragment;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 
-import com.common.model.Msg;
 import com.common.model.UserMsg;
 import com.common.utils.TimeUtil;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
@@ -34,17 +29,12 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import team.circleofcampus.Interface.MessageListener;
+
 import team.circleofcampus.Interface.OnItemClickListener;
 import team.circleofcampus.R;
 import team.circleofcampus.activity.ChatActivity;
-import team.circleofcampus.activity.HomeActivity;
 import team.circleofcampus.adapter.MyMessageAdapter;
-import team.circleofcampus.dao.Data_Dao;
 import team.circleofcampus.dao.UserMsg_Dao;
-import team.circleofcampus.service.MyService;
-
-import static android.content.Context.BIND_AUTO_CREATE;
 
 /**
  * 消息列表界面
@@ -89,10 +79,10 @@ public class MessageFragment extends Fragment {
                 @Override
                 public void onItemClick(int position) {
 
-//                    Intent intent=new Intent(getActivity(), ChatActivity.class);
-//                    intent.putExtra("receive",data.get(position).getAccount());
-//                    intent.putExtra("nickName",data.get(position).getUserName());
-//                    startActivity(intent);
+                    Intent intent=new Intent(getActivity(), ChatActivity.class);
+                    intent.putExtra("receive",data.get(position).getAccount());
+                    intent.putExtra("nickName",data.get(position).getUserName());
+                    startActivity(intent);
                     data.get(position).setVisible(false);
                     if (dao!=null){
                         List<UserMsg> m=dao.queryMsgBySearch(data.get(0).getAccount());//判断是否已有记录,有则更新

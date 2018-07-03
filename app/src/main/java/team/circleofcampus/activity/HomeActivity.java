@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.common.model.UserMsg;
+import com.common.utils.Symbol;
 import com.common.utils.TimeUtil;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
@@ -93,7 +94,7 @@ public class HomeActivity extends AppCompatActivity {
     QRFragment qrFragment = new QRFragment();
     List<Fragment> data = new ArrayList<>();
     private int selectedPageId = 0;
-    Data_Dao dao ;
+
     String account;
     WebSocketClient myClient;
 
@@ -124,11 +125,7 @@ public class HomeActivity extends AppCompatActivity {
                                     } catch (ParseException e) {
                                         e.printStackTrace();
                                     }
-
-
-
                             }
-
                         }
                     });
 
@@ -225,11 +222,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
-        try {
-            dao= new Data_Dao(this);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
         account = SharedPreferencesUtil.getAccount(this);
 
         // 获取用户ID
@@ -358,9 +351,9 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MyService.class);
         SharedPreferences preferences=getSharedPreferences("user", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor=preferences.edit();
-        editor.putString("send", "test2");
+        editor.putString("send", account);
         editor.commit();
-      bindService(intent, conn, BIND_AUTO_CREATE);
+        bindService(intent, conn, BIND_AUTO_CREATE);
     }
 
     @Override

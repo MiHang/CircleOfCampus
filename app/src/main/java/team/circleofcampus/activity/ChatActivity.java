@@ -29,7 +29,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.common.model.Message;
-import com.common.model.Msg;
 import com.common.utils.AudioUtils;
 import com.common.utils.ByteUtils;
 import com.common.utils.Symbol;
@@ -128,6 +127,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = getIntent();
         receive = intent.getStringExtra("receive");
         nickName = intent.getStringExtra("nickName");
+//        receive="test1";
+//        nickName ="啊哒哒";
         if (receive == null || receive.equals("")) {
             finish();
         }
@@ -145,10 +146,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     String result = helper.getUserInfoByAccount(send);
                     JSONObject jsonObject = new JSONObject(result);
                     if (jsonObject.getString("result").equals("success")) {
-
                         sex=jsonObject.getString("gender");
-
-
                     } else { // 查询失败
                         handler.sendEmptyMessage(0x0002);
                     }
@@ -177,15 +175,20 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void update( String account, boolean isUpdate) {
                         data.clear();
-                        List<Message> msg= null;
-                        try {
-                            msg = dao.getMessage(receive, send);
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        }
+
+                        List<Message> msg = dao.getMessage(send, receive);
+
                         for(Message m :msg){
+                            Log.e("tag", "数据库聊天数据"+m.toString());
                            data.add(m);
                        }
+                       Toast.makeText(myService, "新消息", Toast.LENGTH_SHORT).show();
+                        Log.e("ingo","更新");
+//                        List<Message>  data = dao.getAllMsg();
+//
+//                        for (Message m : data) {
+//                            Log.e("tag", "数据库聊天数据"+m.toString());
+//                        }
                         ChatRecord.smoothScrollToPosition(data.size());
                         myAdapter.notifyDataSetChanged();
 
@@ -205,25 +208,24 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             public void PictureDisplay(int res) {
                 if (myClient != null && myClient.getConnection().isOpen()) {//发送图片
                     Bitmap bitmap = BitmapFactory.decodeResource(getResources(), res);
-                    Msg dataMsg = new Msg();
+                    Message dataMsg = new Message();
                     dataMsg.setSend(send);
                     dataMsg.setSex(sex);
                     dataMsg.setReceive(receive);
                     dataMsg.setImg(utils.BitmapToBytes(bitmap));
                     myClient.send(utils.toByteArray(dataMsg));
 
-                    Message message = new Message();
-                    message.setMsg(dataMsg);
-                    message.setReceive(0);
 
-                    dao.setData(message);
-                    data.clear();
-                    List<Message> msg= null;
                     try {
-                        msg = dao.getMessage(receive, send);
+                        dao.save(dataMsg);
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
+                    data.clear();
+                    List<Message> msg= null;
+
+                        msg = dao.getMessage(receive, send);
+
                     for(Message m :msg){
                         data.add(m);
                     }
@@ -250,7 +252,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void clickItem(int position) {
                 Message msg = data.get(position);
-                if (msg.getMsg().getAudio() != null) {
+                if (msg.getAudio() != null) {
                     Toast.makeText(getApplicationContext(), "语音识别", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -260,42 +262,25 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void ClickIcon(View v, int position) {
                 Message msg = data.get(position);
-                Toast.makeText(getApplicationContext(), "用户:" + msg.getMsg().getSend()+"性别"+msg.getMsg().getSex(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "用户:" + msg.getSend()+"性别"+msg.getSex(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void ClickDialog(View v, int position) {
                 Message msg = data.get(position);
-//                if (msg.getMsg().getText() != null) {
-//                    Toast.makeText(getApplicationContext(), "文本" + msg.getMsg().getText(), Toast.LENGTH_SHORT).show();
-//                }
-
-
-                if (msg.getReceive() == Symbol.Receive_Mode) {//接收
-
-                    if (msg.getMsg().getAudio() != null) {
-                        File file = new File(getFilesDir(), msg.getMsg().getAudioPath());
-                        sm.PlayAudio(Integer.parseInt(data.get(position).getMsg().getDuration()), file);
-                        msg.setNew(0);
-                        myAdapter.notifyDataSetChanged();
-                        ChatRecord.smoothScrollToPosition(position);
-                        Message message = dao.queryMessageById(position);
-                        message.setNew(0);
+                if (msg.getAudio() != null) {//语音不为空
+                    File file = new File(getFilesDir(), msg.getAudioPath());
+                    sm.PlayAudio(Integer.parseInt(data.get(position).getDuration()), file);
+                    msg.setMsg_New(Symbol.Msg_Old);//不显示红点
+                    try {
                         dao.update(msg);
-
+                    } catch (SQLException e) {
+                        e.printStackTrace();
                     }
-                } else {//发送
-                    if (msg.getMsg().getAudio() != null) {
-                        File file = new File(getFilesDir(), msg.getMsg().getAudioPath());
-                        sm.PlayAudio(Integer.parseInt(data.get(position).getMsg().getDuration()), file);
-                        data.get(position).setNew(0);
-                        Message message = dao.queryMessageById(position);
-                        message.setNew(0);
-                        dao.update(msg);
-                        myAdapter.notifyDataSetChanged();
-                        ChatRecord.smoothScrollToPosition(position);
+                    data.get(position).setMsg_New(Symbol.Msg_Old);
+                    myAdapter.notifyDataSetChanged();
+                    ChatRecord.smoothScrollToPosition(position);
 
-                    }
                 }
 
             }
@@ -305,6 +290,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void init() {
+
         try {
             dao = new Data_Dao(this);
         } catch (SQLException e) {
@@ -329,24 +315,25 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     if (myClient != null) {
                         if (myClient.getConnection().isOpen()) {
                             if (MsgText.getText().toString().length() > 0) {
-                                Msg msg = new Msg();
+                                Message msg = new Message();
                                 msg.setSend(send);
                                 msg.setReceive(receive);
                                 msg.setSex(sex);
                                 msg.setText(MsgText.getText().toString());
-
+                                msg.setMsg_Receive(Symbol.Msg_Send);
                                 myClient.send(utils.toByteArray(msg));
 
-                                Message message = new Message();
-                                message.setMsg(msg);
-                                message.setReceive(0);
-
-                                data.add(message);
-                                dao.setData(message);
-
                                 myAdapter.notifyDataSetChanged();
-
                                 MsgText.setText("");
+                                data.add(msg);
+
+                                try {
+                                    dao.save(msg);
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+
+
                             } else {
                                 Toast.makeText(ChatActivity.this, "请输入您想要发送的信息", Toast.LENGTH_SHORT).show();
                             }
@@ -363,13 +350,11 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         });
 
 
-        try {
-            data = dao.getMessage(receive, send);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
+
+        data= dao.getMessage(send, receive);
         for (Message m : data) {
-            Log.e("tag", m.toString());
+            Log.e("s", "用户"+m.getSend()+"向"+m.getReceive()+"发送"+m.getText()+m.getDate());
         }
 
 
@@ -430,24 +415,23 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
                         try {
                             byte[] audio = utils.DocToByte(file.getPath());//录音文件转字节流
-                            Msg msg = new Msg();
+                            Message msg = new Message();
                             msg.setSend(send);
                             msg.setReceive(receive);
 
 
-                            msg.setAudio(audio);
+                            msg.setAudio(audio);//语音字节
                             msg.setAudioPath(audioName);
-                            msg.setDuration(sm.getDuration(file) + "");
+                            msg.setDuration(sm.getDuration(file) + "");//语言地址
+                            myClient.send(utils.toByteArray(msg));//发送语音
 
-                            myClient.send(utils.toByteArray(msg));
 
-                            //更新适配器
-                            Message message = new Message();
-                            message.setMsg(msg);
-                            message.setReceive(0);
-                            message.setNew(Symbol.NewMode);
-                            data.add(message);
-                            dao.setData(message);
+                            data.add(msg);
+                            try {
+                                dao.save(msg);
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
                             myAdapter.notifyDataSetChanged();
 
 
