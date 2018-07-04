@@ -22,13 +22,10 @@ public class Data_Dao {
     public Data_Dao(Context context) throws SQLException {
         this.helper = new DatabaseHelper(context);
         this.message = this.helper.getDao(Message.class);
-
-
     }
 
     public List<Message> getMessage(String Send, String Receive) {
         List<Message> data = new ArrayList();
-
         try {
             data = message.queryBuilder().where().in("Send",Send, Receive).and()
                     .in("Receive", Send, Receive).query();
@@ -53,7 +50,7 @@ public class Data_Dao {
         } catch (SQLException var3) {
             var3.printStackTrace();
         }
-return dataMsg;
+        return dataMsg;
     }
     public List<Message> getAllMsg() {
        List< Message> dataMsg = null;

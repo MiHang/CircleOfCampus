@@ -29,6 +29,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.common.model.Message;
+import com.common.model.UserMsg;
 import com.common.utils.AudioUtils;
 import com.common.utils.ByteUtils;
 import com.common.utils.Symbol;
@@ -55,6 +56,7 @@ import team.circleofcampus.R;
 import team.circleofcampus.adapter.MyFragmentPagerAdapter;
 import team.circleofcampus.adapter.RecordAdapter;
 import team.circleofcampus.dao.Data_Dao;
+import team.circleofcampus.dao.UserMsg_Dao;
 import team.circleofcampus.http.HttpHelper;
 import team.circleofcampus.service.MyService;
 import team.circleofcampus.util.SharedPreferencesUtil;
@@ -102,8 +104,50 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private FontEditText MsgText;
     private ImageView Face;
     private ViewPager FaceViewPager;
-   HttpHelper helper;
-   String sex;
+    HttpHelper helper;
+    String sex;
+
+    private ServiceConnection conn = new ServiceConnection() {
+        @Override
+        public void onServiceDisconnected(ComponentName name) {}
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            // 返回一个MsgService对象
+            myService = ((MyService.MsgBinder) service).getService();
+            myClient = myService.getMyClient();
+
+            myService.setMessageListener("C", new MessageListener() {
+                @Override
+                public void update( String account, boolean isUpdate) {
+
+                    // 清空未读消息数
+                    try {
+                        UserMsg_Dao dao = new UserMsg_Dao(ChatActivity.this);
+                        List<UserMsg> m = dao.queryMsgBySearch(account);
+                        if (m != null && m.size() > 0){
+                            UserMsg user = m.get(0);
+                            user.setMsg(user.getMsg());
+                            user.setAmount(0);
+                            dao.update(user);
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+
+                    data.clear();
+                    List<Message> msg = dao.getMessage(send, receive);
+                    for(Message m : msg){
+                        data.add(m);
+                    }
+
+                    Log.e("tag","更新ChatActivity....");
+                    ChatRecord.smoothScrollToPosition(data.size());
+                    myAdapter.notifyDataSetChanged();
+                }
+            });
+        }
+    };
+
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(ChatActivity.this, HomeActivity.class);
@@ -123,7 +167,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         tintManager.setTintResource(R.drawable.bg);
 
         initView();
-
 
         Intent intent = getIntent();
         receive = intent.getStringExtra("receive");
@@ -156,47 +199,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-
         Intent intent2 = new Intent(this, myService.getClass());
-
-        ServiceConnection conn = new ServiceConnection() {
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-            }
-
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                //返回一个MsgService对象
-                myService = ((MyService.MsgBinder) service).getService();
-
-                myClient = myService.getMyClient();
-
-                myService.setMessageListener(new MessageListener() {
-                    @Override
-                    public void update( String account, boolean isUpdate) {
-                        data.clear();
-
-                        List<Message> msg = dao.getMessage(send, receive);
-
-                        for(Message m :msg){
-                            Log.e("tag", "数据库聊天数据"+m.toString());
-                           data.add(m);
-                       }
-                       Toast.makeText(myService, "新消息", Toast.LENGTH_SHORT).show();
-                        Log.e("ingo","更新");
-//                        List<Message>  data = dao.getAllMsg();
-//
-//                        for (Message m : data) {
-//                            Log.e("tag", "数据库聊天数据"+m.toString());
-//                        }
-                        ChatRecord.smoothScrollToPosition(data.size());
-                        myAdapter.notifyDataSetChanged();
-
-                    }
-                });
-
-            }
-        };
         bindService(intent2, conn, Context.BIND_AUTO_CREATE);
     }
 
@@ -293,7 +296,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void init() {
-
         try {
             dao = new Data_Dao(this);
         } catch (SQLException e) {
@@ -335,28 +337,18 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-
-
                             } else {
                                 Toast.makeText(ChatActivity.this, "请输入您想要发送的信息", Toast.LENGTH_SHORT).show();
                             }
-
                         } else {
                             Toast.makeText(getApplicationContext(), "未连接到服务器", Toast.LENGTH_SHORT).show();
                         }
                     }
                     return true;
                 }
-
                 return false;
             }
         });
-
-
-
-
-
-
 
         Talk.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -378,7 +370,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -420,12 +411,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                             msg.setSend(send);
                             msg.setReceive(receive);
 
-
                             msg.setAudio(audio);//语音字节
                             msg.setAudioPath(audioName);
                             msg.setDuration(sm.getDuration(file) + "");//语音时长
                             myClient.send(utils.toByteArray(msg));//发送语音
-
 
                             data.add(msg);
                             try {
@@ -435,16 +424,12 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                             }
                             myAdapter.notifyDataSetChanged();
 
-
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
 
-
                     }
                 }
-
-
                 return false;
             }
 
@@ -452,6 +437,16 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    @Override
+    protected void onDestroy() {
+        Log.e("tag", "ChatActivity onDestroy......");
+
+        // 解绑service
+        myService.removeMessageListener("C");
+        unbindService(conn);
+
+        super.onDestroy();
+    }
 
     /**
      * 事件分发机制
@@ -486,7 +481,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
         return super.dispatchTouchEvent(event);
     }
-
 
     @Override
     public void onClick(View view) {

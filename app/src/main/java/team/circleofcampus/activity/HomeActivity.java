@@ -99,19 +99,19 @@ public class HomeActivity extends AppCompatActivity {
     WebSocketClient myClient;
     MyService myService;
 
-    List<UserMsg> UserMsg_data=new ArrayList<>();
+    List<UserMsg> UserMsg_data = new ArrayList<>();
     MessageFragment bFragment = new MessageFragment();
-    TimeUtil timeUtil=new TimeUtil();
+    TimeUtil timeUtil  = new TimeUtil();
     Date date;
-    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    ServiceConnection conn = new ServiceConnection() {
+    private ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             MyService.MsgBinder myBinder = (MyService.MsgBinder) binder;
             myClient = myBinder.getService().getMyClient();
             myService = myBinder.getService();
-            myBinder.getService().setMessageListener(new MessageListener() {
+            myBinder.getService().setMessageListener("H", new MessageListener() {
                 @Override
                 public void update(final String account, boolean isUpdate) {
                     HomeViewPager.post(new Runnable() {
@@ -119,11 +119,7 @@ public class HomeActivity extends AppCompatActivity {
                         public void run() {
                             MessageFragment messageFragment = ((MessageFragment)data.get(1));
                             if (messageFragment != null) {
-                                try {
-                                    messageFragment.updateMsgList(HomeActivity.this,account);
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
+                                messageFragment.updateMsgList(HomeActivity.this);
                             }
                         }
                     });
@@ -331,6 +327,7 @@ public class HomeActivity extends AppCompatActivity {
                 SharedPreferencesUtil.setNetworkAvailable(HomeActivity.this, true);
                 if (myService != null && isDisconnectNetwork) {
                     myService.getCon(account);
+                    Log.e("tag", "重新连接WebSocket客户端....");
                 }
                 isDisconnectNetwork = false;
                 handler.sendEmptyMessage(0x0006);

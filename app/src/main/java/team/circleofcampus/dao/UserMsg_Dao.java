@@ -29,7 +29,6 @@ public class UserMsg_Dao {
     public List<UserMsg> getAllMsg(){
         List<UserMsg> data=new ArrayList<>();
         try {
-
             data=userMsg_dao.queryForAll();
         } catch (SQLException e) {
             e.printStackTrace();

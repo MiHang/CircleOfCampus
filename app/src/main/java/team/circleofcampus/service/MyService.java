@@ -28,7 +28,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import team.circleofcampus.Interface.MessageListener;
 import team.circleofcampus.R;
 import team.circleofcampus.dao.Data_Dao;
@@ -36,11 +39,9 @@ import team.circleofcampus.dao.UserMsg_Dao;
 import team.circleofcampus.http.HttpRequest;
 import team.circleofcampus.util.Uuidutil;
 
-
 /**
- * Created by 惠普 on 2018-05-15.
+ * 接收消息后台服务
  */
-
 public class MyService extends Service {
     String TAG="service";
     MsgBinder binder=new MsgBinder();
@@ -48,10 +49,13 @@ public class MyService extends Service {
     String send;
     Data_Dao dao;
     UserMsg_Dao userMsg_dao;
-    MessageListener listener;
 
-    public void setMessageListener(MessageListener listener) {
-        this.listener = listener;
+    private Map<String, MessageListener> listenerMap = new HashMap<String, MessageListener>();
+    public void setMessageListener(String key, MessageListener messageListener) {
+        this.listenerMap.put(key, messageListener);
+    }
+    public void removeMessageListener(String key) {
+        this.listenerMap.remove(key);
     }
 
     public WebSocketClient getMyClient() {
@@ -101,29 +105,19 @@ public class MyService extends Service {
 
                     ByteUtils utils = new ByteUtils();
                     Message msg = utils.toT(bytes.array());
-
-                    msg.setMsg_Receive(Symbol.Msg_Receive);//消息接收
-                    Log.d(TAG,"来下哦消息"+ msg.getSend()+":"+msg.getText()+msg.getDate());
+                    msg.setMsg_Receive(Symbol.Msg_Receive); // 消息接收
 
                     //储存语音信息
                     if (msg.getAudio()!=null&&msg.getAudioPath()!=null){
                         Log.e("tag","语音消息储存");
                         Uuidutil.FileToByte(msg.getAudio(),getApplicationContext(),msg.getAudioPath());
-    //                  AudioUtils audioUtils=new AudioUtils(getApplicationContext());
-    //                  File file = new File(getFilesDir(), msg.getAudioPath());
-    //                  audioUtils.PlayAudio(Integer.parseInt(msg.getDuration()),file);
                     }
 
                     try {
                         dao.save(msg);
-                        Log.e("tag", "sqlite save method execute。。。。");
                     } catch (SQLException e) {
-                        Log.e("tag", "SQLException method execute。。。。");
                         e.printStackTrace();
                     }
-
-
-
 
                     UserMsg userMsg=new UserMsg();
                     userMsg.setAccount(msg.getSend());
@@ -139,9 +133,9 @@ public class MyService extends Service {
                         userMsg.setMsg("图片消息");
                     }
                     userMsg.setDate(msg.getDate());
-                    List<UserMsg> m=userMsg_dao.queryMsgBySearch(userMsg.getAccount());//判断是否已有记录,有则更新
+                    List<UserMsg> m = userMsg_dao.queryMsgBySearch(userMsg.getAccount()); // 判断是否已有记录,有则更新
                     if (m!=null&&m.size()>0){
-                        UserMsg user=m.get(0);
+                        UserMsg user = m.get(0);
                         user.setMsg(userMsg.getMsg());
                         user.setAmount(user.getAmount()+1);
                         user.setDate(msg.getDate());
@@ -159,27 +153,22 @@ public class MyService extends Service {
                     }else{
                         userMsg_dao.add(userMsg);
                     }
-                    if (listener!=null){
-                        listener.update(userMsg.getAccount(),true);
-                        Log.e("tag","监听");
+
+                    // 遍历Map监听
+                    for (Map.Entry<String, MessageListener> entry : listenerMap.entrySet()) {
+                        entry.getValue().update(userMsg.getAccount(),true);
                     }
-
                 }
 
                 @Override
-                public void onMessage(final String message) {
-
-                }
+                public void onMessage(final String message) {}
 
                 @Override
-                public void onClose(int code, String reason, boolean remote) {
-
-                }
+                public void onClose(int code, String reason, boolean remote) {}
 
                 @Override
-                public void onError(Exception ex) {
+                public void onError(Exception ex) {}
 
-                }
             };
             myClient.connect();
         } catch (URISyntaxException e) {

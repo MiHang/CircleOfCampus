@@ -50,14 +50,6 @@ public class MessageFragment extends Fragment {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
-    public void onDestroyView() {
-        super .onDestroyView();
-        if (null != view) {
-            ((ViewGroup) view.getParent()).removeView(view);
-        }
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_msg, null);
@@ -69,19 +61,8 @@ public class MessageFragment extends Fragment {
 
         // 设置菜单Item点击监听。
         recycler_view.setSwipeMenuItemClickListener(menuItemClickListener);
-        try {
-            dao = new UserMsg_Dao(getContext());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        List<UserMsg> list=dao.getAllMsg();
-        for(UserMsg u:list){
-            if (u.getAmount()>0){
-                data.add(u);
-            }
 
-        }
-        adapter = new MyMessageAdapter(getContext(),data);
+        adapter = new MyMessageAdapter(getContext(), data);
         if (adapter!=null){
             adapter.setOnItemClickListener(onItemClickListener);
             recycler_view.setAdapter(adapter);
@@ -95,7 +76,7 @@ public class MessageFragment extends Fragment {
                     startActivity(intent);
                     data.get(position).setVisible(false);
                     if (dao!=null){
-                        List<UserMsg> m=dao.queryMsgBySearch(data.get(0).getAccount());//判断是否已有记录,有则更新
+                        List<UserMsg> m=dao.queryMsgBySearch(data.get(0).getAccount()); // 判断是否已有记录,有则更新
                         if (m!=null&&m.size()>0){
                             UserMsg user=m.get(0);
                             user.setMsg(user.getMsg());
@@ -107,7 +88,6 @@ public class MessageFragment extends Fragment {
                 }
             });
         }
-        Log.e("tag", "MessageFragemnt onCreate....");
     }
 
     @Override
@@ -116,56 +96,51 @@ public class MessageFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateMsgList(getContext());
+    }
 
-    public void updateMsgList(Context context,String Account) throws ParseException {
+    @Override
+    public void onDestroyView() {
+        super .onDestroyView();
+        if (null != view) {
+            ((ViewGroup) view.getParent()).removeView(view);
+        }
+    }
 
-
+    /**
+     * 更新消息预览列表
+     * @param context
+     */
+    public void updateMsgList(Context context) {
         try {
             dao = new UserMsg_Dao(context);
+            List<UserMsg> list = dao.getAllMsg();
+            if (list != null && list.size() > 0){
+                data.clear();
+                for (UserMsg userMsg : list) {
+                    Date date = sdf.parse(userMsg.getDate());
+                    userMsg.setDate(timeUtil.getTimeFormatText(date));
+                    if (userMsg.getAmount() == 0) {
+                        userMsg.setVisible(false);
+                    }
+                    data.add(userMsg);
+                }
+            }
+
+            // 排序&&刷新适配器
+            Collections.sort(data);
+            if (adapter!=null){
+                adapter.notifyDataSetChanged();
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-        List<UserMsg> list = dao.queryMsgBySearch(Account);
-        if (list == null || list.size()==0){
-          return;
-        }
-        UserMsg userMsg=list.get(0);
-        Log.e("tag","数据库数据"+userMsg.getAccount()+userMsg.getMsg()+userMsg.getDate()+userMsg.isVisible());
-        boolean isFlag = true;
-        for(UserMsg m : data){
-            if (m.getAccount().equals(userMsg.getAccount())){
-                isFlag = false;
-            }
-        }
-
-        Date date = sdf.parse(userMsg.getDate());
-        userMsg.setDate(timeUtil.getTimeFormatText(date));
-
-        if (isFlag){//新增
-            userMsg.setAmount(1);
-            userMsg.setVisible(true);
-
-            data.add(userMsg);
-            Log.e("tag","新增____");
-        }else{//修改
-            Iterator<UserMsg> iterator = data.iterator();
-            while(iterator.hasNext())
-            {
-                UserMsg msg=iterator.next();
-               if (msg.getAccount().equals(userMsg.getAccount())){
-                   data.remove(msg);
-                   data.add(userMsg);
-                   Log.e("tag","需该____");
-                   break;
-
-               }
-            }
-        }
-        Collections.sort(data);
-        if (adapter!=null){
-            adapter.notifyDataSetChanged();
-        }
-
     }
 
     private OnItemClickListener onItemClickListener = new OnItemClickListener() {
@@ -173,9 +148,7 @@ public class MessageFragment extends Fragment {
         public void onItemClick(int position) {
             // 打开自定义的Activity
             Intent intentNotifi = new Intent(getActivity(), ChatActivity.class);
-
             getActivity().startActivity(intentNotifi);
-
         }
     };
 
@@ -193,14 +166,6 @@ public class MessageFragment extends Fragment {
         @Override
         public void onItemClick(Closeable closeable, int adapterPosition, int menuPosition, int direction) {
             closeable.smoothCloseMenu();// 关闭被点击的菜单。
-
-//            if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
-//                Toast.makeText(getContext(), "list第" + adapterPosition + "; 右侧菜单第" + menuPosition, Toast.LENGTH_SHORT).show();
-//            } else if (direction == SwipeMenuRecyclerView.LEFT_DIRECTION) {
-//                Toast.makeText(getContext(), "list第" + adapterPosition + "; 左侧菜单第" + menuPosition, Toast.LENGTH_SHORT).show();
-//            }
-
-            // TODO 推荐调用Adapter.notifyItemRemoved(position)，也可以Adapter.notifyDataSetChanged();
             if (menuPosition == 1) {// 删除按钮被点击。
                 data.remove(adapterPosition);
                 adapter.notifyItemRemoved(adapterPosition);
