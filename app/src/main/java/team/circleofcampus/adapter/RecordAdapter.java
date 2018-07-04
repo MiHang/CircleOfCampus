@@ -199,7 +199,11 @@ public class RecordAdapter extends BaseAdapter {
             }else  if (itemType==1){//接收
                 vh.Msg.setCompoundDrawablesWithIntrinsicBounds(R.drawable.receive_audio,0,0,0);
             }
-            vh.Duration.setText(msg.getDuration());//语音时长
+            if (Integer.valueOf(msg.getDuration())==0){//语音时长
+                vh.Msg.setText("1");
+            }else{
+                vh.Msg.setText(msg.getDuration());
+            }
         } else if (msg.getImg() != null) {//接收图片信息
             vh.Img.setImageBitmap(bp);
             vh.Duration.setVisibility(View.GONE);
