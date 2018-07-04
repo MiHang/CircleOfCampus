@@ -63,14 +63,24 @@ public class MessageFragment extends Fragment {
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_msg, null);
 
         recycler_view = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
-
         recycler_view.setLayoutManager(new LinearLayoutManager(getContext()));// 布局管理器。
         recycler_view.setHasFixedSize(true);// 如果Item够简单，高度是确定的，打开FixSize将提高性能。
         recycler_view.setSwipeMenuCreator(swipeMenuCreator);
 
         // 设置菜单Item点击监听。
         recycler_view.setSwipeMenuItemClickListener(menuItemClickListener);
+        try {
+            dao = new UserMsg_Dao(getContext());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        List<UserMsg> list=dao.getAllMsg();
+        for(UserMsg u:list){
+            if (u.getAmount()>0){
+                data.add(u);
+            }
 
+        }
         adapter = new MyMessageAdapter(getContext(),data);
         if (adapter!=null){
             adapter.setOnItemClickListener(onItemClickListener);
@@ -149,14 +159,11 @@ public class MessageFragment extends Fragment {
                    break;
 
                }
-
             }
-
         }
         Collections.sort(data);
         if (adapter!=null){
             adapter.notifyDataSetChanged();
-
         }
 
     }

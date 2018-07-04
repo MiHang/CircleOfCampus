@@ -4,12 +4,17 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioFormat;
+import android.media.AudioManager;
+import android.media.AudioTrack;
+import android.media.SoundPool;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import com.common.model.Message;
 import com.common.model.UserMsg;
+import com.common.utils.AudioUtils;
 import com.common.utils.ByteUtils;
 import com.common.utils.Symbol;
 
@@ -17,15 +22,19 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.sql.SQLException;
 import java.util.List;
 import team.circleofcampus.Interface.MessageListener;
+import team.circleofcampus.R;
 import team.circleofcampus.dao.Data_Dao;
 import team.circleofcampus.dao.UserMsg_Dao;
 import team.circleofcampus.http.HttpRequest;
+import team.circleofcampus.util.Uuidutil;
 
 
 /**
@@ -98,6 +107,17 @@ private void getCon(final String send){
                 msg.setMsg_Receive(Symbol.Msg_Receive);//消息接收
                 Log.d(TAG,"来下哦消息"+ msg.getSend()+":"+msg.getText()+msg.getDate());
 
+                //储存语音信息
+                if (msg.getAudio()!=null&&msg.getAudioPath()!=null){
+                    Log.e("tag","语音消息储存");
+                    Uuidutil.FileToByte(msg.getAudio(),getApplicationContext(),msg.getAudioPath());
+//                    AudioUtils audioUtils=new AudioUtils(getApplicationContext());
+//
+//                    File file = new File(getFilesDir(), msg.getAudioPath());
+//
+//                    audioUtils.PlayAudio(Integer.parseInt(msg.getDuration()),file);
+                }
+
                 try {
                     dao.save(msg);
                     Log.e("tag", "sqlite save method execute。。。。");
@@ -105,6 +125,8 @@ private void getCon(final String send){
                     Log.e("tag", "SQLException method execute。。。。");
                     e.printStackTrace();
                 }
+
+
 
 
                 UserMsg userMsg=new UserMsg();

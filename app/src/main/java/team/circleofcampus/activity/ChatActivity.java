@@ -58,6 +58,7 @@ import team.circleofcampus.dao.Data_Dao;
 import team.circleofcampus.http.HttpHelper;
 import team.circleofcampus.service.MyService;
 import team.circleofcampus.util.SharedPreferencesUtil;
+import team.circleofcampus.util.Uuidutil;
 import team.circleofcampus.view.FontButton;
 import team.circleofcampus.view.FontEditText;
 import team.circleofcampus.view.FontTextView;
@@ -127,8 +128,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = getIntent();
         receive = intent.getStringExtra("receive");
         nickName = intent.getStringExtra("nickName");
-//        receive="test1";
-//        nickName ="啊哒哒";
+
         if (receive == null || receive.equals("")) {
             finish();
         }
@@ -372,7 +372,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     isDown = true;
 
                     //录制音频
-                    audioName = sdf.format(new Date());
+//                    audioName = sdf.format(new Date());
+                    audioName= Uuidutil.getUUID();
                     RECORD_ON = true;
                     handler.post(new Runnable() {
                         @Override
@@ -422,7 +423,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
                             msg.setAudio(audio);//语音字节
                             msg.setAudioPath(audioName);
-                            msg.setDuration(sm.getDuration(file) + "");//语言地址
+                            msg.setDuration(sm.getDuration(file) + "");//语音时长
                             myClient.send(utils.toByteArray(msg));//发送语音
 
 
