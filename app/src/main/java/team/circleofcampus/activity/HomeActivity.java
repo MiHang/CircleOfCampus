@@ -97,6 +97,7 @@ public class HomeActivity extends AppCompatActivity {
 
     String account;
     WebSocketClient myClient;
+    MyService myService;
 
     List<UserMsg> UserMsg_data=new ArrayList<>();
     MessageFragment bFragment = new MessageFragment();
@@ -108,27 +109,24 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             MyService.MsgBinder myBinder = (MyService.MsgBinder) binder;
-            myClient=myBinder.getService().getMyClient();
-
+            myClient = myBinder.getService().getMyClient();
+            myService = myBinder.getService();
             myBinder.getService().setMessageListener(new MessageListener() {
                 @Override
                 public void update(final String account, boolean isUpdate) {
                     HomeViewPager.post(new Runnable() {
                         @Override
                         public void run() {
-
                             MessageFragment messageFragment = ((MessageFragment)data.get(1));
                             if (messageFragment != null) {
-
-                                    try {
-                                        messageFragment.updateMsgList(HomeActivity.this,account);
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
-                                    }
+                                try {
+                                    messageFragment.updateMsgList(HomeActivity.this,account);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     });
-
                     Log.e("tag", "------ 新消息------");
                 }
             });
@@ -149,7 +147,7 @@ public class HomeActivity extends AppCompatActivity {
     // 当前activity可见
     private boolean isResume = true;
     private boolean isShowHint = true;
-
+    private boolean isDisconnectNetwork = false; // 是否断开网络连接
 
     /**
      * 用户ID
@@ -237,7 +235,6 @@ public class HomeActivity extends AppCompatActivity {
         headerSelect(0);
 
         // 校园圈
-
         circleFragment.setSwitchListener(new FragmentSwitchListener() {
             @Override
             public void displayThisFragment(boolean display) {}
@@ -273,7 +270,6 @@ public class HomeActivity extends AppCompatActivity {
                         try {
                             js.put("Account", account);
                             js.put("Request", "Offline");
-
                         } catch (JSONException e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
@@ -281,13 +277,11 @@ public class HomeActivity extends AppCompatActivity {
                         myClient.send(js.toString());
                     }
                 }
-
             }
         });
         data.add(mineFragment);
 
         // 我的二维码
-
         JSONObject jsonObject=new JSONObject();
         try {
             jsonObject.put("Account",account);
@@ -300,6 +294,7 @@ public class HomeActivity extends AppCompatActivity {
         // 更多校园官方公告
         CampusCircleFragment campusCircleFragment = new CampusCircleFragment();
         data.add(campusCircleFragment);
+
         // 更多社团公告
         SocietyCircleFragment societyCircleFragment = new SocietyCircleFragment();
         data.add(societyCircleFragment);
@@ -309,9 +304,7 @@ public class HomeActivity extends AppCompatActivity {
 
         HomeViewPager.setOnPageChangeListener(new NoPreloadViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
             @Override
             public void onPageSelected(int position) {
@@ -320,9 +313,7 @@ public class HomeActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
+            public void onPageScrollStateChanged(int state) {}
         });
 
         // 获取单例线程池
@@ -338,18 +329,22 @@ public class HomeActivity extends AppCompatActivity {
                 // 数据加载， 网络重新连接上可再次加载
                 Log.e("tag", "HomeActivity reload data...");
                 SharedPreferencesUtil.setNetworkAvailable(HomeActivity.this, true);
+                if (myService != null && isDisconnectNetwork) {
+                    myService.getCon(account);
+                }
+                isDisconnectNetwork = false;
                 handler.sendEmptyMessage(0x0006);
             }
             @Override
             public void networkUnavailable() {
                 SharedPreferencesUtil.setNetworkAvailable(HomeActivity.this, false);
+                isDisconnectNetwork = true;
                 Toast.makeText(HomeActivity.this, "糟糕，网络开小差了(;′⌒`)", Toast.LENGTH_SHORT).show();
             }
         });
 
-
         Intent intent = new Intent(this, MyService.class);
-        SharedPreferences preferences=getSharedPreferences("user", Context.MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences("user", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor=preferences.edit();
         editor.putString("send", account);
         editor.commit();

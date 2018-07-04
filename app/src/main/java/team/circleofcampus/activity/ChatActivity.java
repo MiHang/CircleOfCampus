@@ -244,7 +244,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         fragmentAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), fragments);
         FaceViewPager.setAdapter(fragmentAdapter);
 
-
+        data= dao.getMessage(send, receive);
+        for (Message m : data) {
+            Log.e("s", "用户"+m.getSend()+"向"+m.getReceive()+"发送"+m.getText()+m.getDate());
+        }
         myAdapter = new RecordAdapter(this, data);
         ChatRecord.setAdapter(myAdapter);
 
@@ -352,10 +355,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-        data= dao.getMessage(send, receive);
-        for (Message m : data) {
-            Log.e("s", "用户"+m.getSend()+"向"+m.getReceive()+"发送"+m.getText()+m.getDate());
-        }
+
 
 
         Talk.setOnTouchListener(new View.OnTouchListener() {
