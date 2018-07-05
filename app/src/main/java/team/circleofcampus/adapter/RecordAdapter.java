@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.text.SpannableString;
@@ -64,8 +65,7 @@ public class RecordAdapter extends BaseAdapter {
     Bitmap bp = null;
     MsgLongClickListener longClickListener;
     UserDao userDao;
-    Bitmap localUserAvatar;
-
+    Drawable localUserAvatar;
 
     public void setLongClickListener(MsgLongClickListener longClickListener) {
         this.longClickListener = longClickListener;
@@ -75,7 +75,7 @@ public class RecordAdapter extends BaseAdapter {
         this.context = context;
         this.data = data;
         utils = new ImgUtils(context);
-        Map<String, Integer> map = new EmojiData().initDatas();//获取表情包资源
+        Map<String, Integer> map = new EmojiData().initDatas(); // 获取表情包资源
         for (Map.Entry<String, Integer> entry : map.entrySet()) {
             Map<String, Integer> m = new HashMap<>();
             m.put(entry.getKey(), entry.getValue());
@@ -87,7 +87,10 @@ public class RecordAdapter extends BaseAdapter {
             if (user != null) {
                 // 加载用户头像
                 String filePath = StorageUtil.getStorageDirectory() + user.getHeadIcon();
-                localUserAvatar = BitmapFactory.decodeFile(filePath);
+                Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+                if (bitmap != null) {
+                    localUserAvatar = new BitmapDrawable(context.getResources(), bitmap);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -144,17 +147,20 @@ public class RecordAdapter extends BaseAdapter {
         }
 
         // 加载头像
-        int res = R.drawable.woman;
-        if (msg.getSex() == null || msg.getSex().equals("male")) {
-            res = R.drawable.man;
+        if (itemType == 0 && localUserAvatar != null) { // 发送者有本地头像，加载本地头像
+            vh.Icon.setImageDrawable(localUserAvatar);
+        } else {
+            int res = R.drawable.woman;
+            if (msg.getSex() == null || msg.getSex().equals("male")) {
+                res = R.drawable.man;
+            }
+            String username = msg.getUserName();
+            Glide.with(context)
+                    .load("http://" + HttpRequest.IP + ":8080/res/img/" + username)
+                    .asBitmap()
+                    .error(res)
+                    .into(vh.Icon);
         }
-        String username = msg.getUserName();
-
-        Glide.with(context)
-                .load("http://" + HttpRequest.IP + ":8080/res/img/" + username)
-                .asBitmap()
-                .error(res)
-                .into(vh.Icon);
 
         // 判断是否显示时间
         if (i != 0) {
@@ -175,40 +181,45 @@ public class RecordAdapter extends BaseAdapter {
         }
 
         //消息处理
-        if (msg.getImg() != null) {//图片不为空
+        if (msg.getImg() != null) {// 图片不为空
             bp = byteUtils.BytesToBitmap(msg.getImg());
         }
+
         if (msg.getText() != null) { // 接收文本消息
             vh.Duration.setVisibility(View.GONE);
+            vh.Msg.setVisibility(View.VISIBLE);
+            vh.Img.setVisibility(View.GONE);
             vh.Msg.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             if (!convertNormalStringToSpannableString(msg.getText(), vh.Msg)) {
                 vh.Msg.setText(msg.getText());
                 setBackgroundAndKeepPadding(vh.Msg, itemType==0?R.drawable.send_bg_1:R.drawable.receive_bg_1);
             }
 
-        } else if (msg.getAudioPath() != null) {//接收语音信息
-
+        } else if (msg.getAudioPath() != null) { // 接收语音信息
+            vh.Img.setVisibility(View.GONE);
             vh.Msg.setText("");
-            if (msg.getMsg_New() == Symbol.Msg_New) {//新消息 显示小点
+            if (msg.getMsg_New() == Symbol.Msg_New) {// 新消息 显示小点
                 vh.Duration.setVisibility(View.VISIBLE);
             } else {
                 vh.Duration.setVisibility(View.GONE);
             }
-            if (itemType==0){//发送
+            if (itemType==0){ // 发送
                 vh.Msg.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.send_audio,0);
-            }else  if (itemType==1){//接收
+            }else  if (itemType==1){ // 接收
                 vh.Msg.setCompoundDrawablesWithIntrinsicBounds(R.drawable.receive_audio,0,0,0);
             }
-            if (Integer.valueOf(msg.getDuration())==0){//语音时长
+            if (Integer.valueOf(msg.getDuration())==0){ // 语音时长
                 vh.Msg.setText("1");
+                vh.Duration.setText("1");
             }else{
                 vh.Msg.setText(msg.getDuration());
+                vh.Duration.setText(msg.getDuration());
             }
-        } else if (msg.getImg() != null) {//接收图片信息
+        } else if (msg.getImg() != null) { // 接收图片信息
             vh.Img.setImageBitmap(bp);
             vh.Duration.setVisibility(View.GONE);
             vh.Msg.setVisibility(View.GONE);
-            vh.Img.setVisibility(View.VISIBLE);//显示图片
+            vh.Img.setVisibility(View.VISIBLE); // 显示图片
         }
         vh.Msg.setOnLongClickListener(new View.OnLongClickListener() {//长按监听
             @Override
@@ -250,12 +261,10 @@ public class RecordAdapter extends BaseAdapter {
     public boolean DisPlayTime(String t1, String t2) {
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
         try {
             Date d1 = df.parse(t1);
             Date d2 = df.parse(t2);
             long diff = d1.getTime() - d2.getTime();//这样得到的差值是微秒级别
-
 
             long days = diff / (1000 * 60 * 60 * 24);
             long hours = (diff - days * (1000 * 60 * 60 * 24)) / (1000 * 60 * 60);

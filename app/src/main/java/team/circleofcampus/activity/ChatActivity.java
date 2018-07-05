@@ -144,7 +144,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            Log.e("tag","更新ChatActivity....");
                             myAdapter.notifyDataSetChanged();
                             ChatRecord.smoothScrollToPosition(data.size());
                         }
@@ -216,6 +215,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void PictureDisplay(int res) {
                 if (myClient != null && myClient.getConnection().isOpen()) { // 发送图片
+                    Log.e("tag", "发送图片....");
                     Bitmap bitmap = BitmapFactory.decodeResource(getResources(), res);
                     Message dataMsg = new Message();
                     dataMsg.setSend(send);
@@ -230,11 +230,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                         e.printStackTrace();
                     }
                     data.clear();
-                    List<Message> msg= null;
-
-                        msg = dao.getMessage(receive, send);
-
-                    for(Message m :msg){
+                    List<Message> msg = dao.getMessage(receive, send);
+                    for(Message m : msg){
                         data.add(m);
                     }
 

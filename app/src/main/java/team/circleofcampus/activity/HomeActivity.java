@@ -533,8 +533,8 @@ public class HomeActivity extends AppCompatActivity {
                 headerLeftText.setText("发表");
                 headerLeftImage.setVisibility(View.GONE);
                 headerRightText.setText("");
-                headerRightImage.setImageResource(R.drawable.icon_search_white);
-                headerRightImage.setVisibility(View.VISIBLE);
+                // headerRightImage.setImageResource(R.drawable.icon_search_white);
+                headerRightImage.setVisibility(View.GONE);
                 setHomeBottomNavNormal();
                 circle.setImageResource(R.drawable.icon_home_campus_hover);
             };break;
