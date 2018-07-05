@@ -67,7 +67,7 @@ import team.circleofcampus.view.FontTextView;
 
 public class ChatActivity extends AppCompatActivity implements View.OnClickListener {
 
-    List<Message> data = new ArrayList<>();
+    List<Message> data = new ArrayList<Message>();
     RecordAdapter myAdapter;
     String send;
     String receive;
@@ -209,6 +209,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void setAdapter() {
+
         faceFragment = new FaceFragment();
         faceFragment.bind(MsgText, null);
         faceFragment.setPictureClickListener(new PictureClickListener() {
@@ -247,12 +248,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         fragmentAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), fragments);
         FaceViewPager.setAdapter(fragmentAdapter);
 
-        data= dao.getMessage(send, receive);
-        for (Message m : data) {
-            Log.e("s", "用户"+m.getSend()+"向"+m.getReceive()+"发送"+m.getText()+m.getDate());
+        List<Message> messages = dao.getMessage(send, receive);
+        if (messages != null) {
+            data.addAll(messages);
         }
         myAdapter = new RecordAdapter(this, data);
         ChatRecord.setAdapter(myAdapter);
+        ChatRecord.setSelection(myAdapter.getCount()-1);
 
         myAdapter.setLongClickListener(new MsgLongClickListener() {
             @Override
