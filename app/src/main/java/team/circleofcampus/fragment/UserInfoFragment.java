@@ -37,7 +37,7 @@ import com.xiasuhuei321.loadingdialog.view.LoadingDialog;
  */
 public class UserInfoFragment extends Fragment implements View.OnClickListener , OnItemClickListener, OnDismissListener{
 
-    private AlertView mAlertView;//避免创建重复View，先创建View，然后需要的时候show出来，推荐这个做法
+    private AlertView mAlertView; // 避免创建重复View，先创建View，然后需要的时候show出来，推荐这个做法
     HttpHelper helper;
     private CircleImageView Icon;
     private FontTextView NickName;
@@ -54,6 +54,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener ,
     SharedPreferencesUtil sharedPreferencesUtil;
     String email;
     JSONObject jsonObject;
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -91,9 +92,8 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener ,
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(getActivity(), ChatActivity.class);
-                        intent.putExtra("receive", account.getText());
+                        intent.putExtra("receive", username);
                         intent.putExtra("nickName", name);
-                        intent.putExtra("username", username);
                         startActivity(intent);
                     }
                 });

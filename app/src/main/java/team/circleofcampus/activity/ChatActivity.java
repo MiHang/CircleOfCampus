@@ -136,13 +136,19 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
                     data.clear();
                     List<Message> msg = dao.getMessage(send, receive);
-                    for(Message m : msg){
-                        data.add(m);
+                    if (msg != null) {
+                        data.addAll(msg);
                     }
 
-                    Log.e("tag","更新ChatActivity....");
-                    ChatRecord.smoothScrollToPosition(data.size());
-                    myAdapter.notifyDataSetChanged();
+                    // 延迟刷新
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e("tag","更新ChatActivity....");
+                            myAdapter.notifyDataSetChanged();
+                            ChatRecord.smoothScrollToPosition(data.size());
+                        }
+                    }, 500);
                 }
             });
         }
@@ -209,7 +215,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         faceFragment.setPictureClickListener(new PictureClickListener() {
             @Override
             public void PictureDisplay(int res) {
-                if (myClient != null && myClient.getConnection().isOpen()) {//发送图片
+                if (myClient != null && myClient.getConnection().isOpen()) { // 发送图片
                     Bitmap bitmap = BitmapFactory.decodeResource(getResources(), res);
                     Message dataMsg = new Message();
                     dataMsg.setSend(send);
@@ -217,7 +223,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     dataMsg.setReceive(receive);
                     dataMsg.setImg(utils.BitmapToBytes(bitmap));
                     myClient.send(utils.toByteArray(dataMsg));
-
 
                     try {
                         dao.save(dataMsg);
@@ -233,13 +238,11 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                         data.add(m);
                     }
 
-                    ChatRecord.smoothScrollToPosition(data.size());
                     myAdapter.notifyDataSetChanged();
+                    ChatRecord.smoothScrollToPosition(data.size());
                 } else {
                     Toast.makeText(getApplicationContext(), "未连接到服务器", Toast.LENGTH_SHORT).show();
-
                 }
-
             }
         });
         fragments.add(faceFragment);
@@ -286,11 +289,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     data.get(position).setMsg_New(Symbol.Msg_Old);
                     myAdapter.notifyDataSetChanged();
                     ChatRecord.smoothScrollToPosition(position);
-
                 }
-
             }
-
         });
 
     }

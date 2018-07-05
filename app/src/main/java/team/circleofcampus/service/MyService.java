@@ -108,7 +108,7 @@ public class MyService extends Service {
                     msg.setMsg_Receive(Symbol.Msg_Receive); // 消息接收
 
                     //储存语音信息
-                    if (msg.getAudio()!=null&&msg.getAudioPath()!=null){
+                    if (msg.getAudio() != null && msg.getAudioPath() != null){
                         Log.e("tag","语音消息储存");
                         Uuidutil.FileToByte(msg.getAudio(),getApplicationContext(),msg.getAudioPath());
                     }
